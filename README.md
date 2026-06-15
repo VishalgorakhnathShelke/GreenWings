@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # React + TypeScript + Vite
 
 ## Start the GreenWings website locally
@@ -94,3 +95,7 @@ export default defineConfig([
   },
 ])
 ```
+=======
+# GreenWings
+-GreenWings is a scalable multilingual digital platform for a Farmer Producer Organisation (FPO), combining a corporate website, agricultural product marketplace, member portal, enquiry management system, and administrative dashboard to empower farmers and connect them with markets and opportunities.
+>>>>>>> 410737ad7206d2bc95688e98f9ae4c7c263cd790
