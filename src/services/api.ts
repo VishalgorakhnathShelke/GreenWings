@@ -1,26 +1,41 @@
+import type { Lang } from '../data/translations'
+
 export interface DatabaseSubtype {
   subtype_id: number
   subtype_name: string
+  display_name: string
+  language: Lang
   scientific_name: string | null
   marathi_name: string | null
   origin_state: string | null
+  localized_origin_state?: string
   taste_profile: string | null
+  localized_taste_profile?: string
   description: string | null
+  localized_description: string | null
   info: string
+  localized_info: string
 }
 
 export interface DatabaseProduct {
   produce_id: number
   type: string
+  display_type: string
   name: string
+  display_name: string
+  language: Lang
   scientific_name: string | null
   category: string | null
+  localized_category?: string
   season: string | null
+  localized_season?: string
   marathi_name: string | null
   hindi_name: string | null
   english_name: string | null
   description: string | null
+  localized_description: string | null
   info: string
+  localized_info: string
   subtypes: DatabaseSubtype[]
 }
 
@@ -31,8 +46,10 @@ async function apiRequest<T>(path: string, options?: RequestInit): Promise<T> {
   return payload as T
 }
 
-export async function fetchDatabaseProducts(type?: string): Promise<DatabaseProduct[]> {
-  const query = type ? `?type=${encodeURIComponent(type)}` : ''
+export async function fetchDatabaseProducts(type?: string, lang: Lang = 'en'): Promise<DatabaseProduct[]> {
+  const params = new URLSearchParams({ lang })
+  if (type) params.set('type', type)
+  const query = `?${params.toString()}`
   const payload = await apiRequest<{ products: DatabaseProduct[] }>(`/api/products${query}`)
   return payload.products
 }

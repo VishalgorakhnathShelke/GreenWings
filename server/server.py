@@ -33,6 +33,7 @@ ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@greenwings.local")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "ChangeMeBeforeProduction!")
 TOKEN_SECRET = os.environ.get("ADMIN_TOKEN_SECRET", "local-development-secret").encode()
 PORT = int(os.environ.get("API_PORT", "8787"))
+SUPPORTED_LANGUAGES = {"en", "hi", "mr"}
 
 
 def encode_token(role: str, email: str) -> str:
@@ -59,6 +60,88 @@ def database() -> sqlite3.Connection:
     connection = sqlite3.connect(DB_PATH)
     connection.row_factory = sqlite3.Row
     return connection
+
+
+def ensure_database() -> None:
+    if not DB_PATH.exists():
+        import_seed()
+        return
+    with database() as connection:
+        tables = {
+            row["name"] for row in connection.execute(
+                "SELECT name FROM sqlite_master WHERE type = 'table'"
+            ).fetchall()
+        }
+    if not {"produce_translations", "subtype_translations"}.issubset(tables):
+        import_seed()
+
+
+def requested_language(query: dict[str, list[str]]) -> str:
+    language = query.get("lang", ["en"])[0].lower()
+    return language if language in SUPPORTED_LANGUAGES else "en"
+
+
+def localized_product(connection: sqlite3.Connection, row: sqlite3.Row, language: str) -> dict:
+    product = dict(row)
+    product["language"] = language
+    product["display_name"] = product["name"]
+    product["display_type"] = product["type"]
+    product["localized_description"] = product["description"]
+    product["localized_info"] = product["info"]
+
+    if language != "en":
+        translation = connection.execute(
+            """
+            SELECT display_name, display_type, category, season, description, info
+            FROM produce_translations
+            WHERE produce_id = ? AND language = ?
+            """,
+            (row["produce_id"], language),
+        ).fetchone()
+        if translation:
+            product.update({
+                "display_name": translation["display_name"],
+                "display_type": translation["display_type"],
+                "localized_category": translation["category"],
+                "localized_season": translation["season"],
+                "localized_description": translation["description"],
+                "localized_info": translation["info"],
+            })
+
+    product["subtypes"] = [
+        localized_subtype(connection, item, language) for item in connection.execute(
+            "SELECT * FROM subtypes WHERE produce_id = ? ORDER BY subtype_name", (row["produce_id"],)
+        ).fetchall()
+    ]
+    return product
+
+
+def localized_subtype(connection: sqlite3.Connection, row: sqlite3.Row, language: str) -> dict:
+    subtype = dict(row)
+    subtype["language"] = language
+    subtype["display_name"] = subtype["subtype_name"]
+    subtype["localized_description"] = subtype["description"]
+    subtype["localized_info"] = subtype["info"]
+
+    if language != "en":
+        translation = connection.execute(
+            """
+            SELECT display_name, origin_state, taste_profile, description, info
+            FROM subtype_translations
+            WHERE subtype_id = ? AND language = ?
+            """,
+            (row["subtype_id"], language),
+        ).fetchone()
+        if translation:
+            subtype.update({
+                "display_name": translation["display_name"],
+                "localized_origin_state": translation["origin_state"],
+                "localized_taste_profile": translation["taste_profile"],
+                "localized_description": translation["description"],
+                "localized_info": translation["info"],
+            })
+
+    return subtype
 
 
 class ApiHandler(BaseHTTPRequestHandler):
@@ -105,22 +188,15 @@ class ApiHandler(BaseHTTPRequestHandler):
             return
         if parsed.path == "/api/products":
             query = parse_qs(parsed.query)
+            language = requested_language(query)
             product_type = query.get("type", [None])[0]
             with database() as connection:
                 if product_type:
                     rows = connection.execute("SELECT * FROM produce WHERE type = ? ORDER BY name", (product_type,)).fetchall()
                 else:
                     rows = connection.execute("SELECT * FROM produce ORDER BY type, name").fetchall()
-                products = []
-                for row in rows:
-                    product = dict(row)
-                    product["subtypes"] = [
-                        dict(item) for item in connection.execute(
-                            "SELECT * FROM subtypes WHERE produce_id = ? ORDER BY subtype_name", (row["produce_id"],)
-                        ).fetchall()
-                    ]
-                    products.append(product)
-            self.send_json(200, {"products": products})
+                products = [localized_product(connection, row, language) for row in rows]
+            self.send_json(200, {"language": language, "products": products})
             return
         self.send_json(404, {"error": "Not found"})
 
@@ -141,7 +217,6 @@ class ApiHandler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    if not DB_PATH.exists():
-        import_seed()
+    ensure_database()
     print(f"GreenWings API running at http://127.0.0.1:{PORT}")
     ThreadingHTTPServer(("127.0.0.1", PORT), ApiHandler).serve_forever()
