@@ -3,9 +3,24 @@ import { getProductBySlug } from '../data/catalog'
 import { categories } from '../data/categories'
 import { useProductStore } from '../stores/productStore'
 import { useLoginStore } from '../stores/loginStore'
+import { useLanguageStore } from '../stores/languageStore'
+import { catalogueCopy, localizeCategory, localizeProduct } from '../services/catalogLocalization'
 import type { Variety } from '../data/types'
+import type { Lang } from '../data/translations'
 
-function VarietyAccordion({ variety, isOpen, onToggle }: { variety: Variety; isOpen: boolean; onToggle: () => void }) {
+function VarietyAccordion({
+  variety,
+  isOpen,
+  onToggle,
+  lang,
+}: {
+  variety: Variety
+  isOpen: boolean
+  onToggle: () => void
+  lang: Lang
+}) {
+  const copy = catalogueCopy[lang]
+
   return (
     <div className="border border-line bg-white overflow-hidden">
       <button
@@ -18,7 +33,7 @@ function VarietyAccordion({ variety, isOpen, onToggle }: { variety: Variety; isO
         </div>
         <div className="flex items-center gap-3">
           <span className="text-[9px] text-green uppercase tracking-wider font-bold hidden sm:block">{variety.applications.slice(0, 3).join(' · ')}</span>
-          <span className="text-[9px] text-muted">{isOpen ? 'Collapse' : 'Expand'}</span>
+          <span className="text-[9px] text-muted">{isOpen ? copy.collapse : copy.expand}</span>
         </div>
       </button>
 
@@ -40,7 +55,7 @@ function VarietyAccordion({ variety, isOpen, onToggle }: { variety: Variety; isO
             <div>
               <p className="text-sm text-muted leading-[1.8] whitespace-pre-line">{variety.overview}</p>
 
-              <h4 className="text-[10px] uppercase tracking-[0.15em] text-green font-bold mt-6 mb-3">Key Characteristics</h4>
+              <h4 className="text-[10px] uppercase tracking-[0.15em] text-green font-bold mt-6 mb-3">{copy.keyCharacteristics}</h4>
               <div className="grid grid-cols-2 gap-3">
                 {Object.entries(variety.characteristics).map(([key, value]) => (
                   <div key={key} className="border border-line p-3">
@@ -52,11 +67,11 @@ function VarietyAccordion({ variety, isOpen, onToggle }: { variety: Variety; isO
 
               <div className="grid grid-cols-2 gap-3 mt-4">
                 <div className="bg-deep text-white p-4">
-                  <small className="block text-[8px] uppercase tracking-wider text-white/50">Shelf Life</small>
+                  <small className="block text-[8px] uppercase tracking-wider text-white/50">{copy.shelfLife}</small>
                   <span className="text-sm text-gold font-medium">{variety.shelfLife}</span>
                 </div>
                 <div className="bg-green text-white p-4">
-                  <small className="block text-[8px] uppercase tracking-wider text-white/60">Export Suitability</small>
+                  <small className="block text-[8px] uppercase tracking-wider text-white/60">{copy.exportSuitability}</small>
                   <span className="text-sm text-lime font-medium">{variety.exportSuitability}</span>
                 </div>
               </div>
@@ -70,16 +85,20 @@ function VarietyAccordion({ variety, isOpen, onToggle }: { variety: Variety; isO
 
 export function ProductProfilePage() {
   const { categorySlug, productSlug } = useParams<{ categorySlug: string; productSlug: string }>()
-  const category = categories.find((c) => c.slug === categorySlug)
-  const product = productSlug ? getProductBySlug(categorySlug ?? '', productSlug) : undefined
+  const lang = useLanguageStore((s) => s.lang)
+  const copy = catalogueCopy[lang]
+  const rawCategory = categories.find((c) => c.slug === categorySlug)
+  const rawProduct = productSlug ? getProductBySlug(categorySlug ?? '', productSlug) : undefined
+  const category = rawCategory ? localizeCategory(rawCategory, lang) : undefined
+  const product = rawProduct ? localizeProduct(rawProduct, lang) : undefined
   const { openAccordion, toggleAccordion } = useProductStore()
   const openLogin = useLoginStore((s) => s.openLogin)
 
-  if (!category || !product) {
+  if (!rawCategory || !category || !product) {
     return (
       <div className="py-24 px-[8vw] text-center">
-        <h2 className="font-serif text-3xl text-ink mb-4">Product not found</h2>
-        <Link to="/products" className="text-green font-bold no-underline">← Back to all categories</Link>
+        <h2 className="font-serif text-3xl text-ink mb-4">{copy.productNotFound}</h2>
+        <Link to="/products" className="text-green font-bold no-underline">{copy.backToCategories}</Link>
       </div>
     )
   }
@@ -87,9 +106,9 @@ export function ProductProfilePage() {
   return (
     <section className="py-16 px-[8vw]">
       <nav className="flex items-center gap-2 text-[11px] text-muted mb-8 flex-wrap">
-        <Link to="/products" className="text-green no-underline hover:underline">Products</Link>
+        <Link to="/products" className="text-green no-underline hover:underline">{copy.products}</Link>
         <span>/</span>
-        <Link to={`/products/${category.slug}`} className="text-green no-underline hover:underline">{category.name}</Link>
+        <Link to={`/products/${rawCategory.slug}`} className="text-green no-underline hover:underline">{category.name}</Link>
         <span>/</span>
         <span className="text-ink">{product.name}</span>
       </nav>
@@ -100,21 +119,21 @@ export function ProductProfilePage() {
           <p className="text-sm text-muted leading-[1.8] mb-6">{product.overview}</p>
 
           <div className="flex flex-wrap gap-2 mb-6">
-            {product.keyBenefits.map((b) => (
-              <span key={b} className="bg-green/10 text-green text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 border border-green/20">{b}</span>
+            {product.keyBenefits.map((benefit) => (
+              <span key={benefit} className="bg-green/10 text-green text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 border border-green/20">{benefit}</span>
             ))}
           </div>
 
           <button onClick={openLogin} className="bg-gold text-deep px-5 py-3 text-[10px] font-bold uppercase cursor-pointer border-0 hover:bg-gold/90 transition-colors">
-            Request specifications →
+            {copy.requestSpecs}
           </button>
         </div>
 
         <div className="h-72 lg:h-auto min-h-[320px] bg-cover bg-center rounded-sm relative" style={{ backgroundImage: `url(${product.heroImage})` }}>
           <div className="absolute inset-0 bg-gradient-to-t from-deep/40 to-transparent rounded-sm" />
           <div className="absolute bottom-4 left-4 flex gap-2 flex-wrap">
-            {product.growingRegions.map((r) => (
-              <span key={r} className="bg-deep/80 text-white text-[9px] uppercase tracking-wider font-bold px-3 py-1">{r}</span>
+            {product.growingRegions.map((region) => (
+              <span key={region} className="bg-deep/80 text-white text-[9px] uppercase tracking-wider font-bold px-3 py-1">{region}</span>
             ))}
           </div>
         </div>
@@ -122,12 +141,12 @@ export function ProductProfilePage() {
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-12">
         {[
-          { label: 'Harvest Season', value: product.harvestSeason },
-          { label: 'Export Status', value: product.exportAvailability, highlight: true },
-          { label: 'Storage', value: product.storageInfo },
-          ...product.nutritionalHighlights.slice(0, 3).map((n) => ({ label: 'Nutrition', value: n })),
-        ].map((item, i) => (
-          <div key={i} className={`${item.highlight ? 'bg-green text-white' : 'bg-paper'} border border-line p-4`}>
+          { label: copy.harvestSeason, value: product.harvestSeason },
+          { label: copy.exportStatus, value: product.exportAvailability, highlight: true },
+          { label: copy.storage, value: product.storageInfo },
+          ...product.nutritionalHighlights.slice(0, 3).map((highlight) => ({ label: copy.nutrition, value: highlight })),
+        ].map((item, index) => (
+          <div key={index} className={`${item.highlight ? 'bg-green text-white' : 'bg-paper'} border border-line p-4`}>
             <small className="block text-[8px] uppercase tracking-wider text-muted mb-1">{item.label}</small>
             <span className={`text-sm font-medium ${item.highlight ? 'text-lime' : 'text-ink'}`}>{item.value}</span>
           </div>
@@ -136,21 +155,21 @@ export function ProductProfilePage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
         <div>
-          <h3 className="text-[10px] uppercase tracking-[0.15em] text-green font-bold mb-4">Nutritional Highlights</h3>
+          <h3 className="text-[10px] uppercase tracking-[0.15em] text-green font-bold mb-4">{copy.nutritionalHighlights}</h3>
           <ul className="grid gap-2">
-            {product.nutritionalHighlights.map((n) => (
-              <li key={n} className="flex items-start gap-2 text-sm text-muted">
-                <span className="text-lime mt-0.5">●</span> {n}
+            {product.nutritionalHighlights.map((highlight) => (
+              <li key={highlight} className="flex items-start gap-2 text-sm text-muted">
+                <span className="text-lime mt-0.5">•</span> {highlight}
               </li>
             ))}
           </ul>
         </div>
         <div>
-          <h3 className="text-[10px] uppercase tracking-[0.15em] text-green font-bold mb-4">Market Applications</h3>
+          <h3 className="text-[10px] uppercase tracking-[0.15em] text-green font-bold mb-4">{copy.marketApplications}</h3>
           <ul className="grid gap-2">
-            {product.marketApplications.map((m) => (
-              <li key={m} className="flex items-start gap-2 text-sm text-muted">
-                <span className="text-lime mt-0.5">●</span> {m}
+            {product.marketApplications.map((application) => (
+              <li key={application} className="flex items-start gap-2 text-sm text-muted">
+                <span className="text-lime mt-0.5">•</span> {application}
               </li>
             ))}
           </ul>
@@ -159,9 +178,9 @@ export function ProductProfilePage() {
 
       <div className="mb-6">
         <h2 className="font-serif text-[clamp(24px,4vw,42px)] leading-tight tracking-[-0.045em] mb-2">
-          {product.varieties.length} {product.name} Varieties
+          {product.varieties.length} {product.name} {copy.varieties}
         </h2>
-        <p className="text-sm text-muted">Click any variety to expand its full profile with characteristics, applications, and export information.</p>
+        <p className="text-sm text-muted">{copy.varietyIntro}</p>
       </div>
 
       <div className="grid gap-3">
@@ -171,21 +190,22 @@ export function ProductProfilePage() {
             variety={variety}
             isOpen={openAccordion === variety.slug}
             onToggle={() => toggleAccordion(variety.slug)}
+            lang={lang}
           />
         ))}
       </div>
 
       <div className="mt-12 p-6 bg-deep text-white flex flex-wrap items-center justify-between gap-4 rounded-sm">
         <div>
-          <h3 className="font-serif text-lg mb-1">Interested in {product.name}?</h3>
-          <p className="text-sm text-white/60">Submit an enquiry and our team will respond with specifications, pricing, and availability.</p>
+          <h3 className="font-serif text-lg mb-1">{copy.interested(product.name)}</h3>
+          <p className="text-sm text-white/60">{copy.enquiryText}</p>
         </div>
         <div className="flex gap-3">
           <button onClick={openLogin} className="bg-gold text-deep px-5 py-3 text-[10px] font-bold uppercase cursor-pointer border-0 hover:bg-gold/90">
-            Submit enquiry →
+            {copy.submitEnquiry}
           </button>
-          <Link to={`/products/${category.slug}`} className="border border-white/30 text-white px-5 py-3 text-[10px] font-bold uppercase no-underline hover:bg-white/10">
-            Back to {category.name}
+          <Link to={`/products/${rawCategory.slug}`} className="border border-white/30 text-white px-5 py-3 text-[10px] font-bold uppercase no-underline hover:bg-white/10">
+            {copy.backTo(category.name)}
           </Link>
         </div>
       </div>
