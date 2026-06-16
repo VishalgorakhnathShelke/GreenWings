@@ -45,5 +45,4 @@ for example:
 
 `Add database-backed product catalogue and admin authorization`
 
-Commit messages should describe the change and must not contain generated
-attribution text.
+
