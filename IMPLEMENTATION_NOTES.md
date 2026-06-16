@@ -38,11 +38,6 @@ reveals its `info` value and all subtype `info` values loaded from the backend.
   the member dashboard.
 - Signing out clears the stored role and admin token.
 
-## Commit Process
 
-Each completed change should be committed with a concise imperative subject,
-for example:
-
-`Add database-backed product catalogue and admin authorization`
 
 
