@@ -3,9 +3,13 @@ import { useLanguageStore } from '../stores/languageStore'
 import { categories } from '../data/categories'
 import { Reveal } from '../components/shared/Reveal'
 import { DatabaseCatalogue } from '../components/products/DatabaseCatalogue'
+import { catalogueCopy, localizeCategory } from '../services/catalogLocalization'
 
 export function ProductsPage() {
-  const t = useLanguageStore((s) => s.t)
+  const t = useLanguageStore((state) => state.t)
+  const lang = useLanguageStore((state) => state.lang)
+  const copy = catalogueCopy[lang]
+  const localizedCategories = categories.map((category) => localizeCategory(category, lang))
 
   return (
     <section className="bg-[#eef2e9]">
@@ -23,10 +27,10 @@ export function ProductsPage() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {categories.map((cat) => (
+          {localizedCategories.map((cat, index) => (
             <Reveal key={cat.id}>
               <Link
-                to={`/products/${cat.slug}`}
+                to={`/products/${categories[index].slug}`}
                 className="group block bg-white border border-line overflow-hidden hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(16,38,28,0.09)] transition-all no-underline text-ink"
               >
                 <div className="h-48 bg-cover bg-center relative" style={{ backgroundImage: `url(${cat.heroImage})` }}>
@@ -35,14 +39,14 @@ export function ProductsPage() {
                     <span className="text-3xl">{cat.icon}</span>
                   </div>
                   <div className="absolute top-4 right-4 bg-gold/90 text-deep text-[9px] uppercase tracking-wider font-bold px-3 py-1">
-                    Explore →
+                    {copy.explore}
                   </div>
                 </div>
                 <div className="p-5">
                   <h3 className="font-serif text-2xl mb-2 text-ink">{cat.name}</h3>
                   <p className="text-[11px] text-muted leading-relaxed line-clamp-3">{cat.tagline}</p>
                   <p className="text-[10px] text-green font-bold mt-3 uppercase tracking-wider">
-                    View all products →
+                    {copy.viewAllProducts}
                   </p>
                 </div>
               </Link>
