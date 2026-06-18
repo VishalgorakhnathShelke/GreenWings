@@ -13,24 +13,25 @@ export function HomePage() {
     <>
       <section id="home" className="relative min-h-screen flex items-center justify-center text-white overflow-hidden">
         <img src="/assets/greenwings-community.png" alt="A diverse group of Indian farmers standing together in a field at sunrise" className="absolute inset-0 w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-b from-deep/60 to-deep/80" />
+        <div className="absolute inset-0 bg-gradient-to-br from-deep/85 via-green/55 to-soil/80" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_24%,rgba(239,184,74,0.24),transparent_28%),radial-gradient(circle_at_82%_72%,rgba(139,201,214,0.20),transparent_30%)]" />
 
         <div className="relative z-10 text-center max-w-3xl mx-auto px-6">
           <Reveal>
-            <div className="text-[9px] uppercase tracking-[0.15em] font-bold text-white/80 mb-6">
+            <div className="inline-flex text-[9px] uppercase tracking-[0.15em] font-bold text-white/85 mb-6 border border-harvest/40 bg-deep/30 px-4 py-2 backdrop-blur-sm">
               {t('heroEyebrow')}
             </div>
             <h1 className="font-serif text-[clamp(32px,6vw,72px)] leading-tight tracking-[-0.045em] mb-6">
-              {t('heroTitle')}<br /><em className="text-lime not-italic font-inherit">{t('heroTitleEm')}</em>
+              {t('heroTitle')}<br /><em className="text-harvest not-italic font-inherit">{t('heroTitleEm')}</em>
             </h1>
             <p className="text-base text-white/80 mb-8 max-w-xl mx-auto leading-relaxed">
               {t('heroText')}
             </p>
             <div className="flex items-center justify-center gap-4 flex-wrap">
-              <Link to="/about" className="inline-flex items-center gap-2 bg-green text-white px-6 py-3 text-sm font-bold rounded-sm no-underline hover:bg-green/90 transition-colors">
+              <Link to="/about" className="inline-flex items-center gap-2 bg-harvest text-deep px-6 py-3 text-sm font-bold rounded-sm no-underline hover:bg-gold transition-colors shadow-[0_14px_30px_rgba(8,41,29,0.28)]">
                 <span>{t('discover')}</span><b>↗</b>
               </Link>
-              <button onClick={openLogin} className="flex items-center gap-2 bg-transparent border border-white/30 text-white px-6 py-3 text-sm cursor-pointer hover:bg-white/10">
+              <button onClick={openLogin} className="flex items-center gap-2 bg-paper/10 border border-white/30 text-white px-6 py-3 text-sm cursor-pointer hover:bg-white/15 backdrop-blur-sm">
                 <span>▶</span><span>{t('watchStory')}</span>
               </button>
             </div>
@@ -43,7 +44,7 @@ export function HomePage() {
             { value: '18', label: t('villagesReached') },
             { value: '32%', label: t('betterReturns') },
           ].map((stat) => (
-            <div key={stat.label} className="text-center">
+            <div key={stat.label} className="text-center border border-white/12 bg-deep/28 px-5 py-3 backdrop-blur-sm">
               <strong className="block font-serif text-2xl lg:text-3xl text-white">{stat.value}</strong>
               <span className="text-[10px] text-white/60 uppercase tracking-wider">{stat.label}</span>
             </div>

@@ -12,8 +12,8 @@ export function ProductsPage() {
   const localizedCategories = categories.map((category) => localizeCategory(category, lang))
 
   return (
-    <section className="bg-[#eef2e9]">
-      <div className="text-[9px] uppercase tracking-[0.12em] font-bold bg-deep text-lime inline-block px-3 py-2">
+    <section className="bg-gradient-to-b from-paper via-cream to-[#edf4df]">
+      <div className="text-[9px] uppercase tracking-[0.12em] font-bold bg-deep text-harvest inline-block px-3 py-2">
         Catalogue update · 13 June 2026 · Interactive edition
       </div>
 
@@ -31,14 +31,14 @@ export function ProductsPage() {
             <Reveal key={cat.id}>
               <Link
                 to={`/products/${categories[index].slug}`}
-                className="group block bg-white border border-line overflow-hidden hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(16,38,28,0.09)] transition-all no-underline text-ink"
+                className="group block bg-white/90 border border-line overflow-hidden hover:-translate-y-1 hover:shadow-[0_22px_44px_rgba(58,38,20,0.13)] transition-all no-underline text-ink backdrop-blur-sm"
               >
                 <div className="h-48 bg-cover bg-center relative" style={{ backgroundImage: `url(${cat.heroImage})` }}>
                   <div className="absolute inset-0 bg-gradient-to-t from-deep/60 to-transparent" />
                   <div className="absolute bottom-4 left-5">
                     <span className="text-3xl">{cat.icon}</span>
                   </div>
-                  <div className="absolute top-4 right-4 bg-gold/90 text-deep text-[9px] uppercase tracking-wider font-bold px-3 py-1">
+                  <div className="absolute top-4 right-4 bg-harvest/95 text-deep text-[9px] uppercase tracking-wider font-bold px-3 py-1">
                     {copy.explore}
                   </div>
                 </div>
