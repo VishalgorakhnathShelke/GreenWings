@@ -31,7 +31,7 @@ export function AboutPage() {
         </Reveal>
       </section>
 
-      <section className="bg-deep text-white py-20 px-[8vw] grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-12 lg:gap-[7vw] items-center">
+      <section className="bg-gradient-to-br from-deep via-green to-soil text-white py-20 px-[8vw] grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-12 lg:gap-[7vw] items-center">
         <Reveal>
           <div className="text-[9px] uppercase tracking-[0.15em] font-bold text-white/80 mb-4">Registered farmer producer company</div>
           <h2 className="font-serif text-[clamp(28px,4vw,52px)] leading-tight tracking-[-0.045em]">
@@ -46,7 +46,7 @@ export function AboutPage() {
               { label: 'PAN', value: 'AAKCG3098B' },
               { label: 'GSTIN', value: '27AAKCG3098B1ZK' },
             ].map((item) => (
-              <div key={item.label} className="bg-deep p-5">
+              <div key={item.label} className="bg-deep/70 p-5">
                 <small className="block text-white/40 text-[9px] uppercase tracking-[0.13em] mb-2">{item.label}</small>
                 <strong className="text-gold text-sm break-all">{item.value}</strong>
               </div>

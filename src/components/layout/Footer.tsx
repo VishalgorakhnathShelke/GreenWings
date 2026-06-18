@@ -6,7 +6,7 @@ export function Footer() {
   const openLogin = useLoginStore((s) => s.openLogin)
 
   return (
-    <footer className="bg-deep text-white">
+    <footer className="bg-gradient-to-br from-deep via-green to-soil text-white">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 px-[8vw] py-16">
         <div>
           <Link to="/" className="flex items-center gap-2.5 no-underline text-white mb-6">
@@ -41,8 +41,8 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="bg-green p-6">
-          <span className="text-[9px] text-gold uppercase tracking-[0.12em] font-bold">Member support</span>
+        <div className="bg-deep/55 border border-harvest/20 p-6 backdrop-blur-sm">
+          <span className="text-[9px] text-harvest uppercase tracking-[0.12em] font-bold">Member support</span>
           <h3 className="font-serif text-xl mt-3 mb-4 text-white">Have a question about your farm or membership?</h3>
           <button onClick={openLogin} className="border border-white/30 bg-transparent text-white px-4 py-2 text-sm cursor-pointer hover:bg-white/10">
             Open member portal →

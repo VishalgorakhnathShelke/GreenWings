@@ -22,7 +22,7 @@ function VarietyAccordion({
   const copy = catalogueCopy[lang]
 
   return (
-    <div className="border border-line bg-white overflow-hidden">
+    <div className="border border-line bg-white/90 overflow-hidden shadow-[0_10px_26px_rgba(58,38,20,0.06)]">
       <button
         onClick={onToggle}
         className="w-full flex items-center justify-between p-5 text-left bg-transparent border-0 cursor-pointer hover:bg-cream/50 transition-colors"
@@ -41,7 +41,7 @@ function VarietyAccordion({
         <div className="border-t border-line p-6 lg:p-8" style={{ animation: 'fade-in-up 0.3s ease-out' }}>
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-8">
             <div>
-              <div className="h-52 bg-gradient-to-br from-green/5 to-cream border border-dashed border-line flex items-center justify-center text-center text-muted text-[10px] uppercase tracking-wider p-6 rounded-sm mb-6">
+              <div className="h-52 bg-gradient-to-br from-sky/20 via-cream to-harvest/20 border border-dashed border-line flex items-center justify-center text-center text-muted text-[10px] uppercase tracking-wider p-6 rounded-sm mb-6">
                 {variety.imagePlaceholder}
               </div>
 
@@ -66,9 +66,9 @@ function VarietyAccordion({
               </div>
 
               <div className="grid grid-cols-2 gap-3 mt-4">
-                <div className="bg-deep text-white p-4">
+                <div className="bg-soil text-white p-4">
                   <small className="block text-[8px] uppercase tracking-wider text-white/50">{copy.shelfLife}</small>
-                  <span className="text-sm text-gold font-medium">{variety.shelfLife}</span>
+                  <span className="text-sm text-harvest font-medium">{variety.shelfLife}</span>
                 </div>
                 <div className="bg-green text-white p-4">
                   <small className="block text-[8px] uppercase tracking-wider text-white/60">{copy.exportSuitability}</small>
@@ -104,7 +104,7 @@ export function ProductProfilePage() {
   }
 
   return (
-    <section className="py-16 px-[8vw]">
+    <section className="py-16 px-[8vw] bg-gradient-to-b from-paper via-cream to-[#edf4df]">
       <nav className="flex items-center gap-2 text-[11px] text-muted mb-8 flex-wrap">
         <Link to="/products" className="text-green no-underline hover:underline">{copy.products}</Link>
         <span>/</span>
@@ -124,7 +124,7 @@ export function ProductProfilePage() {
             ))}
           </div>
 
-          <button onClick={openLogin} className="bg-gold text-deep px-5 py-3 text-[10px] font-bold uppercase cursor-pointer border-0 hover:bg-gold/90 transition-colors">
+          <button onClick={openLogin} className="bg-harvest text-deep px-5 py-3 text-[10px] font-bold uppercase cursor-pointer border-0 hover:bg-gold transition-colors">
             {copy.requestSpecs}
           </button>
         </div>
@@ -195,13 +195,13 @@ export function ProductProfilePage() {
         ))}
       </div>
 
-      <div className="mt-12 p-6 bg-deep text-white flex flex-wrap items-center justify-between gap-4 rounded-sm">
+      <div className="mt-12 p-6 bg-gradient-to-r from-deep via-green to-soil text-white flex flex-wrap items-center justify-between gap-4 rounded-sm">
         <div>
           <h3 className="font-serif text-lg mb-1">{copy.interested(product.name)}</h3>
           <p className="text-sm text-white/60">{copy.enquiryText}</p>
         </div>
         <div className="flex gap-3">
-          <button onClick={openLogin} className="bg-gold text-deep px-5 py-3 text-[10px] font-bold uppercase cursor-pointer border-0 hover:bg-gold/90">
+          <button onClick={openLogin} className="bg-harvest text-deep px-5 py-3 text-[10px] font-bold uppercase cursor-pointer border-0 hover:bg-gold">
             {copy.submitEnquiry}
           </button>
           <Link to={`/products/${rawCategory.slug}`} className="border border-white/30 text-white px-5 py-3 text-[10px] font-bold uppercase no-underline hover:bg-white/10">
