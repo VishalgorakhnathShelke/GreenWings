@@ -23,7 +23,7 @@ export function CategoryPage() {
   }
 
   return (
-    <section className="py-24 px-[8vw] bg-[#eef2e9]">
+    <section className="py-24 px-[8vw] bg-gradient-to-b from-paper via-cream to-[#edf4df]">
       <nav className="flex items-center gap-2 text-[11px] text-muted mb-8">
         <Link to="/products" className="text-green no-underline hover:underline">{copy.products}</Link>
         <span>/</span>
@@ -49,7 +49,7 @@ export function CategoryPage() {
           <Reveal key={product.id}>
             <Link
               to={`/products/${rawCategory.slug}/${product.slug}`}
-              className="group block bg-white border border-line overflow-hidden hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(16,38,28,0.09)] transition-all no-underline text-ink"
+              className="group block bg-white/90 border border-line overflow-hidden hover:-translate-y-1 hover:shadow-[0_22px_44px_rgba(58,38,20,0.13)] transition-all no-underline text-ink backdrop-blur-sm"
             >
               <div className="h-44 bg-cover bg-center relative" style={{ backgroundImage: `url(${product.heroImage})` }}>
                 <div className="absolute inset-0 bg-gradient-to-t from-ink/50 to-transparent" />

@@ -84,11 +84,11 @@ export function DatabaseCatalogue() {
         </div>
       </div>
 
-      {error && <div className="bg-gold/20 border border-gold p-4 text-sm text-ink">{error}</div>}
+      {error && <div className="bg-harvest/20 border border-harvest p-4 text-sm text-ink">{error}</div>}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {visibleProducts.map((product) => (
-          <article key={product.produce_id} className="bg-white border border-line p-5">
+          <article key={product.produce_id} className="bg-white/90 border border-line p-5 shadow-[0_12px_28px_rgba(58,38,20,0.06)]">
             <button onClick={() => setOpenProduct(openProduct === product.produce_id ? null : product.produce_id)} className="w-full text-left bg-transparent border-0 cursor-pointer p-0">
               <span className="text-[9px] uppercase tracking-wider font-bold text-green">{product.display_type} · {product.subtypes.length} {text.subtypes}</span>
               <h3 className="font-serif text-2xl text-ink mt-2">{product.display_name}</h3>
