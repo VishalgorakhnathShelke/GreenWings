@@ -4,15 +4,20 @@
   --font-sans: "DM Sans", sans-serif;
   --font-serif: "Playfair Display", serif;
 
-  --color-ink: #10261c;
-  --color-green: #1e5037;
-  --color-deep: #0b3023;
-  --color-lime: #b6cf56;
-  --color-gold: #e6ad47;
-  --color-cream: #f4f0e5;
-  --color-paper: #faf8f1;
-  --color-muted: #657168;
-  --color-line: #d8ddd5;
+  --color-ink: #183422;
+  --color-green: #2f6f45;
+  --color-deep: #08291d;
+  --color-lime: #b9d957;
+  --color-gold: #d9962f;
+  --color-cream: #f4ead3;
+  --color-paper: #fbf7e9;
+  --color-muted: #68715d;
+  --color-line: #ddd2b7;
+  --color-soil: #6d4328;
+  --color-harvest: #efb84a;
+  --color-sky: #8bc9d6;
+  --color-leaf: #4c8e45;
+  --color-clay: #b76c3e;
 }
 
 html {
@@ -23,8 +28,16 @@ body {
   margin: 0;
   font-family: var(--font-sans);
   color: var(--color-ink);
-  background: var(--color-paper);
+  background:
+    radial-gradient(circle at 12% 8%, rgba(139, 201, 214, 0.28), transparent 34rem),
+    radial-gradient(circle at 88% 0%, rgba(239, 184, 74, 0.20), transparent 28rem),
+    linear-gradient(180deg, #fbf7e9 0%, #f5ecd8 48%, #eef4df 100%);
   overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-harvest);
+  color: var(--color-deep);
 }
 
 @keyframes ticker-scroll {
