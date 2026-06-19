@@ -34,7 +34,7 @@ export function Header() {
 
   return (
     <header className={`fixed top-0 left-0 right-0 h-[78px] flex items-center justify-between px-[4vw] z-20 transition-all duration-300 border-b ${
-      scrolled || !isHome ? 'h-[68px] bg-paper/94 text-ink shadow-[0_10px_34px_rgba(58,38,20,0.10)] backdrop-blur-16 border-line' : 'text-white border-white/16'
+      scrolled || !isHome ? 'h-[68px] bg-paper/96 text-ink shadow-[0_10px_34px_rgba(58,38,20,0.12)] backdrop-blur-16 border-harvest/30' : 'bg-deep/35 text-white border-harvest/25 backdrop-blur-sm shadow-[0_10px_34px_rgba(8,41,29,0.18)]'
     }`}>
       <Link to="/" className="flex items-center gap-2.5 no-underline text-inherit">
         <BrandMark />
