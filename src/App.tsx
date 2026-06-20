@@ -18,10 +18,36 @@ import { ContactPage } from './pages/ContactPage'
 import { AdminLoginPage } from './pages/AdminLoginPage'
 import { useLanguageStore } from './stores/languageStore'
 import { useAuthStore } from './stores/authStore'
+import { trackWebsiteVisit } from './services/api'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
   useEffect(() => { window.scrollTo(0, 0) }, [pathname])
+  return null
+}
+
+function getOrCreateId(storage: Storage, key: string) {
+  const existing = storage.getItem(key)
+  if (existing) return existing
+  const value = crypto.randomUUID()
+  storage.setItem(key, value)
+  return value
+}
+
+function VisitTracker() {
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    const visitorId = getOrCreateId(localStorage, 'greenwingsVisitorId')
+    const sessionId = getOrCreateId(sessionStorage, 'greenwingsSessionId')
+    void trackWebsiteVisit({
+      pagePath: pathname,
+      referrer: document.referrer,
+      visitorId,
+      sessionId,
+    })
+  }, [pathname])
+
   return null
 }
 
@@ -40,6 +66,7 @@ export function App() {
   return (
     <>
       <ScrollToTop />
+      <VisitTracker />
       <Header />
       <main className="pt-[78px]">
         <Routes>
