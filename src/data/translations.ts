@@ -4,6 +4,7 @@ export const translations: Record<string, Record<string, string>> = {
   en: {
     navAbout: 'About',
     navServices: 'What we do',
+    navInputs: 'Agri Inputs',
     navProducts: 'Products',
     navImpact: 'Impact',
     navStories: 'Stories',
@@ -124,6 +125,7 @@ export const translations: Record<string, Record<string, string>> = {
   hi: {
     navAbout: 'हमारे बारे में',
     navServices: 'हमारे कार्य',
+    navInputs: 'कृषि इनपुट',
     navProducts: 'उत्पाद',
     navImpact: 'प्रभाव',
     navStories: 'कहानियाँ',
@@ -244,6 +246,7 @@ export const translations: Record<string, Record<string, string>> = {
   mr: {
     navAbout: 'आमच्याबद्दल',
     navServices: 'आमचे कार्य',
+    navInputs: 'कृषी इनपुट',
     navProducts: 'उत्पादने',
     navImpact: 'परिणाम',
     navStories: 'कथा',
