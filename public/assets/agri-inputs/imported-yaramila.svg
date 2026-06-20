@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Imported NPK complex fertilizer illustration">
+  <rect width="800" height="600" fill="#edf7fa"/>
+  <circle cx="620" cy="140" r="150" fill="#8bc9d6" opacity=".55"/>
+  <path d="M110 475c105-112 228-160 370-130 77 16 141 58 210 130v30H110Z" fill="#244b2e"/>
+  <rect x="245" y="130" width="310" height="340" rx="30" fill="#fff" stroke="#2d6a3e" stroke-width="12"/>
+  <text x="400" y="235" text-anchor="middle" font-family="Georgia, serif" font-size="54" fill="#2d6a3e">NPK</text>
+  <text x="400" y="305" text-anchor="middle" font-family="Arial" font-size="36" fill="#244b2e">12-11-18</text>
+  <text x="400" y="365" text-anchor="middle" font-family="Arial" font-size="26" fill="#6f4b2b">Imported Complex</text>
+</svg>

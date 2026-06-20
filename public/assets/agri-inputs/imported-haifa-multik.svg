@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Imported potassium nitrate fertilizer illustration">
+  <rect width="800" height="600" fill="#f7f3e7"/>
+  <circle cx="180" cy="130" r="130" fill="#f4c04f" opacity=".45"/>
+  <path d="M120 472c86-120 206-170 360-150 83 11 151 58 205 150v30H120Z" fill="#2d6a3e"/>
+  <rect x="250" y="135" width="300" height="330" rx="30" fill="#113f2a"/>
+  <text x="400" y="245" text-anchor="middle" font-family="Georgia, serif" font-size="52" fill="#fff">Multi-K</text>
+  <text x="400" y="315" text-anchor="middle" font-family="Arial" font-size="32" fill="#b7d653">Potassium Nitrate</text>
+  <text x="400" y="370" text-anchor="middle" font-family="Arial" font-size="24" fill="#f4c04f">Water Soluble</text>
+</svg>

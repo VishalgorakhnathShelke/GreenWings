@@ -1,0 +1,111 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model LocalFertilizer {
+  id                      Int      @id @default(autoincrement())
+  name                    String
+  category                String
+  manufacturer            String
+  countryOfOrigin         String   @default("India")
+  description             String   @db.Text
+  content                 String   @db.Text
+  uses                    String   @db.Text
+  applyOnCrops            String   @db.Text
+  doNotApplyOn            String   @db.Text
+  applicationMethod       String   @db.Text
+  recommendedStage        String
+  season                  String
+  temperatureRange        String
+  soilType                String
+  benefits                String   @db.Text
+  precautions             String   @db.Text
+  imageUrl                String?
+  status                  String   @default("active")
+  documentUrl             String?
+  approvalBody            String?
+  regionalRecommendations String?  @db.Text
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  translations LocalFertilizerTranslation[]
+
+  @@index([status])
+  @@index([category])
+}
+
+model ImportedFertilizer {
+  id                          Int      @id @default(autoincrement())
+  name                        String
+  category                    String
+  manufacturer                String
+  countryOfOrigin             String
+  description                 String   @db.Text
+  content                     String   @db.Text
+  uses                        String   @db.Text
+  applyOnCrops                String   @db.Text
+  doNotApplyOn                String   @db.Text
+  applicationMethod           String   @db.Text
+  recommendedStage            String
+  season                      String
+  temperatureRange            String
+  soilType                    String
+  benefits                    String   @db.Text
+  precautions                 String   @db.Text
+  imageUrl                    String?
+  status                      String   @default("active")
+  documentUrl                 String?
+  brand                       String?
+  importCertifications        String?  @db.Text
+  internationalSpecifications String?  @db.Text
+  createdAt                   DateTime @default(now())
+  updatedAt                   DateTime @updatedAt
+
+  translations ImportedFertilizerTranslation[]
+
+  @@index([status])
+  @@index([category])
+}
+
+model LocalFertilizerTranslation {
+  id           Int             @id @default(autoincrement())
+  fertilizerId Int
+  language     String
+  name         String?
+  category     String?
+  description  String?         @db.Text
+  content      String?         @db.Text
+  uses         String?         @db.Text
+  benefits     String?         @db.Text
+  precautions  String?         @db.Text
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  fertilizer LocalFertilizer @relation(fields: [fertilizerId], references: [id], onDelete: Cascade)
+
+  @@unique([fertilizerId, language])
+}
+
+model ImportedFertilizerTranslation {
+  id           Int                @id @default(autoincrement())
+  fertilizerId Int
+  language     String
+  name         String?
+  category     String?
+  description  String?            @db.Text
+  content      String?            @db.Text
+  uses         String?            @db.Text
+  benefits     String?            @db.Text
+  precautions  String?            @db.Text
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  fertilizer ImportedFertilizer @relation(fields: [fertilizerId], references: [id], onDelete: Cascade)
+
+  @@unique([fertilizerId, language])
+}
