@@ -89,6 +89,8 @@ export interface AdminSummary {
   role: 'admin'
   produce: number
   subtypes: number
+  localFertilizers?: number
+  importedFertilizers?: number
   totalUsers: number
   newUsersToday: number
   totalEnquiries: number
@@ -99,6 +101,51 @@ export interface AdminSummary {
   recentUsers: AuthUser[]
   recentEnquiries: EnquiryRecord[]
   mostVisitedPages: Array<{ pagePath: string; visits: number }>
+}
+
+export type FertilizerKind = 'local' | 'imported'
+
+export interface Fertilizer {
+  id: number
+  kind: FertilizerKind
+  language: Lang
+  name: string
+  displayName: string
+  category: string
+  displayCategory: string
+  manufacturer: string
+  countryOfOrigin: string
+  description: string
+  localizedDescription: string
+  content: string
+  localizedContent: string
+  uses: string
+  localizedUses: string
+  applyOnCrops: string
+  doNotApplyOn: string
+  applicationMethod: string
+  recommendedStage: string
+  season: string
+  temperatureRange: string
+  soilType: string
+  benefits: string
+  localizedBenefits: string
+  precautions: string
+  localizedPrecautions: string
+  imageUrl?: string
+  status: 'active' | 'draft' | 'inactive' | string
+  documentUrl?: string
+  approvalBody?: string
+  regionalRecommendations?: string
+  brand?: string
+  importCertifications?: string
+  internationalSpecifications?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export type FertilizerPayload = Omit<Fertilizer, 'id' | 'kind' | 'language' | 'displayName' | 'displayCategory' | 'localizedDescription' | 'localizedContent' | 'localizedUses' | 'localizedBenefits' | 'localizedPrecautions' | 'createdAt' | 'updatedAt'> & {
+  translations?: Record<'hi' | 'mr', Partial<Pick<Fertilizer, 'name' | 'category' | 'description' | 'content' | 'uses' | 'benefits' | 'precautions'>>>
 }
 
 async function apiRequest<T>(path: string, options?: RequestInit): Promise<T> {
@@ -117,6 +164,50 @@ export async function fetchDatabaseProducts(type?: string, lang: Lang = 'en'): P
   const query = `?${params.toString()}`
   const payload = await apiRequest<{ products: DatabaseProduct[] }>(`/api/products${query}`)
   return payload.products
+}
+
+export async function fetchFertilizers(kind: FertilizerKind, lang: Lang = 'en', filters?: { search?: string; category?: string }) {
+  const params = new URLSearchParams({ kind, lang })
+  if (filters?.search) params.set('search', filters.search)
+  if (filters?.category) params.set('category', filters.category)
+  return apiRequest<{ kind: FertilizerKind; language: Lang; categories: string[]; fertilizers: Fertilizer[] }>(`/api/fertilizers?${params.toString()}`)
+}
+
+export async function fetchFertilizer(kind: FertilizerKind, id: string | number, lang: Lang = 'en') {
+  return apiRequest<{ fertilizer: Fertilizer }>(`/api/fertilizers/${kind}/${id}?lang=${lang}`)
+}
+
+export async function fetchAdminFertilizers(token: string, kind: FertilizerKind, filters?: { search?: string; category?: string; status?: string }) {
+  const params = new URLSearchParams({ kind })
+  if (filters?.search) params.set('search', filters.search)
+  if (filters?.category) params.set('category', filters.category)
+  if (filters?.status) params.set('status', filters.status)
+  return apiRequest<{ kind: FertilizerKind; fertilizers: Fertilizer[] }>(`/api/admin/fertilizers?${params.toString()}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export async function createAdminFertilizer(token: string, kind: FertilizerKind, payload: FertilizerPayload) {
+  return apiRequest<{ fertilizer: Fertilizer }>(`/api/admin/fertilizers?kind=${kind}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function updateAdminFertilizer(token: string, kind: FertilizerKind, id: number, payload: FertilizerPayload) {
+  return apiRequest<{ fertilizer: Fertilizer }>(`/api/admin/fertilizers/${kind}/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function deleteAdminFertilizer(token: string, kind: FertilizerKind, id: number) {
+  return apiRequest<{ ok: boolean }>(`/api/admin/fertilizers/${kind}/${id}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  })
 }
 
 export async function loginAdmin(email: string, password: string) {

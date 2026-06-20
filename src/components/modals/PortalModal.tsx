@@ -6,6 +6,7 @@ import { BrandMark } from '../layout/BrandMark'
 import { type Enquiry } from '../../data/content'
 import { useAuthStore } from '../../stores/authStore'
 import { fetchAdminSummary, type AdminSummary } from '../../services/api'
+import { FertilizerManager } from '../admin/FertilizerManager'
 
 function initials(name?: string | null, email?: string | null) {
   const source = name || email || 'GW'
@@ -232,6 +233,8 @@ function AdminPanel() {
     { value: summary.totalEnquiries, label: 'Total enquiries', desc: `${summary.newEnquiries} new/open` },
     { value: summary.totalVisits, label: 'Website visits', desc: `${summary.todayVisits} today` },
     { value: summary.uniqueVisitors, label: 'Unique visitors', desc: 'Tracked without raw IP storage' },
+    { value: summary.localFertilizers || 0, label: 'Local fertilizers', desc: 'Indian input catalogue' },
+    { value: summary.importedFertilizers || 0, label: 'Imported fertilizers', desc: 'Global input catalogue' },
   ] : []
 
   return (
@@ -286,6 +289,14 @@ function AdminPanel() {
   )
 }
 
+function LocalFertilizerAdminPanel() {
+  return <FertilizerManager kind="local" />
+}
+
+function ImportedFertilizerAdminPanel() {
+  return <FertilizerManager kind="imported" />
+}
+
 export function PortalModal() {
   const isOpen = usePortalStore((s) => s.isOpen)
   const closePortal = usePortalStore((s) => s.closePortal)
@@ -314,6 +325,8 @@ export function PortalModal() {
     documents: DocumentsPanel,
     profile: ProfilePanel,
     admin: AdminPanel,
+    localFertilizers: LocalFertilizerAdminPanel,
+    importedFertilizers: ImportedFertilizerAdminPanel,
   }
 
   const safePanel = activePanel === 'admin' && role !== 'admin' ? 'dashboard' : activePanel
@@ -322,7 +335,7 @@ export function PortalModal() {
   return (
     <div className="fixed inset-0 z-[130] flex">
       <div className="absolute inset-0 bg-ink/50" onClick={closePortal} />
-      <aside className="relative z-10 ml-auto bg-paper w-full max-w-[680px] flex flex-col overflow-hidden" style={{ animation: 'slide-in-right 0.4s ease-out' }}>
+      <aside className="relative z-10 ml-auto bg-paper w-full max-w-[920px] flex flex-col overflow-hidden" style={{ animation: 'slide-in-right 0.4s ease-out' }}>
         <button onClick={closePortal} className="absolute right-5 top-5 bg-transparent border-0 text-xl cursor-pointer text-ink z-10" aria-label="Close portal">x</button>
 
         <div className="border-b border-line p-5 flex items-center gap-3">
@@ -349,7 +362,11 @@ export function PortalModal() {
             { id: 'new', icon: '+', label: t('newEnquiry') },
             { id: 'documents', icon: 'D', label: t('documents') },
             { id: 'profile', icon: 'P', label: 'My profile' },
-            ...(role === 'admin' ? [{ id: 'admin', icon: 'A', label: 'Admin management' }] : []),
+            ...(role === 'admin' ? [
+              { id: 'admin', icon: 'A', label: 'Admin management' },
+              { id: 'localFertilizers', icon: 'L', label: 'Manage Local Fertilizers' },
+              { id: 'importedFertilizers', icon: 'I', label: 'Manage Imported Fertilizers' },
+            ] : []),
           ].map((item) => (
             <button
               key={item.id}
