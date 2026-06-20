@@ -4,6 +4,8 @@ export interface Enquiry {
   category: string
   status: string
   date: string
+  description?: string
+  priority?: string
 }
 
 export const baseEnquiries: Enquiry[] = [
