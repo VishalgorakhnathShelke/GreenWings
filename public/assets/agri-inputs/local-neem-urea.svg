@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Neem coated urea fertilizer bag illustration">
+  <rect width="800" height="600" fill="#eef4df"/>
+  <circle cx="640" cy="120" r="150" fill="#b7d653" opacity=".45"/>
+  <path d="M150 480c110-130 235-177 373-142 69 17 124 56 177 117v25H150Z" fill="#2d6a3e" opacity=".9"/>
+  <rect x="265" y="130" width="270" height="330" rx="28" fill="#f7f3e7" stroke="#244b2e" stroke-width="12"/>
+  <path d="M300 205h200v80H300Z" fill="#2d6a3e"/>
+  <text x="400" y="255" text-anchor="middle" font-family="Georgia, serif" font-size="42" fill="#fff">UREA</text>
+  <text x="400" y="335" text-anchor="middle" font-family="Arial" font-size="34" fill="#244b2e">Neem Coated</text>
+  <text x="400" y="382" text-anchor="middle" font-family="Arial" font-size="28" fill="#6f4b2b">Local Fertilizer</text>
+</svg>

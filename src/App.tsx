@@ -11,6 +11,8 @@ import { ServicesPage } from './pages/ServicesPage'
 import { ProductsPage } from './pages/ProductsPage'
 import { CategoryPage } from './pages/CategoryPage'
 import { ProductProfilePage } from './pages/ProductProfilePage'
+import { AgriculturalInputsPage } from './pages/AgriculturalInputsPage'
+import { FertilizerProfilePage } from './pages/FertilizerProfilePage'
 import { ImpactPage } from './pages/ImpactPage'
 import { StoriesPage } from './pages/StoriesPage'
 import { ResourcesPage } from './pages/ResourcesPage'
@@ -73,6 +75,8 @@ export function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/services" element={<ServicesPage />} />
+          <Route path="/agricultural-inputs" element={<AgriculturalInputsPage />} />
+          <Route path="/agricultural-inputs/:kind/:id" element={<FertilizerProfilePage />} />
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/products/:categorySlug" element={<CategoryPage />} />
           <Route path="/products/:categorySlug/:productSlug" element={<ProductProfilePage />} />

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="City compost organic manure illustration">
+  <rect width="800" height="600" fill="#f4ead7"/>
+  <circle cx="165" cy="145" r="118" fill="#b7d653" opacity=".55"/>
+  <path d="M110 455c85-90 174-132 267-126 118 8 215 65 313 126v45H110Z" fill="#6f4b2b"/>
+  <rect x="250" y="145" width="300" height="310" rx="34" fill="#244b2e"/>
+  <path d="M302 230c58-83 138-84 196 0-69-25-129-25-196 0Z" fill="#b7d653"/>
+  <text x="400" y="315" text-anchor="middle" font-family="Georgia, serif" font-size="44" fill="#fff">Compost</text>
+  <text x="400" y="365" text-anchor="middle" font-family="Arial" font-size="28" fill="#f4c04f">Organic Manure</text>
+</svg>
