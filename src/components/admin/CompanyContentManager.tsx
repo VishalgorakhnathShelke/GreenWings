@@ -47,8 +47,10 @@ const blankMilestone: CompanyMilestonePayload = {
 const blankLeadership: LeadershipPayload = {
   fullName: '',
   designation: '',
+  roleDescription: '',
   biography: '',
   image: '',
+  imageUrl: '',
   displayOrder: 0,
   active: true,
   translations: { hi: {}, mr: {} },
@@ -369,8 +371,10 @@ function LeadershipManager() {
     setForm({
       fullName: member.fullName,
       designation: member.baseDesignation || member.designation,
+      roleDescription: member.baseRoleDescription || member.roleDescription || '',
       biography: member.baseBiography || member.biography,
       image: member.image || '',
+      imageUrl: member.imageUrl || member.image || '',
       displayOrder: member.displayOrder,
       active: member.active,
       translations: {

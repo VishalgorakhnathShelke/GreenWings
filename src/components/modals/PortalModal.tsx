@@ -7,7 +7,7 @@ import { type Enquiry } from '../../data/content'
 import { useAuthStore } from '../../stores/authStore'
 import { fetchAdminSummary, type AdminSummary } from '../../services/api'
 import { FertilizerManager } from '../admin/FertilizerManager'
-import { CompanyContentManager } from '../admin/CompanyContentManager'
+import { CompanyProfileManager } from '../admin/CompanyProfileManager'
 
 function initials(name?: string | null, email?: string | null) {
   const source = name || email || 'GW'
@@ -236,9 +236,10 @@ function AdminPanel() {
     { value: summary.uniqueVisitors, label: 'Unique visitors', desc: 'Tracked without raw IP storage' },
     { value: summary.localFertilizers || 0, label: 'Local fertilizers', desc: 'Indian input catalogue' },
     { value: summary.importedFertilizers || 0, label: 'Imported fertilizers', desc: 'Global input catalogue' },
-    { value: summary.companyStories || 0, label: 'Company stories', desc: 'Multilingual website content' },
-    { value: summary.companyMilestones || 0, label: 'Timeline milestones', desc: 'Company journey records' },
+    { value: summary.companyContents || summary.companyStories || 0, label: 'Company content', desc: 'Introduction, vision, mission' },
+    { value: summary.companyTimelines || summary.companyMilestones || 0, label: 'Journey timeline', desc: 'Company journey records' },
     { value: summary.leadershipMembers || 0, label: 'Leadership profiles', desc: 'Directors and management' },
+    { value: summary.homepageStatistics || 0, label: 'Homepage stats', desc: 'Impact statistics' },
   ] : []
 
   return (
@@ -302,15 +303,19 @@ function ImportedFertilizerAdminPanel() {
 }
 
 function CompanyStoriesAdminPanel() {
-  return <CompanyContentManager section="stories" />
+  return <CompanyProfileManager section="content" />
 }
 
 function CompanyMilestonesAdminPanel() {
-  return <CompanyContentManager section="milestones" />
+  return <CompanyProfileManager section="timeline" />
+}
+
+function HomepageStatisticsAdminPanel() {
+  return <CompanyProfileManager section="statistics" />
 }
 
 function LeadershipAdminPanel() {
-  return <CompanyContentManager section="leadership" />
+  return <CompanyProfileManager section="leadership" />
 }
 
 export function PortalModal() {
@@ -345,10 +350,11 @@ export function PortalModal() {
     importedFertilizers: ImportedFertilizerAdminPanel,
     companyStories: CompanyStoriesAdminPanel,
     companyMilestones: CompanyMilestonesAdminPanel,
+    homepageStatistics: HomepageStatisticsAdminPanel,
     leadershipMembers: LeadershipAdminPanel,
   }
 
-  const adminPanels = ['admin', 'localFertilizers', 'importedFertilizers', 'companyStories', 'companyMilestones', 'leadershipMembers']
+  const adminPanels = ['admin', 'localFertilizers', 'importedFertilizers', 'companyStories', 'companyMilestones', 'homepageStatistics', 'leadershipMembers']
   const safePanel = role !== 'admin' && adminPanels.includes(activePanel) ? 'dashboard' : activePanel
   const ActivePanelComponent = panels[safePanel] ?? DashboardPanel
 
@@ -386,8 +392,9 @@ export function PortalModal() {
               { id: 'admin', icon: 'A', label: 'Admin management' },
               { id: 'localFertilizers', icon: 'L', label: 'Manage Local Fertilizers' },
               { id: 'importedFertilizers', icon: 'I', label: 'Manage Imported Fertilizers' },
-              { id: 'companyStories', icon: 'S', label: 'Manage Stories' },
-              { id: 'companyMilestones', icon: 'M', label: 'Manage Milestones' },
+              { id: 'companyStories', icon: 'C', label: 'Manage Company Content' },
+              { id: 'companyMilestones', icon: 'T', label: 'Manage Timeline' },
+              { id: 'homepageStatistics', icon: '#', label: 'Manage Statistics' },
               { id: 'leadershipMembers', icon: 'T', label: 'Manage Leadership' },
             ] : []),
           ].map((item) => (
