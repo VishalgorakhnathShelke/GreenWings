@@ -14,7 +14,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from datetime import datetime, timezone
 from email.message import EmailMessage
 from pathlib import Path
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, unquote, urlparse
 
 from import_seed import DB_PATH, import_seed
 
@@ -81,6 +81,38 @@ LEADERSHIP_FIELDS = ["fullName", "designation", "roleDescription", "biography", 
 COMPANY_CONTENT_FIELDS = ["sectionKey", "title", "subtitle", "content", "language", "displayOrder", "status"]
 COMPANY_TIMELINE_FIELDS = ["year", "title", "description", "impactMetric", "language", "displayOrder", "status"]
 HOMEPAGE_STATISTIC_FIELDS = ["label", "value", "description", "displayOrder", "active"]
+SUCCESS_STORY_FIELDS = [
+    "farmerName",
+    "farmerPhone",
+    "title",
+    "slug",
+    "location",
+    "village",
+    "district",
+    "cropType",
+    "landArea",
+    "storyCategory",
+    "shortQuote",
+    "shortSummary",
+    "fullStory",
+    "challenge",
+    "solution",
+    "result",
+    "yieldBefore",
+    "yieldAfter",
+    "priceBenefit",
+    "additionalIncome",
+    "fertilizerUsed",
+    "seedUsed",
+    "marketSupport",
+    "profileImage",
+    "coverImage",
+    "language",
+    "displayOrder",
+    "featured",
+    "status",
+]
+SUCCESS_STORY_MEDIA_FIELDS = ["mediaType", "mediaUrl", "caption", "displayOrder"]
 
 
 def now_iso() -> str:
@@ -374,6 +406,54 @@ def ensure_app_schema() -> None:
                 UNIQUE(label)
             );
 
+            CREATE TABLE IF NOT EXISTS success_stories (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                farmerName TEXT NOT NULL,
+                farmerPhone TEXT,
+                title TEXT NOT NULL,
+                slug TEXT NOT NULL,
+                location TEXT,
+                village TEXT,
+                district TEXT,
+                cropType TEXT,
+                landArea TEXT,
+                storyCategory TEXT,
+                shortQuote TEXT,
+                shortSummary TEXT,
+                fullStory TEXT NOT NULL,
+                challenge TEXT,
+                solution TEXT,
+                result TEXT,
+                yieldBefore TEXT,
+                yieldAfter TEXT,
+                priceBenefit TEXT,
+                additionalIncome TEXT,
+                fertilizerUsed TEXT,
+                seedUsed TEXT,
+                marketSupport TEXT,
+                profileImage TEXT,
+                coverImage TEXT,
+                language TEXT NOT NULL DEFAULT 'en',
+                displayOrder INTEGER NOT NULL DEFAULT 0,
+                featured INTEGER NOT NULL DEFAULT 0,
+                status TEXT NOT NULL DEFAULT 'published',
+                createdAt TEXT NOT NULL,
+                updatedAt TEXT NOT NULL,
+                UNIQUE(slug, language)
+            );
+
+            CREATE TABLE IF NOT EXISTS success_story_media (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                successStoryId INTEGER NOT NULL,
+                mediaType TEXT NOT NULL DEFAULT 'image',
+                mediaUrl TEXT NOT NULL,
+                caption TEXT,
+                displayOrder INTEGER NOT NULL DEFAULT 0,
+                createdAt TEXT NOT NULL,
+                updatedAt TEXT NOT NULL,
+                FOREIGN KEY (successStoryId) REFERENCES success_stories(id) ON DELETE CASCADE
+            );
+
             CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
             CREATE INDEX IF NOT EXISTS idx_enquiries_user ON enquiries(userId);
             CREATE INDEX IF NOT EXISTS idx_enquiries_status ON enquiries(status);
@@ -390,6 +470,8 @@ def ensure_app_schema() -> None:
             CREATE INDEX IF NOT EXISTS idx_company_timelines_lookup ON company_timelines(language, status, displayOrder);
             CREATE INDEX IF NOT EXISTS idx_leadership_members_active ON leadership_members(active, displayOrder);
             CREATE INDEX IF NOT EXISTS idx_homepage_statistics_active ON homepage_statistics(active, displayOrder);
+            CREATE INDEX IF NOT EXISTS idx_success_stories_lookup ON success_stories(language, status, featured, displayOrder);
+            CREATE INDEX IF NOT EXISTS idx_success_story_media_story ON success_story_media(successStoryId, displayOrder);
             """
         )
         ensure_columns(
@@ -404,6 +486,7 @@ def ensure_app_schema() -> None:
     seed_fertilizers()
     seed_company_content()
     seed_company_profile_content()
+    seed_success_stories()
 
 
 def ensure_database() -> None:
@@ -1223,6 +1306,239 @@ def seed_company_profile_content() -> None:
             )
 
 
+def insert_success_story_media(connection: sqlite3.Connection, story_id: int, media: list[dict], timestamp: str) -> None:
+    for index, item in enumerate(media):
+        media_url = str(item.get("mediaUrl", "")).strip()
+        if not media_url:
+            continue
+        existing = connection.execute(
+            """
+            SELECT 1 FROM success_story_media
+            WHERE successStoryId = ? AND mediaUrl = ?
+            """,
+            (story_id, media_url),
+        ).fetchone()
+        if existing:
+            continue
+        connection.execute(
+            """
+            INSERT INTO success_story_media (
+                successStoryId, mediaType, mediaUrl, caption, displayOrder, createdAt, updatedAt
+            ) VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                story_id,
+                str(item.get("mediaType", "image")).strip() or "image",
+                media_url,
+                str(item.get("caption", "")).strip(),
+                int(item.get("displayOrder", index + 1) or index + 1),
+                timestamp,
+                timestamp,
+            ),
+        )
+
+
+def seed_success_stories() -> None:
+    created_at = now_iso()
+    stories = [
+        {
+            "farmerName": "Mr. Pravin Malhari Jadhav",
+            "farmerPhone": "",
+            "title": "Organic Fertilizer Improved Onion Yield",
+            "slug": "pravin-malhari-jadhav-onion-yield",
+            "location": "Jalgaon Neur, Yeola, Nashik",
+            "village": "Jalgaon Neur",
+            "district": "Nashik",
+            "cropType": "Onion, Papaya, Maize, Pomegranate",
+            "landArea": "15 gunthas comparison plots",
+            "storyCategory": "Input Support",
+            "shortQuote": "The organic fertilizer helped us increase onion yield from 30 quintals to 40 quintals on the same land area.",
+            "shortSummary": "Mr. Pravin Malhari Jadhav compared regular chemical fertilizer with Ichhamani Organic Fertilizer on equal onion plots and saw a clear yield improvement.",
+            "fullStory": "\n\n".join([
+                "In the first year, Mr. Pravin Malhari Jadhav cultivated onions on 15 gunthas of land using the regular chemical fertilizers commonly recommended in the area. The yield obtained from this plot was 30 quintals of onions.",
+                "On another plot of the same size, he used Ichhamani Organic Fertilizer supplied by the company. The yield from this plot increased to 40 quintals, showing a clear improvement compared to the chemical fertilizer plot.",
+                "After seeing these results, he started using Ichhamani Organic Fertilizer regularly on papaya, maize, onion and pomegranate. The treated crops showed better growth, vigor and overall field performance.",
+                "During the Kharif season of 2025, the company also supplied maize seed. The crop performance was excellent, with higher productivity than other maize varieties commonly grown in the area.",
+            ]),
+            "challenge": "The farmer was using regular chemical fertilizers and wanted better crop growth, stronger plants and improved productivity without increasing land area.",
+            "solution": "GreenWings supplied Ichhamani Organic Fertilizer and later supported the farmer with the company's maize seed variety during the Kharif season.",
+            "result": "Onion yield improved from 30 quintals to 40 quintals on the same 15 guntha plot size, and other crops showed better growth and vigor.",
+            "yieldBefore": "30 quintals onion yield",
+            "yieldAfter": "40 quintals onion yield",
+            "priceBenefit": "10 quintals higher onion output on the same area",
+            "additionalIncome": "Improved productivity potential across onion, papaya, maize and pomegranate crops",
+            "fertilizerUsed": "Ichhamani Organic Fertilizer",
+            "seedUsed": "Company maize seed variety",
+            "marketSupport": "Input guidance and crop-performance support",
+            "profileImage": "/assets/greenwings-community.png",
+            "coverImage": "/assets/greenwings-hero.png",
+            "language": "en",
+            "displayOrder": 1,
+            "featured": 1,
+            "status": "published",
+            "media": [
+                {"mediaType": "image", "mediaUrl": "/assets/greenwings-hero.png", "caption": "Onion field supported by GreenWings inputs", "displayOrder": 1},
+                {"mediaType": "image", "mediaUrl": "/assets/greenwings-community.png", "caption": "Farmer community and field support", "displayOrder": 2},
+            ],
+        },
+        {
+            "farmerName": "Mr. Gorakhanath Namdeorao Shelke",
+            "farmerPhone": "",
+            "title": "Dragon Fruit Yield and Market Price Improved",
+            "slug": "gorakhanath-shelke-dragon-fruit-market-access",
+            "location": "Yeola, Nashik",
+            "village": "Yeola",
+            "district": "Nashik",
+            "cropType": "Dragon Fruit",
+            "landArea": "1 bigha",
+            "storyCategory": "Market Access",
+            "shortQuote": "With Ichhamani Organic Fertilizer and company marketing support, dragon fruit yield increased and we received a better selling price.",
+            "shortSummary": "Mr. Gorakhanath Shelke improved dragon fruit yield from 12 quintals to 20 quintals and received ₹2-3 per kg above prevailing market prices through company support.",
+            "fullStory": "\n\n".join([
+                "Mr. Gorakhanath Namdeorao Shelke cultivates dragon fruit on 1 bigha of land. In the previous year, he used other organic fertilizers and obtained 12 quintals of dragon fruit from the same area.",
+                "This year, after using Ichhamani Organic Fertilizer, the yield increased significantly to 20 quintals from the same 1 bigha field.",
+                "Along with improved production, the company helped arrange marketing and sale of the produce. Through this support, he secured a selling price that was ₹2-3 per kilogram higher than the prevailing market rate.",
+                "The improved yield, better market access and transparent sales support helped increase overall farm profitability.",
+            ]),
+            "challenge": "The farmer needed stronger productivity in dragon fruit cultivation and better support for selling produce at a fair market price.",
+            "solution": "GreenWings supported the crop with Ichhamani Organic Fertilizer and helped arrange marketing and sale of the produce.",
+            "result": "Dragon fruit yield improved from 12 quintals to 20 quintals on the same land area, with ₹2-3 per kg better selling price.",
+            "yieldBefore": "12 quintals dragon fruit yield",
+            "yieldAfter": "20 quintals dragon fruit yield",
+            "priceBenefit": "₹2-3 per kg higher than prevailing market rate",
+            "additionalIncome": "Higher farm profitability through improved yield and better market access",
+            "fertilizerUsed": "Ichhamani Organic Fertilizer",
+            "seedUsed": "",
+            "marketSupport": "Marketing arrangement and sale support",
+            "profileImage": "/assets/greenwings-community.png",
+            "coverImage": "/assets/greenwings-fruits.png",
+            "language": "en",
+            "displayOrder": 2,
+            "featured": 1,
+            "status": "published",
+            "media": [
+                {"mediaType": "image", "mediaUrl": "/assets/greenwings-fruits.png", "caption": "Dragon fruit cultivation and market linkage", "displayOrder": 1},
+                {"mediaType": "image", "mediaUrl": "/assets/greenwings-community.png", "caption": "GreenWings farmer support network", "displayOrder": 2},
+            ],
+        },
+    ]
+    translations = {
+        "hi": [
+            {
+                **stories[0],
+                "title": "जैविक खाद से प्याज उत्पादन में वृद्धि",
+                "storyCategory": "इनपुट सहयोग",
+                "shortQuote": "इसी भूमि क्षेत्र में जैविक खाद से प्याज उत्पादन 30 क्विंटल से बढ़कर 40 क्विंटल हुआ।",
+                "shortSummary": "श्री प्रवीण मल्हारी जाधव ने समान आकार के प्याज प्लॉट में रासायनिक खाद और इच्छामणि जैविक खाद की तुलना की और स्पष्ट उत्पादन वृद्धि देखी।",
+                "fullStory": "\n\n".join([
+                    "पहले वर्ष में श्री प्रवीण मल्हारी जाधव ने 15 गुंठे भूमि पर सामान्य रासायनिक खादों का उपयोग कर प्याज की खेती की। इस प्लॉट से 30 क्विंटल प्याज उत्पादन मिला।",
+                    "इसी आकार के दूसरे प्लॉट में उन्होंने कंपनी द्वारा उपलब्ध कराई गई इच्छामणि जैविक खाद का उपयोग किया। इस प्लॉट से उत्पादन 40 क्विंटल तक बढ़ गया।",
+                    "इन परिणामों के बाद उन्होंने पपीता, मक्का, प्याज और अनार में इच्छामणि जैविक खाद का नियमित उपयोग शुरू किया। फसलों में बेहतर बढ़वार, ताकत और प्रदर्शन दिखाई दिया।",
+                    "खरीफ 2025 में कंपनी ने मक्का बीज भी उपलब्ध कराया, जिससे क्षेत्र की अन्य किस्मों की तुलना में बेहतर उत्पादकता मिली।",
+                ]),
+                "challenge": "किसान बेहतर फसल बढ़वार और अधिक उत्पादकता चाहते थे, लेकिन भूमि क्षेत्र वही रखना था।",
+                "solution": "ग्रीनविंग्स ने इच्छामणि जैविक खाद और खरीफ मौसम में कंपनी की मक्का बीज किस्म उपलब्ध कराई।",
+                "result": "समान 15 गुंठे क्षेत्र में प्याज उत्पादन 30 क्विंटल से बढ़कर 40 क्विंटल हुआ।",
+                "yieldBefore": "30 क्विंटल प्याज उत्पादन",
+                "yieldAfter": "40 क्विंटल प्याज उत्पादन",
+                "priceBenefit": "उसी क्षेत्र में 10 क्विंटल अधिक उत्पादन",
+                "additionalIncome": "प्याज, पपीता, मक्का और अनार में बेहतर उत्पादकता की संभावना",
+                "marketSupport": "इनपुट मार्गदर्शन और फसल प्रदर्शन सहयोग",
+                "language": "hi",
+            },
+            {
+                **stories[1],
+                "title": "ड्रैगन फ्रूट उत्पादन और बाजार मूल्य में सुधार",
+                "storyCategory": "बाजार पहुंच",
+                "shortQuote": "इच्छामणि जैविक खाद और कंपनी के विपणन सहयोग से उत्पादन बढ़ा और बेहतर बिक्री मूल्य मिला।",
+                "shortSummary": "श्री गोरखनाथ शेलके का ड्रैगन फ्रूट उत्पादन 12 क्विंटल से 20 क्विंटल हुआ और कंपनी सहयोग से ₹2-3 प्रति किलो अधिक भाव मिला।",
+                "fullStory": "\n\n".join([
+                    "श्री गोरखनाथ नामदेवराव शेलके 1 बीघा भूमि पर ड्रैगन फ्रूट की खेती करते हैं। पिछले वर्ष अन्य जैविक खादों से 12 क्विंटल उत्पादन मिला था।",
+                    "इस वर्ष इच्छामणि जैविक खाद के उपयोग के बाद उसी 1 बीघा क्षेत्र से उत्पादन 20 क्विंटल तक बढ़ गया।",
+                    "कंपनी ने उपज की बिक्री और विपणन व्यवस्था में भी सहयोग किया, जिससे उन्हें बाजार दर से ₹2-3 प्रति किलो अधिक भाव मिला।",
+                    "बेहतर उत्पादन, बाजार पहुंच और पारदर्शी बिक्री सहयोग से फार्म की लाभप्रदता बढ़ी।",
+                ]),
+                "challenge": "किसान को ड्रैगन फ्रूट में अधिक उत्पादकता और उचित बिक्री मूल्य की आवश्यकता थी।",
+                "solution": "ग्रीनविंग्स ने इच्छामणि जैविक खाद और उपज की बिक्री व्यवस्था में सहयोग दिया।",
+                "result": "उत्पादन 12 क्विंटल से 20 क्विंटल हुआ और ₹2-3 प्रति किलो अधिक भाव मिला।",
+                "yieldBefore": "12 क्विंटल ड्रैगन फ्रूट उत्पादन",
+                "yieldAfter": "20 क्विंटल ड्रैगन फ्रूट उत्पादन",
+                "priceBenefit": "बाजार दर से ₹2-3 प्रति किलो अधिक",
+                "additionalIncome": "बेहतर उत्पादन और बाजार पहुंच से अधिक लाभप्रदता",
+                "marketSupport": "विपणन व्यवस्था और बिक्री सहयोग",
+                "language": "hi",
+            },
+        ],
+        "mr": [
+            {
+                **stories[0],
+                "title": "सेंद्रिय खतामुळे कांदा उत्पादनात वाढ",
+                "storyCategory": "इनपुट सहाय्य",
+                "shortQuote": "त्याच क्षेत्रात सेंद्रिय खतामुळे कांदा उत्पादन 30 क्विंटलवरून 40 क्विंटल झाले.",
+                "shortSummary": "श्री. प्रवीण मल्हारी जाधव यांनी समान आकाराच्या कांदा प्लॉटमध्ये रासायनिक खत आणि इच्छामणि सेंद्रिय खताची तुलना केली आणि स्पष्ट उत्पादन वाढ पाहिली.",
+                "fullStory": "\n\n".join([
+                    "पहिल्या वर्षी श्री. प्रवीण मल्हारी जाधव यांनी 15 गुंठे जमिनीवर नियमित रासायनिक खतांचा वापर करून कांदा लागवड केली. या प्लॉटमधून 30 क्विंटल कांदा उत्पादन मिळाले.",
+                    "त्याच आकाराच्या दुसऱ्या प्लॉटमध्ये त्यांनी कंपनीकडून मिळालेल्या इच्छामणि सेंद्रिय खताचा वापर केला. या प्लॉटमधून उत्पादन 40 क्विंटलपर्यंत वाढले.",
+                    "हे परिणाम पाहिल्यानंतर त्यांनी पपई, मका, कांदा आणि डाळिंबामध्ये इच्छामणि सेंद्रिय खताचा नियमित वापर सुरू केला. पिकांमध्ये चांगली वाढ, जोम आणि कामगिरी दिसली.",
+                    "खरीप 2025 मध्ये कंपनीने मका बियाणेही उपलब्ध करून दिले, ज्यामुळे परिसरातील इतर वाणांच्या तुलनेत चांगली उत्पादकता मिळाली.",
+                ]),
+                "challenge": "शेतकऱ्यांना त्याच जमिनीवर चांगली वाढ आणि अधिक उत्पादकता हवी होती.",
+                "solution": "ग्रीनविंग्सने इच्छामणि सेंद्रिय खत आणि खरीप हंगामात कंपनीचे मका बियाणे उपलब्ध करून दिले.",
+                "result": "त्याच 15 गुंठे क्षेत्रात कांदा उत्पादन 30 क्विंटलवरून 40 क्विंटल झाले.",
+                "yieldBefore": "30 क्विंटल कांदा उत्पादन",
+                "yieldAfter": "40 क्विंटल कांदा उत्पादन",
+                "priceBenefit": "त्याच क्षेत्रात 10 क्विंटल अधिक उत्पादन",
+                "additionalIncome": "कांदा, पपई, मका आणि डाळिंबात चांगल्या उत्पादकतेची संधी",
+                "marketSupport": "इनपुट मार्गदर्शन आणि पीक कामगिरी सहाय्य",
+                "language": "mr",
+            },
+            {
+                **stories[1],
+                "title": "ड्रॅगन फ्रूट उत्पादन आणि बाजारभावात सुधारणा",
+                "storyCategory": "बाजारपेठ प्रवेश",
+                "shortQuote": "इच्छामणि सेंद्रिय खत आणि कंपनीच्या विपणन सहाय्यामुळे उत्पादन वाढले आणि चांगला दर मिळाला.",
+                "shortSummary": "श्री. गोरखनाथ शेलके यांचे ड्रॅगन फ्रूट उत्पादन 12 क्विंटलवरून 20 क्विंटल झाले आणि कंपनीच्या सहाय्याने ₹2-3 प्रति किलो जास्त दर मिळाला.",
+                "fullStory": "\n\n".join([
+                    "श्री. गोरखनाथ नामदेवराव शेलके 1 बीघा जमिनीवर ड्रॅगन फ्रूटची लागवड करतात. मागील वर्षी इतर सेंद्रिय खतांनी 12 क्विंटल उत्पादन मिळाले होते.",
+                    "या वर्षी इच्छामणि सेंद्रिय खत वापरल्यानंतर त्याच 1 बीघा क्षेत्रातून उत्पादन 20 क्विंटलपर्यंत वाढले.",
+                    "कंपनीने उत्पादनाच्या विक्री आणि विपणन व्यवस्थेतही मदत केली, ज्यामुळे त्यांना बाजारभावापेक्षा ₹2-3 प्रति किलो अधिक दर मिळाला.",
+                    "चांगले उत्पादन, बाजारपेठ प्रवेश आणि पारदर्शक विक्री सहाय्यामुळे शेतीची नफा क्षमता वाढली.",
+                ]),
+                "challenge": "शेतकऱ्यांना ड्रॅगन फ्रूटमध्ये अधिक उत्पादन आणि योग्य विक्री दराची गरज होती.",
+                "solution": "ग्रीनविंग्सने इच्छामणि सेंद्रिय खत आणि उत्पादन विक्री व्यवस्थेत सहाय्य दिले.",
+                "result": "उत्पादन 12 क्विंटलवरून 20 क्विंटल झाले आणि ₹2-3 प्रति किलो जास्त दर मिळाला.",
+                "yieldBefore": "12 क्विंटल ड्रॅगन फ्रूट उत्पादन",
+                "yieldAfter": "20 क्विंटल ड्रॅगन फ्रूट उत्पादन",
+                "priceBenefit": "बाजारभावापेक्षा ₹2-3 प्रति किलो अधिक",
+                "additionalIncome": "चांगले उत्पादन आणि बाजारपेठ प्रवेशामुळे अधिक नफा",
+                "marketSupport": "विपणन व्यवस्था आणि विक्री सहाय्य",
+                "language": "mr",
+            },
+        ],
+    }
+
+    all_rows = stories + translations["hi"] + translations["mr"]
+    with database() as connection:
+        for item in all_rows:
+            values = [item.get(field, "") for field in SUCCESS_STORY_FIELDS]
+            values.extend([created_at, created_at])
+            columns = SUCCESS_STORY_FIELDS + ["createdAt", "updatedAt"]
+            placeholders = ", ".join("?" for _ in columns)
+            connection.execute(
+                f"""
+                INSERT OR IGNORE INTO success_stories ({', '.join(columns)})
+                VALUES ({placeholders})
+                """,
+                values,
+            )
+            row = connection.execute(
+                "SELECT id FROM success_stories WHERE slug = ? AND language = ?",
+                (item["slug"], item["language"]),
+            ).fetchone()
+            if row:
+                insert_success_story_media(connection, int(row["id"]), item.get("media", []), created_at)
+
+
 def rate_limited(key: str, limit: int, window_seconds: int) -> bool:
     current = time.time()
     entries = [stamp for stamp in RATE_LIMITS.get(key, []) if current - stamp < window_seconds]
@@ -1504,6 +1820,57 @@ def row_to_homepage_statistic(row: sqlite3.Row) -> dict:
     }
 
 
+def row_to_success_story_media(row: sqlite3.Row) -> dict:
+    return {
+        "id": row["id"],
+        "successStoryId": row["successStoryId"],
+        "mediaType": row["mediaType"],
+        "mediaUrl": row["mediaUrl"],
+        "caption": row["caption"] or "",
+        "displayOrder": row["displayOrder"],
+        "createdAt": row["createdAt"],
+        "updatedAt": row["updatedAt"],
+    }
+
+
+def row_to_success_story(row: sqlite3.Row, media: list[dict] | None = None) -> dict:
+    return {
+        "id": row["id"],
+        "farmerName": row["farmerName"],
+        "farmerPhone": row["farmerPhone"] or "",
+        "title": row["title"],
+        "slug": row["slug"],
+        "location": row["location"] or "",
+        "village": row["village"] or "",
+        "district": row["district"] or "",
+        "cropType": row["cropType"] or "",
+        "landArea": row["landArea"] or "",
+        "storyCategory": row["storyCategory"] or "",
+        "shortQuote": row["shortQuote"] or "",
+        "shortSummary": row["shortSummary"] or "",
+        "fullStory": row["fullStory"],
+        "challenge": row["challenge"] or "",
+        "solution": row["solution"] or "",
+        "result": row["result"] or "",
+        "yieldBefore": row["yieldBefore"] or "",
+        "yieldAfter": row["yieldAfter"] or "",
+        "priceBenefit": row["priceBenefit"] or "",
+        "additionalIncome": row["additionalIncome"] or "",
+        "fertilizerUsed": row["fertilizerUsed"] or "",
+        "seedUsed": row["seedUsed"] or "",
+        "marketSupport": row["marketSupport"] or "",
+        "profileImage": row["profileImage"] or "",
+        "coverImage": row["coverImage"] or "",
+        "language": row["language"],
+        "displayOrder": row["displayOrder"],
+        "featured": bool(row["featured"]),
+        "status": row["status"],
+        "media": media or [],
+        "createdAt": row["createdAt"],
+        "updatedAt": row["updatedAt"],
+    }
+
+
 def row_to_leadership_member(row: sqlite3.Row, translation: sqlite3.Row | None = None) -> dict:
     image_url = row["imageUrl"] or row["image"] or ""
     localized_biography = translation["biography"] if translation and translation["biography"] else row["biography"]
@@ -1581,6 +1948,42 @@ def homepage_statistic_payload(body: dict) -> tuple[dict, list[str]]:
         clean["displayOrder"] = 0
     clean["active"] = 1 if body.get("active", True) in {True, 1, "1", "true", "active", "yes"} else 0
     errors = [f"{field} is required." for field in ["label", "value"] if not clean.get(field)]
+    return clean, errors
+
+
+def success_story_media_payload(items: object) -> list[dict]:
+    if not isinstance(items, list):
+        return []
+    clean_items: list[dict] = []
+    for index, item in enumerate(items):
+        if not isinstance(item, dict):
+            continue
+        clean = {field: str(item.get(field, "")).strip() for field in SUCCESS_STORY_MEDIA_FIELDS}
+        if not clean["mediaUrl"]:
+            continue
+        clean["mediaType"] = clean["mediaType"] or "image"
+        try:
+            clean["displayOrder"] = int(item.get("displayOrder", index + 1))
+        except (TypeError, ValueError):
+            clean["displayOrder"] = index + 1
+        clean_items.append(clean)
+    return clean_items
+
+
+def success_story_payload(body: dict) -> tuple[dict, list[str]]:
+    clean = {field: str(body.get(field, "")).strip() for field in SUCCESS_STORY_FIELDS}
+    clean["language"] = clean["language"] if clean["language"] in SUPPORTED_LANGUAGES else "en"
+    clean["status"] = clean["status"] if clean["status"] in {"draft", "published", "archived"} else "published"
+    try:
+        clean["displayOrder"] = int(body.get("displayOrder", 0))
+    except (TypeError, ValueError):
+        clean["displayOrder"] = 0
+    clean["featured"] = 1 if body.get("featured", False) in {True, 1, "1", "true", "featured", "yes", "on"} else 0
+    errors = [
+        f"{field} is required."
+        for field in ["farmerName", "title", "slug", "fullStory", "language"]
+        if not clean.get(field)
+    ]
     return clean, errors
 
 
@@ -1748,6 +2151,77 @@ def statistic_collection(connection: sqlite3.Connection, only_active: bool = Tru
         f"SELECT * FROM homepage_statistics {where} ORDER BY displayOrder, label"
     ).fetchall()
     return [row_to_homepage_statistic(row) for row in rows]
+
+
+def success_story_media_collection(connection: sqlite3.Connection, story_id: int) -> list[dict]:
+    rows = connection.execute(
+        """
+        SELECT * FROM success_story_media
+        WHERE successStoryId = ?
+        ORDER BY displayOrder, id
+        """,
+        (story_id,),
+    ).fetchall()
+    return [row_to_success_story_media(row) for row in rows]
+
+
+def success_story_collection(connection: sqlite3.Connection, language: str, only_public: bool = True) -> list[dict]:
+    clauses = ["language IN ('en', ?)"]
+    params: list[object] = [language]
+    if only_public:
+        clauses.append("status = 'published'")
+    rows = connection.execute(
+        f"""
+        SELECT * FROM success_stories
+        WHERE {' AND '.join(clauses)}
+        ORDER BY displayOrder, featured DESC, farmerName
+        """,
+        params,
+    ).fetchall()
+    by_slug: dict[str, sqlite3.Row] = {}
+    for row in rows:
+        current = by_slug.get(row["slug"])
+        if not current or row["language"] == language:
+            by_slug[row["slug"]] = row
+    stories: list[dict] = []
+    for row in by_slug.values():
+        media = success_story_media_collection(connection, int(row["id"]))
+        if not media and row["language"] != "en":
+            english = connection.execute(
+                "SELECT id FROM success_stories WHERE slug = ? AND language = 'en'",
+                (row["slug"],),
+            ).fetchone()
+            if english:
+                media = success_story_media_collection(connection, int(english["id"]))
+        stories.append(row_to_success_story(row, media))
+    return sorted(stories, key=lambda item: (item["displayOrder"], item["farmerName"]))
+
+
+def success_story_detail(connection: sqlite3.Connection, slug: str, language: str, only_public: bool = True) -> dict | None:
+    clauses = ["slug = ?", "language IN ('en', ?)"]
+    params: list[object] = [slug, language]
+    if only_public:
+        clauses.append("status = 'published'")
+    rows = connection.execute(
+        f"""
+        SELECT * FROM success_stories
+        WHERE {' AND '.join(clauses)}
+        ORDER BY CASE WHEN language = ? THEN 0 ELSE 1 END
+        """,
+        [*params, language],
+    ).fetchall()
+    if not rows:
+        return None
+    row = rows[0]
+    media = success_story_media_collection(connection, int(row["id"]))
+    if not media and row["language"] != "en":
+        english = connection.execute(
+            "SELECT id FROM success_stories WHERE slug = ? AND language = 'en'",
+            (slug,),
+        ).fetchone()
+        if english:
+            media = success_story_media_collection(connection, int(english["id"]))
+    return row_to_success_story(row, media)
 
 
 def leadership_collection(connection: sqlite3.Connection, language: str, only_active: bool = True) -> list[dict]:
@@ -1975,6 +2449,15 @@ class ApiHandler(BaseHTTPRequestHandler):
         if parsed.path in {"/api/company-content", "/api/content/about"}:
             self.handle_company_content(parsed)
             return
+        if parsed.path == "/api/success-stories":
+            self.handle_success_story_list(parsed)
+            return
+        if parsed.path.startswith("/api/success-stories/"):
+            self.handle_success_story_detail(parsed)
+            return
+        if parsed.path == "/api/admin/success-stories":
+            self.handle_admin_success_story_list(parsed)
+            return
         if parsed.path == "/api/admin/company-stories":
             self.handle_admin_company_story_list(parsed)
             return
@@ -2039,6 +2522,9 @@ class ApiHandler(BaseHTTPRequestHandler):
         if parsed.path == "/api/admin/company-stories":
             self.handle_create_company_story()
             return
+        if parsed.path == "/api/admin/success-stories":
+            self.handle_create_success_story()
+            return
         if parsed.path == "/api/admin/company-contents":
             self.handle_create_company_content()
             return
@@ -2064,6 +2550,9 @@ class ApiHandler(BaseHTTPRequestHandler):
         if parsed.path.startswith("/api/admin/company-stories/"):
             self.handle_update_company_story(parsed)
             return
+        if parsed.path.startswith("/api/admin/success-stories/"):
+            self.handle_update_success_story(parsed)
+            return
         if parsed.path.startswith("/api/admin/company-contents/"):
             self.handle_update_company_content(parsed)
             return
@@ -2088,6 +2577,9 @@ class ApiHandler(BaseHTTPRequestHandler):
             return
         if parsed.path.startswith("/api/admin/company-stories/"):
             self.handle_delete_company_story(parsed)
+            return
+        if parsed.path.startswith("/api/admin/success-stories/"):
+            self.handle_delete_success_story(parsed)
             return
         if parsed.path.startswith("/api/admin/company-contents/"):
             self.handle_delete_company_content(parsed)
@@ -2177,6 +2669,12 @@ class ApiHandler(BaseHTTPRequestHandler):
         }
         return record
 
+    def success_story_admin_record(self, connection: sqlite3.Connection, story_id: int) -> dict | None:
+        row = connection.execute("SELECT * FROM success_stories WHERE id = ?", (story_id,)).fetchone()
+        if not row:
+            return None
+        return row_to_success_story(row, success_story_media_collection(connection, story_id))
+
     def handle_company_content(self, parsed) -> None:
         language = requested_language(parse_qs(parsed.query))
         with database() as connection:
@@ -2200,6 +2698,135 @@ class ApiHandler(BaseHTTPRequestHandler):
                 "leadership": leadership,
             },
         )
+
+    def handle_success_story_list(self, parsed) -> None:
+        query = parse_qs(parsed.query)
+        language = requested_language(query)
+        featured_only = query.get("featured", [""])[0].lower() in {"1", "true", "yes"}
+        with database() as connection:
+            stories = success_story_collection(connection, language)
+        if featured_only:
+            stories = [story for story in stories if story["featured"]]
+        self.send_json(200, {"language": language, "stories": stories})
+
+    def handle_success_story_detail(self, parsed) -> None:
+        query = parse_qs(parsed.query)
+        language = requested_language(query)
+        slug = unquote(parsed.path.removeprefix("/api/success-stories/").strip("/"))
+        if not slug:
+            self.send_json(400, {"error": "Story slug is required."})
+            return
+        with database() as connection:
+            story = success_story_detail(connection, slug, language)
+        if not story:
+            self.send_json(404, {"error": "Success story not found."})
+            return
+        self.send_json(200, {"language": language, "story": story})
+
+    def handle_admin_success_story_list(self, parsed) -> None:
+        if not self.require_admin():
+            return
+        query = parse_qs(parsed.query)
+        search = query.get("search", [""])[0].strip()
+        language = query.get("language", [""])[0].strip()
+        status = query.get("status", [""])[0].strip()
+        clauses: list[str] = []
+        params: list[str] = []
+        if search:
+            clauses.append("(farmerName LIKE ? OR title LIKE ? OR slug LIKE ? OR location LIKE ? OR cropType LIKE ? OR storyCategory LIKE ? OR fullStory LIKE ?)")
+            params.extend([f"%{search}%"] * 7)
+        if language:
+            clauses.append("language = ?")
+            params.append(language)
+        if status:
+            clauses.append("status = ?")
+            params.append(status)
+        where = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+        with database() as connection:
+            rows = connection.execute(
+                f"SELECT * FROM success_stories {where} ORDER BY displayOrder, farmerName, language",
+                params,
+            ).fetchall()
+            stories = [
+                row_to_success_story(row, success_story_media_collection(connection, int(row["id"])))
+                for row in rows
+            ]
+        self.send_json(200, {"stories": stories})
+
+    def handle_create_success_story(self) -> None:
+        if not self.require_admin():
+            return
+        body = self.read_json()
+        clean, errors = success_story_payload(body)
+        if errors:
+            self.send_json(400, {"error": "Please complete the success story form.", "details": errors})
+            return
+        timestamp = now_iso()
+        columns = SUCCESS_STORY_FIELDS + ["createdAt", "updatedAt"]
+        values = [clean.get(column, "") for column in SUCCESS_STORY_FIELDS]
+        values.extend([timestamp, timestamp])
+        placeholders = ", ".join("?" for _ in columns)
+        try:
+            with database() as connection:
+                cursor = connection.execute(
+                    f"INSERT INTO success_stories ({', '.join(columns)}) VALUES ({placeholders})",
+                    values,
+                )
+                story_id = int(cursor.lastrowid)
+                insert_success_story_media(connection, story_id, success_story_media_payload(body.get("media")), timestamp)
+                story = self.success_story_admin_record(connection, story_id)
+            self.send_json(201, {"story": story})
+        except sqlite3.IntegrityError:
+            self.send_json(409, {"error": "A success story with this slug and language already exists."})
+
+    def handle_update_success_story(self, parsed) -> None:
+        if not self.require_admin():
+            return
+        story_id = self.id_from_path(parsed.path, "/api/admin/success-stories/")
+        if story_id is None:
+            self.send_json(400, {"error": "Invalid success story path."})
+            return
+        body = self.read_json()
+        clean, errors = success_story_payload(body)
+        if errors:
+            self.send_json(400, {"error": "Please complete the success story form.", "details": errors})
+            return
+        timestamp = now_iso()
+        assignments = ", ".join(f"{field} = ?" for field in SUCCESS_STORY_FIELDS)
+        values = [clean.get(field, "") for field in SUCCESS_STORY_FIELDS]
+        values.extend([timestamp, story_id])
+        try:
+            with database() as connection:
+                existing = connection.execute("SELECT 1 FROM success_stories WHERE id = ?", (story_id,)).fetchone()
+                if not existing:
+                    self.send_json(404, {"error": "Success story not found."})
+                    return
+                connection.execute(
+                    f"UPDATE success_stories SET {assignments}, updatedAt = ? WHERE id = ?",
+                    values,
+                )
+                if "media" in body:
+                    connection.execute("DELETE FROM success_story_media WHERE successStoryId = ?", (story_id,))
+                    insert_success_story_media(connection, story_id, success_story_media_payload(body.get("media")), timestamp)
+                story = self.success_story_admin_record(connection, story_id)
+            self.send_json(200, {"story": story})
+        except sqlite3.IntegrityError:
+            self.send_json(409, {"error": "A success story with this slug and language already exists."})
+
+    def handle_delete_success_story(self, parsed) -> None:
+        if not self.require_admin():
+            return
+        story_id = self.id_from_path(parsed.path, "/api/admin/success-stories/")
+        if story_id is None:
+            self.send_json(400, {"error": "Invalid success story path."})
+            return
+        with database() as connection:
+            connection.execute("DELETE FROM success_story_media WHERE successStoryId = ?", (story_id,))
+            cursor = connection.execute("DELETE FROM success_stories WHERE id = ?", (story_id,))
+            if cursor.rowcount == 0:
+                self.send_json(404, {"error": "Success story not found."})
+                return
+        self.send_json(200, {"ok": True})
 
     def handle_admin_company_content_list(self, parsed) -> None:
         if not self.require_admin():
@@ -3220,6 +3847,7 @@ class ApiHandler(BaseHTTPRequestHandler):
             company_timelines = connection.execute("SELECT COUNT(*) FROM company_timelines").fetchone()[0]
             leadership_members = connection.execute("SELECT COUNT(*) FROM leadership_members").fetchone()[0]
             homepage_statistics = connection.execute("SELECT COUNT(*) FROM homepage_statistics").fetchone()[0]
+            success_stories = connection.execute("SELECT COUNT(*) FROM success_stories").fetchone()[0]
             total_users = connection.execute("SELECT COUNT(*) FROM users WHERE role = 'USER'").fetchone()[0]
             new_users_today = connection.execute(
                 "SELECT COUNT(*) FROM users WHERE role = 'USER' AND createdAt LIKE ?",
@@ -3281,6 +3909,7 @@ class ApiHandler(BaseHTTPRequestHandler):
                 "companyTimelines": company_timelines,
                 "leadershipMembers": leadership_members,
                 "homepageStatistics": homepage_statistics,
+                "successStories": success_stories,
                 "totalUsers": total_users,
                 "newUsersToday": new_users_today,
                 "totalEnquiries": total_enquiries,

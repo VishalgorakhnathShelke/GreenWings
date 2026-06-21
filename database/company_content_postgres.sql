@@ -120,3 +120,56 @@ CREATE TABLE IF NOT EXISTS homepage_statistics (
 
 CREATE INDEX IF NOT EXISTS idx_homepage_statistics_active
   ON homepage_statistics (active, "displayOrder");
+
+CREATE TABLE IF NOT EXISTS success_stories (
+  id SERIAL PRIMARY KEY,
+  "farmerName" TEXT NOT NULL,
+  "farmerPhone" TEXT,
+  title TEXT NOT NULL,
+  slug TEXT NOT NULL,
+  location TEXT,
+  village TEXT,
+  district TEXT,
+  "cropType" TEXT,
+  "landArea" TEXT,
+  "storyCategory" TEXT,
+  "shortQuote" TEXT,
+  "shortSummary" TEXT,
+  "fullStory" TEXT NOT NULL,
+  challenge TEXT,
+  solution TEXT,
+  result TEXT,
+  "yieldBefore" TEXT,
+  "yieldAfter" TEXT,
+  "priceBenefit" TEXT,
+  "additionalIncome" TEXT,
+  "fertilizerUsed" TEXT,
+  "seedUsed" TEXT,
+  "marketSupport" TEXT,
+  "profileImage" TEXT,
+  "coverImage" TEXT,
+  language TEXT NOT NULL DEFAULT 'en',
+  "displayOrder" INTEGER NOT NULL DEFAULT 0,
+  featured BOOLEAN NOT NULL DEFAULT FALSE,
+  status TEXT NOT NULL DEFAULT 'published',
+  "createdAt" TIMESTAMPTZ NOT NULL DEFAULT now(),
+  "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT now(),
+  CONSTRAINT success_stories_slug_language_key UNIQUE (slug, language)
+);
+
+CREATE INDEX IF NOT EXISTS idx_success_stories_lookup
+  ON success_stories (language, status, featured, "displayOrder");
+
+CREATE TABLE IF NOT EXISTS success_story_media (
+  id SERIAL PRIMARY KEY,
+  "successStoryId" INTEGER NOT NULL REFERENCES success_stories(id) ON DELETE CASCADE,
+  "mediaType" TEXT NOT NULL DEFAULT 'image',
+  "mediaUrl" TEXT NOT NULL,
+  caption TEXT,
+  "displayOrder" INTEGER NOT NULL DEFAULT 0,
+  "createdAt" TIMESTAMPTZ NOT NULL DEFAULT now(),
+  "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_success_story_media_story
+  ON success_story_media ("successStoryId", "displayOrder");
