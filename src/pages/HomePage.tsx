@@ -1,13 +1,43 @@
+import { useEffect, useMemo, useState } from 'react'
 import { useLanguageStore } from '../stores/languageStore'
 import { useLoginStore } from '../stores/loginStore'
 import { Reveal } from '../components/shared/Reveal'
 import { Ticker } from '../components/shared/Ticker'
 import { CatalogueLaunch } from '../components/shared/CatalogueLaunch'
 import { Link } from 'react-router-dom'
+import { fetchCompanyContent, type CompanyContent } from '../services/api'
 
 export function HomePage() {
   const t = useLanguageStore((s) => s.t)
+  const lang = useLanguageStore((s) => s.lang)
   const openLogin = useLoginStore((s) => s.openLogin)
+  const [content, setContent] = useState<CompanyContent | null>(null)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    let active = true
+    setError('')
+    fetchCompanyContent(lang)
+      .then((payload) => {
+        if (active) setContent(payload)
+      })
+      .catch((requestError) => {
+        if (active) setError(requestError instanceof Error ? requestError.message : 'Unable to load company content')
+      })
+    return () => {
+      active = false
+    }
+  }, [lang])
+
+  const hero = content?.storiesBySlug['home-hero']
+  const farmerStat = content?.storiesBySlug['home-stat-farmers']
+  const communityStories = useMemo(
+    () => content?.stories.filter((story) => story.slug.startsWith('community-')) || [],
+    [content],
+  )
+  const statTitleParts = farmerStat?.title.split(':') || []
+  const farmerStatLabel = statTitleParts[0] || t('farmersConnected')
+  const farmerStatValue = statTitleParts.slice(1).join(':').trim() || '1,100+'
 
   return (
     <>
@@ -24,10 +54,10 @@ export function HomePage() {
                 {t('heroEyebrow')}
               </div>
               <h1 className="font-serif text-[clamp(32px,6vw,72px)] leading-tight tracking-[-0.045em] mb-6 text-white">
-                {t('heroTitle')}<br /><em className="text-harvest not-italic font-inherit">{t('heroTitleEm')}</em>
+                {hero?.title || 'GreenWings'}
               </h1>
               <p className="text-base text-white/85 mb-8 max-w-xl mx-auto leading-relaxed">
-                {t('heroText')}
+                {hero?.content || (error ? 'Company content is loading from the GreenWings database.' : 'Loading company content...')}
               </p>
               <div className="mx-auto mb-8 grid max-w-xl grid-cols-3 overflow-hidden border border-white/15 bg-paper/10 text-left">
                 {[
@@ -53,7 +83,7 @@ export function HomePage() {
           </Reveal>
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-3xl mx-auto">
             {[
-              { value: '2,400+', label: t('farmersConnected') },
+              { value: farmerStatValue, label: farmerStatLabel },
               { value: '18', label: t('villagesReached') },
               { value: '32%', label: t('betterReturns') },
             ].map((stat) => (
@@ -75,6 +105,44 @@ export function HomePage() {
 
       <Ticker />
       <CatalogueLaunch />
+
+      <section className="py-24 px-[8vw] bg-paper">
+        <div className="max-w-6xl mx-auto">
+          <Reveal>
+            <div className="max-w-3xl mb-10">
+              <small className="text-[10px] uppercase tracking-[0.15em] font-bold text-green">Community knowledge network</small>
+              <h2 className="font-serif text-[clamp(30px,4vw,56px)] leading-tight tracking-[-0.045em] mt-3 mb-4 text-ink">
+                Farmers learning, collaborating, and sharing better ways to grow.
+              </h2>
+              <p className="text-sm text-muted leading-relaxed">
+                {farmerStat?.content || 'Community content is managed from the GreenWings database and shown in the visitor selected language.'}
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            {communityStories.map((story) => (
+              <Reveal key={story.slug}>
+                <article className="border border-line bg-white overflow-hidden h-full">
+                  <div
+                    className="h-44 bg-cover bg-center relative"
+                    style={{ backgroundImage: `url(${story.featuredImage || '/assets/greenwings-community.png'})` }}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-t from-deep/65 to-transparent" />
+                    <span className="absolute left-4 bottom-4 text-[10px] uppercase tracking-[0.13em] text-harvest font-bold">
+                      Farmer community
+                    </span>
+                  </div>
+                  <div className="p-5">
+                    <h3 className="font-serif text-2xl text-ink mb-3">{story.title}</h3>
+                    <p className="text-sm leading-relaxed text-muted">{story.content}</p>
+                  </div>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
     </>
   )
 }

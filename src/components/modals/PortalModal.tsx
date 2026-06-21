@@ -7,6 +7,7 @@ import { type Enquiry } from '../../data/content'
 import { useAuthStore } from '../../stores/authStore'
 import { fetchAdminSummary, type AdminSummary } from '../../services/api'
 import { FertilizerManager } from '../admin/FertilizerManager'
+import { CompanyContentManager } from '../admin/CompanyContentManager'
 
 function initials(name?: string | null, email?: string | null) {
   const source = name || email || 'GW'
@@ -235,6 +236,9 @@ function AdminPanel() {
     { value: summary.uniqueVisitors, label: 'Unique visitors', desc: 'Tracked without raw IP storage' },
     { value: summary.localFertilizers || 0, label: 'Local fertilizers', desc: 'Indian input catalogue' },
     { value: summary.importedFertilizers || 0, label: 'Imported fertilizers', desc: 'Global input catalogue' },
+    { value: summary.companyStories || 0, label: 'Company stories', desc: 'Multilingual website content' },
+    { value: summary.companyMilestones || 0, label: 'Timeline milestones', desc: 'Company journey records' },
+    { value: summary.leadershipMembers || 0, label: 'Leadership profiles', desc: 'Directors and management' },
   ] : []
 
   return (
@@ -297,6 +301,18 @@ function ImportedFertilizerAdminPanel() {
   return <FertilizerManager kind="imported" />
 }
 
+function CompanyStoriesAdminPanel() {
+  return <CompanyContentManager section="stories" />
+}
+
+function CompanyMilestonesAdminPanel() {
+  return <CompanyContentManager section="milestones" />
+}
+
+function LeadershipAdminPanel() {
+  return <CompanyContentManager section="leadership" />
+}
+
 export function PortalModal() {
   const isOpen = usePortalStore((s) => s.isOpen)
   const closePortal = usePortalStore((s) => s.closePortal)
@@ -327,9 +343,13 @@ export function PortalModal() {
     admin: AdminPanel,
     localFertilizers: LocalFertilizerAdminPanel,
     importedFertilizers: ImportedFertilizerAdminPanel,
+    companyStories: CompanyStoriesAdminPanel,
+    companyMilestones: CompanyMilestonesAdminPanel,
+    leadershipMembers: LeadershipAdminPanel,
   }
 
-  const safePanel = activePanel === 'admin' && role !== 'admin' ? 'dashboard' : activePanel
+  const adminPanels = ['admin', 'localFertilizers', 'importedFertilizers', 'companyStories', 'companyMilestones', 'leadershipMembers']
+  const safePanel = role !== 'admin' && adminPanels.includes(activePanel) ? 'dashboard' : activePanel
   const ActivePanelComponent = panels[safePanel] ?? DashboardPanel
 
   return (
@@ -366,6 +386,9 @@ export function PortalModal() {
               { id: 'admin', icon: 'A', label: 'Admin management' },
               { id: 'localFertilizers', icon: 'L', label: 'Manage Local Fertilizers' },
               { id: 'importedFertilizers', icon: 'I', label: 'Manage Imported Fertilizers' },
+              { id: 'companyStories', icon: 'S', label: 'Manage Stories' },
+              { id: 'companyMilestones', icon: 'M', label: 'Manage Milestones' },
+              { id: 'leadershipMembers', icon: 'T', label: 'Manage Leadership' },
             ] : []),
           ].map((item) => (
             <button
