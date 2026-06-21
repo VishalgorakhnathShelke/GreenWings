@@ -28,4 +28,4 @@ __pycache__/
 *.sw?
 
 cloudflared-windows-amd64.exe
-config.yml
+config.yml  
