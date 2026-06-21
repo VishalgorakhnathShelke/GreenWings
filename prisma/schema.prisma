@@ -109,3 +109,78 @@ model ImportedFertilizerTranslation {
 
   @@unique([fertilizerId, language])
 }
+
+model CompanyStory {
+  id            Int      @id @default(autoincrement())
+  title         String
+  slug          String
+  language      String
+  content       String   @db.Text
+  featuredImage String?
+  displayOrder  Int      @default(0)
+  status        String   @default("published")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([slug, language])
+  @@index([language, status, displayOrder])
+}
+
+model CompanyMilestone {
+  id           Int      @id @default(autoincrement())
+  year         String
+  title        String
+  description  String   @db.Text
+  image        String?
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  translations CompanyMilestoneTranslation[]
+
+  @@index([displayOrder])
+}
+
+model CompanyMilestoneTranslation {
+  id          Int      @id @default(autoincrement())
+  milestoneId Int
+  language    String
+  title       String?
+  description String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  milestone CompanyMilestone @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+
+  @@unique([milestoneId, language])
+}
+
+model LeadershipMember {
+  id           Int      @id @default(autoincrement())
+  fullName     String
+  designation  String
+  biography    String   @db.Text
+  image        String?
+  displayOrder Int      @default(0)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  translations LeadershipMemberTranslation[]
+
+  @@index([active, displayOrder])
+}
+
+model LeadershipMemberTranslation {
+  id                 Int      @id @default(autoincrement())
+  leadershipMemberId Int
+  language           String
+  designation        String?
+  biography          String?  @db.Text
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  leadershipMember LeadershipMember @relation(fields: [leadershipMemberId], references: [id], onDelete: Cascade)
+
+  @@unique([leadershipMemberId, language])
+}
