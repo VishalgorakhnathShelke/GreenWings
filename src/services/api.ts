@@ -92,8 +92,11 @@ export interface AdminSummary {
   localFertilizers?: number
   importedFertilizers?: number
   companyStories?: number
+  companyContents?: number
   companyMilestones?: number
+  companyTimelines?: number
   leadershipMembers?: number
+  homepageStatistics?: number
   totalUsers: number
   newUsersToday: number
   totalEnquiries: number
@@ -121,6 +124,19 @@ export interface CompanyStory {
   updatedAt: string
 }
 
+export interface CompanyContentSection {
+  id: number
+  sectionKey: string
+  title: string
+  subtitle: string
+  content: string
+  language: Lang
+  displayOrder: number
+  status: 'draft' | 'published' | 'archived' | string
+  createdAt: string
+  updatedAt: string
+}
+
 export interface CompanyMilestone {
   id: number
   year: string
@@ -135,14 +151,42 @@ export interface CompanyMilestone {
   updatedAt: string
 }
 
+export interface CompanyTimeline {
+  id: number
+  year: string
+  title: string
+  description: string
+  impactMetric: string
+  language: Lang
+  displayOrder: number
+  status: 'draft' | 'published' | 'archived' | string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface HomepageStatistic {
+  id: number
+  label: string
+  value: string
+  description: string
+  displayOrder: number
+  active: boolean
+  createdAt: string
+  updatedAt: string
+}
+
 export interface LeadershipMember {
   id: number
   fullName: string
   designation: string
+  roleDescription: string
   biography: string
+  language?: Lang
   baseDesignation?: string
+  baseRoleDescription?: string
   baseBiography?: string
   image: string
+  imageUrl: string
   displayOrder: number
   active: boolean
   translations?: Record<'hi' | 'mr', { designation?: string; biography?: string }>
@@ -152,15 +196,22 @@ export interface LeadershipMember {
 
 export interface CompanyContent {
   language: Lang
+  contents: CompanyContentSection[]
+  contentByKey: Record<string, CompanyContentSection>
   stories: CompanyStory[]
   storiesBySlug: Record<string, CompanyStory>
+  timelines: CompanyTimeline[]
   milestones: CompanyMilestone[]
+  statistics: HomepageStatistic[]
   leadership: LeadershipMember[]
 }
 
 export type CompanyStoryPayload = Omit<CompanyStory, 'id' | 'createdAt' | 'updatedAt'>
+export type CompanyContentSectionPayload = Omit<CompanyContentSection, 'id' | 'createdAt' | 'updatedAt'>
 export type CompanyMilestonePayload = Omit<CompanyMilestone, 'id' | 'baseTitle' | 'baseDescription' | 'createdAt' | 'updatedAt'>
-export type LeadershipPayload = Omit<LeadershipMember, 'id' | 'baseDesignation' | 'baseBiography' | 'createdAt' | 'updatedAt'>
+export type CompanyTimelinePayload = Omit<CompanyTimeline, 'id' | 'createdAt' | 'updatedAt'>
+export type HomepageStatisticPayload = Omit<HomepageStatistic, 'id' | 'createdAt' | 'updatedAt'>
+export type LeadershipPayload = Omit<LeadershipMember, 'id' | 'baseDesignation' | 'baseRoleDescription' | 'baseBiography' | 'createdAt' | 'updatedAt'>
 
 export interface Fertilizer {
   id: number
@@ -207,10 +258,24 @@ export type FertilizerPayload = Omit<Fertilizer, 'id' | 'kind' | 'language' | 'd
 
 async function apiRequest<T>(path: string, options?: RequestInit): Promise<T> {
   const response = await fetch(path, options)
-  const payload = await response.json()
+  const text = await response.text()
+  let payload: { error?: string; details?: string[] } = {}
+  if (text) {
+    try {
+      payload = JSON.parse(text)
+    } catch {
+      payload = { error: text }
+    }
+  }
   if (!response.ok) {
     const details = Array.isArray(payload.details) ? ` ${payload.details.join(' ')}` : ''
-    throw new Error(`${payload.error || 'Request failed'}${details}`)
+    const backendMessage = response.status === 502
+      ? 'Backend API is not running. Start it with npm run api, then refresh the page.'
+      : 'Request failed'
+    throw new Error(`${payload.error || backendMessage}${details}`)
+  }
+  if (!text) {
+    throw new Error('Backend returned an empty response. Please restart npm run api.')
   }
   return payload as T
 }
@@ -235,7 +300,41 @@ export async function fetchFertilizer(kind: FertilizerKind, id: string | number,
 }
 
 export async function fetchCompanyContent(lang: Lang = 'en') {
-  return apiRequest<CompanyContent>(`/api/company-content?lang=${lang}`)
+  return apiRequest<CompanyContent>(`/api/content/about?lang=${lang}`, { cache: 'no-store' })
+}
+
+export async function fetchAdminCompanyContents(token: string, filters?: { search?: string; language?: string; status?: string }) {
+  const params = new URLSearchParams()
+  if (filters?.search) params.set('search', filters.search)
+  if (filters?.language) params.set('language', filters.language)
+  if (filters?.status) params.set('status', filters.status)
+  const query = params.toString() ? `?${params.toString()}` : ''
+  return apiRequest<{ contents: CompanyContentSection[] }>(`/api/admin/company-contents${query}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export async function createAdminCompanyContent(token: string, payload: CompanyContentSectionPayload) {
+  return apiRequest<{ content: CompanyContentSection }>('/api/admin/company-contents', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function updateAdminCompanyContent(token: string, id: number, payload: CompanyContentSectionPayload) {
+  return apiRequest<{ content: CompanyContentSection }>(`/api/admin/company-contents/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function deleteAdminCompanyContent(token: string, id: number) {
+  return apiRequest<{ ok: boolean }>(`/api/admin/company-contents/${id}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  })
 }
 
 export async function fetchAdminCompanyStories(token: string, filters?: { search?: string; language?: string; status?: string }) {
@@ -296,6 +395,69 @@ export async function updateAdminCompanyMilestone(token: string, id: number, pay
 
 export async function deleteAdminCompanyMilestone(token: string, id: number) {
   return apiRequest<{ ok: boolean }>(`/api/admin/company-milestones/${id}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export async function fetchAdminCompanyTimelines(token: string, filters?: { search?: string; language?: string; status?: string }) {
+  const params = new URLSearchParams()
+  if (filters?.search) params.set('search', filters.search)
+  if (filters?.language) params.set('language', filters.language)
+  if (filters?.status) params.set('status', filters.status)
+  const query = params.toString() ? `?${params.toString()}` : ''
+  return apiRequest<{ timelines: CompanyTimeline[] }>(`/api/admin/company-timelines${query}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export async function createAdminCompanyTimeline(token: string, payload: CompanyTimelinePayload) {
+  return apiRequest<{ timeline: CompanyTimeline }>('/api/admin/company-timelines', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function updateAdminCompanyTimeline(token: string, id: number, payload: CompanyTimelinePayload) {
+  return apiRequest<{ timeline: CompanyTimeline }>(`/api/admin/company-timelines/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function deleteAdminCompanyTimeline(token: string, id: number) {
+  return apiRequest<{ ok: boolean }>(`/api/admin/company-timelines/${id}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export async function fetchAdminHomepageStatistics(token: string) {
+  return apiRequest<{ statistics: HomepageStatistic[] }>('/api/admin/homepage-statistics', {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export async function createAdminHomepageStatistic(token: string, payload: HomepageStatisticPayload) {
+  return apiRequest<{ statistic: HomepageStatistic }>('/api/admin/homepage-statistics', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function updateAdminHomepageStatistic(token: string, id: number, payload: HomepageStatisticPayload) {
+  return apiRequest<{ statistic: HomepageStatistic }>(`/api/admin/homepage-statistics/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function deleteAdminHomepageStatistic(token: string, id: number) {
+  return apiRequest<{ ok: boolean }>(`/api/admin/homepage-statistics/${id}`, {
     method: 'DELETE',
     headers: { Authorization: `Bearer ${token}` },
   })
