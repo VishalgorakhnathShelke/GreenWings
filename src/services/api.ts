@@ -97,6 +97,7 @@ export interface AdminSummary {
   companyTimelines?: number
   leadershipMembers?: number
   homepageStatistics?: number
+  successStories?: number
   totalUsers: number
   newUsersToday: number
   totalEnquiries: number
@@ -194,6 +195,53 @@ export interface LeadershipMember {
   updatedAt: string
 }
 
+export interface SuccessStoryMedia {
+  id?: number
+  successStoryId?: number
+  mediaType: string
+  mediaUrl: string
+  caption: string
+  displayOrder: number
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface SuccessStory {
+  id: number
+  farmerName: string
+  farmerPhone: string
+  title: string
+  slug: string
+  location: string
+  village: string
+  district: string
+  cropType: string
+  landArea: string
+  storyCategory: string
+  shortQuote: string
+  shortSummary: string
+  fullStory: string
+  challenge: string
+  solution: string
+  result: string
+  yieldBefore: string
+  yieldAfter: string
+  priceBenefit: string
+  additionalIncome: string
+  fertilizerUsed: string
+  seedUsed: string
+  marketSupport: string
+  profileImage: string
+  coverImage: string
+  language: Lang
+  displayOrder: number
+  featured: boolean
+  status: 'draft' | 'published' | 'archived' | string
+  media: SuccessStoryMedia[]
+  createdAt: string
+  updatedAt: string
+}
+
 export interface CompanyContent {
   language: Lang
   contents: CompanyContentSection[]
@@ -212,6 +260,7 @@ export type CompanyMilestonePayload = Omit<CompanyMilestone, 'id' | 'baseTitle' 
 export type CompanyTimelinePayload = Omit<CompanyTimeline, 'id' | 'createdAt' | 'updatedAt'>
 export type HomepageStatisticPayload = Omit<HomepageStatistic, 'id' | 'createdAt' | 'updatedAt'>
 export type LeadershipPayload = Omit<LeadershipMember, 'id' | 'baseDesignation' | 'baseRoleDescription' | 'baseBiography' | 'createdAt' | 'updatedAt'>
+export type SuccessStoryPayload = Omit<SuccessStory, 'id' | 'createdAt' | 'updatedAt'>
 
 export interface Fertilizer {
   id: number
@@ -303,6 +352,14 @@ export async function fetchCompanyContent(lang: Lang = 'en') {
   return apiRequest<CompanyContent>(`/api/content/about?lang=${lang}`, { cache: 'no-store' })
 }
 
+export async function fetchSuccessStories(lang: Lang = 'en') {
+  return apiRequest<{ language: Lang; stories: SuccessStory[] }>(`/api/success-stories?lang=${lang}`, { cache: 'no-store' })
+}
+
+export async function fetchSuccessStory(slug: string, lang: Lang = 'en') {
+  return apiRequest<{ language: Lang; story: SuccessStory }>(`/api/success-stories/${encodeURIComponent(slug)}?lang=${lang}`, { cache: 'no-store' })
+}
+
 export async function fetchAdminCompanyContents(token: string, filters?: { search?: string; language?: string; status?: string }) {
   const params = new URLSearchParams()
   if (filters?.search) params.set('search', filters.search)
@@ -366,6 +423,40 @@ export async function updateAdminCompanyStory(token: string, id: number, payload
 
 export async function deleteAdminCompanyStory(token: string, id: number) {
   return apiRequest<{ ok: boolean }>(`/api/admin/company-stories/${id}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export async function fetchAdminSuccessStories(token: string, filters?: { search?: string; language?: string; status?: string }) {
+  const params = new URLSearchParams()
+  if (filters?.search) params.set('search', filters.search)
+  if (filters?.language) params.set('language', filters.language)
+  if (filters?.status) params.set('status', filters.status)
+  const query = params.toString() ? `?${params.toString()}` : ''
+  return apiRequest<{ stories: SuccessStory[] }>(`/api/admin/success-stories${query}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export async function createAdminSuccessStory(token: string, payload: SuccessStoryPayload) {
+  return apiRequest<{ story: SuccessStory }>('/api/admin/success-stories', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function updateAdminSuccessStory(token: string, id: number, payload: SuccessStoryPayload) {
+  return apiRequest<{ story: SuccessStory }>(`/api/admin/success-stories/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function deleteAdminSuccessStory(token: string, id: number) {
+  return apiRequest<{ ok: boolean }>(`/api/admin/success-stories/${id}`, {
     method: 'DELETE',
     headers: { Authorization: `Bearer ${token}` },
   })
