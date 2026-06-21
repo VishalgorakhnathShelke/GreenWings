@@ -126,6 +126,22 @@ model CompanyStory {
   @@index([language, status, displayOrder])
 }
 
+model CompanyContent {
+  id           Int      @id @default(autoincrement())
+  sectionKey   String
+  title        String
+  subtitle     String?
+  content      String   @db.Text
+  language     String   @default("en")
+  displayOrder Int      @default(0)
+  status       String   @default("published")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([sectionKey, language])
+  @@index([language, status, displayOrder])
+}
+
 model CompanyMilestone {
   id           Int      @id @default(autoincrement())
   year         String
@@ -155,12 +171,31 @@ model CompanyMilestoneTranslation {
   @@unique([milestoneId, language])
 }
 
+model CompanyTimeline {
+  id           Int      @id @default(autoincrement())
+  year         String
+  title        String
+  description  String   @db.Text
+  impactMetric String?  @db.Text
+  language     String   @default("en")
+  displayOrder Int      @default(0)
+  status       String   @default("published")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([year, title, language])
+  @@index([language, status, displayOrder])
+}
+
 model LeadershipMember {
   id           Int      @id @default(autoincrement())
   fullName     String
   designation  String
+  roleDescription String? @db.Text
   biography    String   @db.Text
   image        String?
+  imageUrl     String?
+  language     String   @default("en")
   displayOrder Int      @default(0)
   active       Boolean  @default(true)
   createdAt    DateTime @default(now())
@@ -183,4 +218,17 @@ model LeadershipMemberTranslation {
   leadershipMember LeadershipMember @relation(fields: [leadershipMemberId], references: [id], onDelete: Cascade)
 
   @@unique([leadershipMemberId, language])
+}
+
+model HomepageStatistic {
+  id           Int      @id @default(autoincrement())
+  label        String   @unique
+  value        String
+  description  String?  @db.Text
+  displayOrder Int      @default(0)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([active, displayOrder])
 }

@@ -343,6 +343,7 @@ def ensure_app_schema() -> None:
                 biography TEXT NOT NULL,
                 image TEXT,
                 imageUrl TEXT,
+                language TEXT NOT NULL DEFAULT 'en',
                 displayOrder INTEGER NOT NULL DEFAULT 0,
                 active INTEGER NOT NULL DEFAULT 1,
                 createdAt TEXT NOT NULL,
@@ -397,6 +398,7 @@ def ensure_app_schema() -> None:
             {
                 "roleDescription": "TEXT",
                 "imageUrl": "TEXT",
+                "language": "TEXT NOT NULL DEFAULT 'en'",
             },
         )
     seed_fertilizers()
@@ -829,6 +831,60 @@ def seed_company_profile_content() -> None:
             "status": "published",
         },
     ]
+    company_content_translations = {
+        "hi": {
+            "company_introduction": {
+                "title": "परिचय",
+                "subtitle": "ग्रीन विंग्स फार्मर्स प्रोड्यूसर कंपनी लिमिटेड",
+                "content": "\n\n".join(
+                    [
+                        "ग्रीन विंग्स फार्मर्स प्रोड्यूसर कंपनी की स्थापना 4 मार्च 2023 को भारत सरकार की “10,000 किसान उत्पादक संगठनों के गठन और संवर्धन” योजना के अंतर्गत हुई। इस पहल के तहत कंपनी को NABARD से वित्तीय सहायता प्राप्त हुई।",
+                        "कंपनी का उद्देश्य किसानों की प्रगति, समृद्धि और उज्ज्वल भविष्य को मजबूत करना है। किसानों को एकजुट कर उनकी कृषि उपज के लिए उचित और लाभकारी मूल्य दिलाना तथा बीज, उर्वरक और अन्य कृषि इनपुट सामूहिक रूप से कम लागत पर उपलब्ध कराना इसका प्रमुख लक्ष्य है।",
+                        "बोर्ड ऑफ डायरेक्टर्स ने प्राकृतिक खेती और जैविक खेती को बढ़ावा देने की नीति अपनाई है और किसानों में इन टिकाऊ कृषि पद्धतियों के प्रति जागरूकता निर्माण पर काम कर रहा है।",
+                        "मुख्य कार्यकारी अधिकारी श्री तुषार गोरखनाथ शेलके की दृष्टि है कि कंपनी की कृषि उपज येवला तालुका और नाशिक जिले से आगे महाराष्ट्र, भारत और अंतरराष्ट्रीय बाजारों तक पहुंचे। इसी सोच के साथ कंपनी ने निर्यात क्षेत्र में भी प्रवेश करने का निर्णय लिया।",
+                        "अध्यक्ष श्री मल्हारी रुणजाबा जाधव और सचिव श्री नंदकिशोर श्रीराम शिंदे ने कृषि उपज के प्रसंस्करण और मूल्यवर्धन पर आधारित रणनीति अपनाई है, ताकि किसानों को अपने उत्पादों का बेहतर मूल्य मिल सके।",
+                        "इन पहलों के माध्यम से ग्रीन विंग्स किसानों को सशक्त बनाने, टिकाऊ कृषि को बढ़ावा देने, किसानों की आय बढ़ाने और घरेलू तथा अंतरराष्ट्रीय बाजारों तक पहुंच बनाने के लिए निरंतर कार्य कर रहा है।",
+                    ]
+                ),
+            },
+            "vision": {
+                "title": "दृष्टि",
+                "subtitle": "",
+                "content": "किसानों को उचित बाजारों, टिकाऊ खेती पद्धतियों, मूल्यवर्धित प्रसंस्करण अवसरों और घरेलू तथा अंतरराष्ट्रीय कृषि व्यापार नेटवर्क से जोड़कर सशक्त बनाना।",
+            },
+            "mission": {
+                "title": "मिशन",
+                "subtitle": "",
+                "content": "किसानों को एक मजबूत किसान उत्पादक संगठन के अंतर्गत संगठित करना, सामूहिक खरीद से इनपुट लागत कम करना, प्राकृतिक और जैविक खेती को बढ़ावा देना, कृषि उपज के मूल्यवर्धन में सहयोग करना और बाजार संपर्क तथा निर्यात-उन्मुख विकास के माध्यम से किसानों को बेहतर रिटर्न दिलाना।",
+            },
+        },
+        "mr": {
+            "company_introduction": {
+                "title": "परिचय",
+                "subtitle": "ग्रीन विंग्स फार्मर्स प्रोड्यूसर कंपनी लिमिटेड",
+                "content": "\n\n".join(
+                    [
+                        "ग्रीन विंग्स फार्मर्स प्रोड्यूसर कंपनीची स्थापना 4 मार्च 2023 रोजी भारत सरकारच्या “10,000 शेतकरी उत्पादक संघटनांची स्थापना आणि प्रोत्साहन” योजनेअंतर्गत झाली. या उपक्रमांतर्गत कंपनीला NABARD कडून आर्थिक सहाय्य मिळाले.",
+                        "कंपनीची स्थापना शेतकऱ्यांची प्रगती, समृद्धी आणि उज्ज्वल भविष्य मजबूत करण्याच्या उद्देशाने झाली. शेतकऱ्यांना एकत्र आणून त्यांच्या शेतमालाला योग्य आणि फायदेशीर दर मिळवून देणे, तसेच बियाणे, खते आणि इतर कृषी इनपुट सामूहिक खरेदीद्वारे कमी खर्चात उपलब्ध करून देणे हा प्रमुख उद्देश आहे.",
+                        "संचालक मंडळाने नैसर्गिक शेती आणि सेंद्रिय शेतीला प्रोत्साहन देण्याचे धोरण स्वीकारले असून या शाश्वत शेती पद्धतींबद्दल शेतकऱ्यांमध्ये जागरूकता निर्माण करण्यावर भर दिला आहे.",
+                        "मुख्य कार्यकारी अधिकारी श्री. तुषार गोरखनाथ शेलके यांची दृष्टी अशी आहे की कंपनीचा शेतमाल येवला तालुका आणि नाशिक जिल्ह्याच्या पलीकडे महाराष्ट्र, भारत आणि आंतरराष्ट्रीय बाजारपेठांपर्यंत पोहोचावा. या दृष्टिकोनातून कंपनीने निर्यात क्षेत्रातही प्रवेश करण्याचा निर्णय घेतला.",
+                        "त्याचबरोबर अध्यक्ष श्री. मल्हारी रुणजाबा जाधव आणि सचिव श्री. नंदकिशोर श्रीराम शिंदे यांनी शेतमाल प्रक्रिया आणि मूल्यवर्धनावर आधारित रणनीती स्वीकारली आहे, ज्यामुळे शेतकऱ्यांना त्यांच्या उत्पादनांना अधिक चांगला दर मिळू शकेल.",
+                        "या उपक्रमांद्वारे ग्रीन विंग्स शेतकऱ्यांचे सक्षमीकरण, शाश्वत शेतीचा प्रसार, शेतकरी उत्पन्नवाढ आणि देशांतर्गत तसेच आंतरराष्ट्रीय बाजारपेठांशी जोडणी यासाठी सातत्याने कार्य करत आहे.",
+                    ]
+                ),
+            },
+            "vision": {
+                "title": "दृष्टी",
+                "subtitle": "",
+                "content": "शेतकऱ्यांना योग्य बाजारपेठा, शाश्वत शेती पद्धती, मूल्यवर्धित प्रक्रिया संधी आणि देशांतर्गत तसेच आंतरराष्ट्रीय कृषी व्यापार नेटवर्कशी जोडून सक्षम करणे.",
+            },
+            "mission": {
+                "title": "मिशन",
+                "subtitle": "",
+                "content": "शेतकऱ्यांना मजबूत शेतकरी उत्पादक संस्थेखाली एकत्र आणणे, सामूहिक खरेदीद्वारे इनपुट खर्च कमी करणे, नैसर्गिक आणि सेंद्रिय शेतीला प्रोत्साहन देणे, शेतमालाच्या मूल्यवर्धनाला आधार देणे आणि बाजार जोडणी तसेच निर्याताभिमुख वाढीद्वारे शेतकऱ्यांना चांगला परतावा मिळवून देणे.",
+            },
+        },
+    }
     leadership_rows = [
         {
             "fullName": "Mr. Malhari Runjaba Jadhav",
@@ -941,6 +997,46 @@ def seed_company_profile_content() -> None:
             "displayOrder": 9,
         },
     ]
+    timeline_translations = {
+        "hi": {
+            1: ("कंपनी की स्थापना", "ग्रीन विंग्स फार्मर्स प्रोड्यूसर कंपनी की स्थापना 4 मार्च 2023 को भारत सरकार की 10,000 किसान उत्पादक संगठनों के गठन और संवर्धन योजना के अंतर्गत NABARD की वित्तीय सहायता से हुई।", "राष्ट्रीय FPO प्रोत्साहन पहल के अंतर्गत आधिकारिक पंजीकरण"),
+            2: ("सरकारी प्याज खरीद शुरू", "कंपनी ने NAFED के अंतर्गत महाकिसान वृद्धि एग्रो फेडरेशन के सहयोग से सरकारी प्याज खरीद के माध्यम से अपना कार्य शुरू किया।", "पहली प्रमुख खरीद गतिविधि शुरू"),
+            3: ("ग्रीष्मकालीन प्याज खरीद", "पहले वर्ष में कंपनी ने किसानों से 3,453 क्विंटल ग्रीष्मकालीन प्याज खरीदकर NAFED को आपूर्ति किया। किसानों को बाजार समिति दर से कम से कम ₹2 प्रति किलो अधिक मिला, जिससे प्रत्येक ट्रॉली पर लगभग ₹5,000 अतिरिक्त आय हुई।", "3,453 क्विंटल खरीद, 150+ किसानों को प्रत्यक्ष लाभ"),
+            4: ("लाल प्याज खरीद", "बाद में कंपनी को लाल प्याज खरीद का अवसर मिला। इस गतिविधि में 5,861 क्विंटल प्याज खरीदा गया और 200 से अधिक किसानों को बेहतर मूल्य मिला। किसानों को औसतन ₹4 प्रति किलो अधिक मिला, जिससे संतुष्टि और सदस्यता मजबूत हुई।", "5,861 क्विंटल खरीद, 200+ किसानों को लाभ"),
+            5: ("सदस्यता वृद्धि", "सफल प्याज खरीद गतिविधियों के बाद किसान कंपनी के सदस्य बने और सदस्य संख्या 323 तक पहुंच गई।", "323 सदस्य"),
+            6: ("पहले वर्ष का कारोबार", "इन खरीद गतिविधियों के कारण कंपनी ने पहले वर्ष में लगभग ₹2 करोड़ का कारोबार किया। सभी किसानों का भुगतान सीधे उनके बैंक खातों में ऑनलाइन किया गया।", "₹2 करोड़ पहले वर्ष का कारोबार"),
+            7: ("स्वतंत्र खरीद जारी", "सरकारी और NAFED खरीद नीतियों में बदलाव तथा महाकिसान वृद्धि फेडरेशन से भुगतान में देरी के कारण कंपनी को आगे सरकारी प्याज खरीद कार्य नहीं मिला। फिर भी ग्रीन विंग्स ने स्थानीय स्तर पर स्वतंत्र खरीद गतिविधियां जारी रखीं।", "स्वतंत्र खरीद गतिविधियां जारी"),
+            8: ("बीज और जैविक खाद सहायता", "कंपनी ने किसानों को बीज और जैविक खाद उपलब्ध कराकर महत्वपूर्ण कृषि इनपुट तक पहुंच में सहयोग जारी रखा।", "किसान इनपुट सहायता जारी"),
+            9: ("सदस्यता 600+ पार", "लगातार किसान सहायता, खरीद गतिविधियों और इनपुट आपूर्ति सेवाओं के माध्यम से ग्रीन विंग्स फार्मर्स प्रोड्यूसर कंपनी ने अपनी सदस्य संख्या 600 से अधिक कर ली।", "600+ सदस्य"),
+        },
+        "mr": {
+            1: ("कंपनीची स्थापना", "ग्रीन विंग्स फार्मर्स प्रोड्यूसर कंपनीची स्थापना 4 मार्च 2023 रोजी भारत सरकारच्या 10,000 शेतकरी उत्पादक संघटनांच्या स्थापना आणि प्रोत्साहन योजनेअंतर्गत NABARD च्या आर्थिक सहाय्याने झाली.", "राष्ट्रीय FPO प्रोत्साहन उपक्रमांतर्गत अधिकृत नोंदणी"),
+            2: ("सरकारी कांदा खरेदी सुरू", "कंपनीने NAFED अंतर्गत महाकिसान वृद्धी अॅग्रो फेडरेशनच्या सहकार्याने सरकारी कांदा खरेदीद्वारे कामाची सुरुवात केली.", "पहिली मोठी खरेदी गतिविधी सुरू"),
+            3: ("उन्हाळी कांदा खरेदी", "पहिल्या वर्षी कंपनीने शेतकऱ्यांकडून 3,453 क्विंटल उन्हाळी कांदा खरेदी करून NAFED ला पुरवठा केला. शेतकऱ्यांना बाजार समिती दरापेक्षा किमान ₹2 प्रति किलो जास्त दर मिळाला, ज्यामुळे प्रत्येक ट्रॉलीमागे अंदाजे ₹5,000 अधिक उत्पन्न झाले.", "3,453 क्विंटल खरेदी, 150+ शेतकऱ्यांना थेट लाभ"),
+            4: ("लाल कांदा खरेदी", "नंतर कंपनीला लाल कांदा खरेदीची संधी मिळाली. या उपक्रमात 5,861 क्विंटल कांदा खरेदी करण्यात आला आणि 200 पेक्षा जास्त शेतकऱ्यांना चांगला दर मिळाला. शेतकऱ्यांना सरासरी ₹4 प्रति किलो अधिक मिळाल्याने समाधान आणि सदस्यता मजबूत झाली.", "5,861 क्विंटल खरेदी, 200+ शेतकऱ्यांना लाभ"),
+            5: ("सदस्यता वाढ", "यशस्वी कांदा खरेदी उपक्रमांनंतर शेतकरी कंपनीचे सदस्य झाले आणि सदस्य संख्या 323 पर्यंत वाढली.", "323 सदस्य"),
+            6: ("पहिल्या वर्षाचा उलाढाल", "या खरेदी उपक्रमांमुळे कंपनीने पहिल्या वर्षात अंदाजे ₹2 कोटींची उलाढाल साध्य केली. सर्व शेतकरी देयके थेट त्यांच्या बँक खात्यात ऑनलाइन जमा करण्यात आली.", "₹2 कोटी पहिल्या वर्षाची उलाढाल"),
+            7: ("स्वतंत्र खरेदी सुरूच", "सरकारी आणि NAFED खरेदी धोरणांतील बदल तसेच महाकिसान वृद्धी फेडरेशनकडून देयक विलंबामुळे कंपनीला पुढील सरकारी कांदा खरेदीचे काम मिळाले नाही. तरीही ग्रीन विंग्सने स्थानिक पातळीवर स्वतंत्र खरेदी सुरू ठेवली.", "स्वतंत्र खरेदी गतिविधी सुरू"),
+            8: ("बियाणे आणि सेंद्रिय खत सहाय्य", "कंपनीने शेतकऱ्यांना बियाणे आणि सेंद्रिय खते पुरवून महत्त्वाच्या कृषी इनपुटपर्यंतची मदत सुरू ठेवली.", "शेतकरी इनपुट सहाय्य सुरू"),
+            9: ("सदस्यता 600+ पार", "सातत्यपूर्ण शेतकरी सहाय्य, खरेदी उपक्रम आणि इनपुट पुरवठा सेवांद्वारे ग्रीन विंग्स फार्मर्स प्रोड्यूसर कंपनीची सदस्य संख्या 600 पेक्षा जास्त झाली.", "600+ सदस्य"),
+        },
+    }
+    leadership_translations = {
+        "hi": {
+            "Mr. Malhari Runjaba Jadhav": ("अध्यक्ष", "श्री मल्हारी रुणजाबा जाधव किसान विश्वास, सुशासन और सामूहिक ग्रामीण विकास पर ध्यान केंद्रित करते हुए ग्रीन विंग्स को रणनीतिक दिशा प्रदान करते हैं।"),
+            "Mr. Manik Ramchandra Rasal": ("उपाध्यक्ष", "श्री माणिक रामचंद्र रासल संगठनात्मक योजना, सदस्य समन्वय और किसान-प्रथम कार्यक्रमों के व्यावहारिक क्रियान्वयन में सहयोग करते हैं।"),
+            "Mr. Nandkishor Shriram Shinde": ("सचिव", "श्री नंदकिशोर श्रीराम शिंदे पारदर्शी कंपनी संचालन के लिए दस्तावेजीकरण, समन्वय और सदस्य संवाद की जिम्मेदारी संभालते हैं।"),
+            "Mrs. Varsha Vishwambhar Patil": ("निदेशक", "श्रीमती वर्षा विश्वंभर पाटिल सामुदायिक विकास प्राथमिकताओं का प्रतिनिधित्व करती हैं और किसान समूहों में समावेशी भागीदारी को प्रोत्साहित करती हैं।"),
+            "Mr. Tushar Gorakhanath Shelke": ("निदेशक और मुख्य कार्यकारी अधिकारी", "श्री तुषार गोरखनाथ शेलके ग्रीन विंग्स के संचालन, डिजिटल रणनीति, किसान सेवाओं और बाजार-जोड़णी उपक्रमों का नेतृत्व करते हैं।"),
+        },
+        "mr": {
+            "Mr. Malhari Runjaba Jadhav": ("अध्यक्ष", "श्री. मल्हारी रुणजाबा जाधव शेतकरी विश्वास, सुशासन आणि सामूहिक ग्रामीण विकासावर लक्ष केंद्रित करून ग्रीन विंग्सला धोरणात्मक दिशा देतात."),
+            "Mr. Manik Ramchandra Rasal": ("उपाध्यक्ष", "श्री. माणिक रामचंद्र रासल संस्थात्मक नियोजन, सदस्य समन्वय आणि शेतकरी-प्रथम कार्यक्रमांच्या प्रत्यक्ष अंमलबजावणीत सहकार्य करतात."),
+            "Mr. Nandkishor Shriram Shinde": ("सचिव", "श्री. नंदकिशोर श्रीराम शिंदे पारदर्शक कंपनी कामकाजासाठी दस्तऐवजीकरण, समन्वय आणि सदस्य संवादाची जबाबदारी सांभाळतात."),
+            "Mrs. Varsha Vishwambhar Patil": ("संचालक", "श्रीमती वर्षा विश्वंभर पाटील समुदाय विकासाच्या प्राधान्यांचे प्रतिनिधित्व करतात आणि शेतकरी गटांमध्ये समावेशक सहभागाला प्रोत्साहन देतात."),
+            "Mr. Tushar Gorakhanath Shelke": ("संचालक आणि मुख्य कार्यकारी अधिकारी", "श्री. तुषार गोरखनाथ शेलके ग्रीन विंग्सचे कामकाज, डिजिटल धोरण, शेतकरी सेवा आणि बाजार-जोडणी उपक्रमांचे नेतृत्व करतात."),
+        },
+    }
     statistics = [
         ("Farmers Connected", "600+", "", 1),
         ("Summer Onion Procured", "3,453 Quintals", "", 2),
@@ -968,6 +1064,29 @@ def seed_company_profile_content() -> None:
                     created_at,
                 ),
             )
+        for language, sections in company_content_translations.items():
+            for section_key, translated in sections.items():
+                source = next((item for item in company_contents if item["sectionKey"] == section_key), None)
+                if not source:
+                    continue
+                connection.execute(
+                    """
+                    INSERT OR IGNORE INTO company_contents (
+                        sectionKey, title, subtitle, content, language, displayOrder, status, createdAt, updatedAt
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        section_key,
+                        translated["title"],
+                        translated.get("subtitle", ""),
+                        translated["content"],
+                        language,
+                        source["displayOrder"],
+                        source["status"],
+                        created_at,
+                        created_at,
+                    ),
+                )
 
         for item in leadership_rows:
             existing = connection.execute(
@@ -979,8 +1098,8 @@ def seed_company_profile_content() -> None:
                     """
                     INSERT INTO leadership_members (
                         fullName, designation, roleDescription, biography, image, imageUrl,
-                        displayOrder, active, createdAt, updatedAt
-                    ) VALUES (?, ?, ?, ?, '', ?, ?, ?, ?, ?)
+                        language, displayOrder, active, createdAt, updatedAt
+                    ) VALUES (?, ?, ?, ?, '', ?, 'en', ?, ?, ?, ?)
                     """,
                     (
                         item["fullName"],
@@ -994,6 +1113,19 @@ def seed_company_profile_content() -> None:
                         created_at,
                     ),
                 )
+                member_id = int(connection.execute("SELECT last_insert_rowid()").fetchone()[0])
+                for language, translations in leadership_translations.items():
+                    translated = translations.get(item["fullName"])
+                    if not translated:
+                        continue
+                    connection.execute(
+                        """
+                        INSERT OR IGNORE INTO leadership_member_translations (
+                            leadershipMemberId, language, designation, biography, createdAt, updatedAt
+                        ) VALUES (?, ?, ?, ?, ?, ?)
+                        """,
+                        (member_id, language, translated[0], translated[1], created_at, created_at),
+                    )
                 continue
 
             updates: list[str] = []
@@ -1010,24 +1142,75 @@ def seed_company_profile_content() -> None:
                 values.append(created_at)
                 values.append(existing["id"])
                 connection.execute(f"UPDATE leadership_members SET {', '.join(updates)} WHERE id = ?", values)
+            member_id = int(existing["id"])
+            for language, translations in leadership_translations.items():
+                translated = translations.get(item["fullName"])
+                if not translated:
+                    continue
+                connection.execute(
+                    """
+                    INSERT OR IGNORE INTO leadership_member_translations (
+                        leadershipMemberId, language, designation, biography, createdAt, updatedAt
+                    ) VALUES (?, ?, ?, ?, ?, ?)
+                    """,
+                    (member_id, language, translated[0], translated[1], created_at, created_at),
+                )
 
         for item in timeline_rows:
-            connection.execute(
+            existing_timeline = connection.execute(
                 """
-                INSERT OR IGNORE INTO company_timelines (
-                    year, title, description, impactMetric, language, displayOrder, status, createdAt, updatedAt
-                ) VALUES (?, ?, ?, ?, 'en', ?, 'published', ?, ?)
+                SELECT 1 FROM company_timelines
+                WHERE year = ? AND language = 'en' AND displayOrder = ?
                 """,
-                (
-                    item["year"],
-                    item["title"],
-                    item["description"],
-                    item["impactMetric"],
-                    item["displayOrder"],
-                    created_at,
-                    created_at,
-                ),
-            )
+                (item["year"], item["displayOrder"]),
+            ).fetchone()
+            if not existing_timeline:
+                connection.execute(
+                    """
+                    INSERT INTO company_timelines (
+                        year, title, description, impactMetric, language, displayOrder, status, createdAt, updatedAt
+                    ) VALUES (?, ?, ?, ?, 'en', ?, 'published', ?, ?)
+                    """,
+                    (
+                        item["year"],
+                        item["title"],
+                        item["description"],
+                        item["impactMetric"],
+                        item["displayOrder"],
+                        created_at,
+                        created_at,
+                    ),
+                )
+            for language, translations in timeline_translations.items():
+                translated = translations.get(item["displayOrder"])
+                if not translated:
+                    continue
+                existing_translation = connection.execute(
+                    """
+                    SELECT 1 FROM company_timelines
+                    WHERE year = ? AND language = ? AND displayOrder = ?
+                    """,
+                    (item["year"], language, item["displayOrder"]),
+                ).fetchone()
+                if existing_translation:
+                    continue
+                connection.execute(
+                    """
+                    INSERT INTO company_timelines (
+                        year, title, description, impactMetric, language, displayOrder, status, createdAt, updatedAt
+                    ) VALUES (?, ?, ?, ?, ?, ?, 'published', ?, ?)
+                    """,
+                    (
+                        item["year"],
+                        translated[0],
+                        translated[1],
+                        translated[2],
+                        language,
+                        item["displayOrder"],
+                        created_at,
+                        created_at,
+                    ),
+                )
 
         for label, value, description, order in statistics:
             connection.execute(
@@ -1323,17 +1506,20 @@ def row_to_homepage_statistic(row: sqlite3.Row) -> dict:
 
 def row_to_leadership_member(row: sqlite3.Row, translation: sqlite3.Row | None = None) -> dict:
     image_url = row["imageUrl"] or row["image"] or ""
+    localized_biography = translation["biography"] if translation and translation["biography"] else row["biography"]
+    localized_role = localized_biography if translation and translation["biography"] else (row["roleDescription"] or "")
     return {
         "id": row["id"],
         "fullName": row["fullName"],
         "designation": translation["designation"] if translation and translation["designation"] else row["designation"],
-        "roleDescription": row["roleDescription"] or "",
-        "biography": translation["biography"] if translation and translation["biography"] else row["biography"],
+        "roleDescription": localized_role,
+        "biography": localized_biography,
         "baseDesignation": row["designation"],
         "baseRoleDescription": row["roleDescription"] or "",
         "baseBiography": row["biography"],
         "image": image_url,
         "imageUrl": image_url,
+        "language": row["language"] if "language" in row.keys() else "en",
         "displayOrder": row["displayOrder"],
         "active": bool(row["active"]),
         "createdAt": row["createdAt"],
@@ -1549,7 +1735,7 @@ def timeline_collection(connection: sqlite3.Connection, language: str, only_publ
     by_identity: dict[str, dict] = {}
     for row in rows:
         item = row_to_company_timeline(row)
-        key = f"{item['year']}::{item['title']}"
+        key = f"{item['displayOrder']}::{item['year']}"
         current = by_identity.get(key)
         if not current or item["language"] == language:
             by_identity[key] = item
@@ -1786,7 +1972,7 @@ class ApiHandler(BaseHTTPRequestHandler):
         if parsed.path == "/api/admin/summary":
             self.handle_admin_summary()
             return
-        if parsed.path == "/api/company-content":
+        if parsed.path in {"/api/company-content", "/api/content/about"}:
             self.handle_company_content(parsed)
             return
         if parsed.path == "/api/admin/company-stories":
@@ -2341,6 +2527,217 @@ class ApiHandler(BaseHTTPRequestHandler):
                 return
         self.send_json(200, {"ok": True})
 
+    def handle_admin_company_timeline_list(self, parsed) -> None:
+        if not self.require_admin():
+            return
+        query = parse_qs(parsed.query)
+        search = query.get("search", [""])[0].strip()
+        language = query.get("language", [""])[0].strip()
+        status = query.get("status", [""])[0].strip()
+        clauses: list[str] = []
+        params: list[str] = []
+        if search:
+            clauses.append("(year LIKE ? OR title LIKE ? OR description LIKE ? OR impactMetric LIKE ?)")
+            params.extend([f"%{search}%", f"%{search}%", f"%{search}%", f"%{search}%"])
+        if language:
+            clauses.append("language = ?")
+            params.append(language)
+        if status:
+            clauses.append("status = ?")
+            params.append(status)
+        where = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+        with database() as connection:
+            rows = connection.execute(
+                f"SELECT * FROM company_timelines {where} ORDER BY displayOrder, year, title",
+                params,
+            ).fetchall()
+            timelines = [row_to_company_timeline(row) for row in rows]
+        self.send_json(200, {"timelines": timelines})
+
+    def handle_create_company_timeline(self) -> None:
+        if not self.require_admin():
+            return
+        body = self.read_json()
+        clean, errors = company_timeline_payload(body)
+        if errors:
+            self.send_json(400, {"error": "Please complete the timeline form.", "details": errors})
+            return
+        timestamp = now_iso()
+        try:
+            with database() as connection:
+                cursor = connection.execute(
+                    """
+                    INSERT INTO company_timelines (
+                        year, title, description, impactMetric, language, displayOrder, status, createdAt, updatedAt
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        clean["year"],
+                        clean["title"],
+                        clean["description"],
+                        clean["impactMetric"],
+                        clean["language"],
+                        clean["displayOrder"],
+                        clean["status"],
+                        timestamp,
+                        timestamp,
+                    ),
+                )
+                row = connection.execute("SELECT * FROM company_timelines WHERE id = ?", (cursor.lastrowid,)).fetchone()
+            self.send_json(201, {"timeline": row_to_company_timeline(row)})
+        except sqlite3.IntegrityError:
+            self.send_json(409, {"error": "A timeline record with this year, title and language already exists."})
+
+    def handle_update_company_timeline(self, parsed) -> None:
+        if not self.require_admin():
+            return
+        timeline_id = self.id_from_path(parsed.path, "/api/admin/company-timelines/")
+        if timeline_id is None:
+            self.send_json(400, {"error": "Invalid timeline path."})
+            return
+        body = self.read_json()
+        clean, errors = company_timeline_payload(body)
+        if errors:
+            self.send_json(400, {"error": "Please complete the timeline form.", "details": errors})
+            return
+        timestamp = now_iso()
+        try:
+            with database() as connection:
+                existing = connection.execute("SELECT 1 FROM company_timelines WHERE id = ?", (timeline_id,)).fetchone()
+                if not existing:
+                    self.send_json(404, {"error": "Timeline record not found."})
+                    return
+                connection.execute(
+                    """
+                    UPDATE company_timelines
+                    SET year = ?, title = ?, description = ?, impactMetric = ?, language = ?,
+                        displayOrder = ?, status = ?, updatedAt = ?
+                    WHERE id = ?
+                    """,
+                    (
+                        clean["year"],
+                        clean["title"],
+                        clean["description"],
+                        clean["impactMetric"],
+                        clean["language"],
+                        clean["displayOrder"],
+                        clean["status"],
+                        timestamp,
+                        timeline_id,
+                    ),
+                )
+                row = connection.execute("SELECT * FROM company_timelines WHERE id = ?", (timeline_id,)).fetchone()
+            self.send_json(200, {"timeline": row_to_company_timeline(row)})
+        except sqlite3.IntegrityError:
+            self.send_json(409, {"error": "A timeline record with this year, title and language already exists."})
+
+    def handle_delete_company_timeline(self, parsed) -> None:
+        if not self.require_admin():
+            return
+        timeline_id = self.id_from_path(parsed.path, "/api/admin/company-timelines/")
+        if timeline_id is None:
+            self.send_json(400, {"error": "Invalid timeline path."})
+            return
+        with database() as connection:
+            cursor = connection.execute("DELETE FROM company_timelines WHERE id = ?", (timeline_id,))
+            if cursor.rowcount == 0:
+                self.send_json(404, {"error": "Timeline record not found."})
+                return
+        self.send_json(200, {"ok": True})
+
+    def handle_admin_homepage_statistic_list(self) -> None:
+        if not self.require_admin():
+            return
+        with database() as connection:
+            statistics = statistic_collection(connection, only_active=False)
+        self.send_json(200, {"statistics": statistics})
+
+    def handle_create_homepage_statistic(self) -> None:
+        if not self.require_admin():
+            return
+        body = self.read_json()
+        clean, errors = homepage_statistic_payload(body)
+        if errors:
+            self.send_json(400, {"error": "Please complete the statistic form.", "details": errors})
+            return
+        timestamp = now_iso()
+        try:
+            with database() as connection:
+                cursor = connection.execute(
+                    """
+                    INSERT INTO homepage_statistics (
+                        label, value, description, displayOrder, active, createdAt, updatedAt
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        clean["label"],
+                        clean["value"],
+                        clean["description"],
+                        clean["displayOrder"],
+                        clean["active"],
+                        timestamp,
+                        timestamp,
+                    ),
+                )
+                row = connection.execute("SELECT * FROM homepage_statistics WHERE id = ?", (cursor.lastrowid,)).fetchone()
+            self.send_json(201, {"statistic": row_to_homepage_statistic(row)})
+        except sqlite3.IntegrityError:
+            self.send_json(409, {"error": "A statistic with this label already exists."})
+
+    def handle_update_homepage_statistic(self, parsed) -> None:
+        if not self.require_admin():
+            return
+        statistic_id = self.id_from_path(parsed.path, "/api/admin/homepage-statistics/")
+        if statistic_id is None:
+            self.send_json(400, {"error": "Invalid statistic path."})
+            return
+        body = self.read_json()
+        clean, errors = homepage_statistic_payload(body)
+        if errors:
+            self.send_json(400, {"error": "Please complete the statistic form.", "details": errors})
+            return
+        timestamp = now_iso()
+        try:
+            with database() as connection:
+                existing = connection.execute("SELECT 1 FROM homepage_statistics WHERE id = ?", (statistic_id,)).fetchone()
+                if not existing:
+                    self.send_json(404, {"error": "Statistic not found."})
+                    return
+                connection.execute(
+                    """
+                    UPDATE homepage_statistics
+                    SET label = ?, value = ?, description = ?, displayOrder = ?, active = ?, updatedAt = ?
+                    WHERE id = ?
+                    """,
+                    (
+                        clean["label"],
+                        clean["value"],
+                        clean["description"],
+                        clean["displayOrder"],
+                        clean["active"],
+                        timestamp,
+                        statistic_id,
+                    ),
+                )
+                row = connection.execute("SELECT * FROM homepage_statistics WHERE id = ?", (statistic_id,)).fetchone()
+            self.send_json(200, {"statistic": row_to_homepage_statistic(row)})
+        except sqlite3.IntegrityError:
+            self.send_json(409, {"error": "A statistic with this label already exists."})
+
+    def handle_delete_homepage_statistic(self, parsed) -> None:
+        if not self.require_admin():
+            return
+        statistic_id = self.id_from_path(parsed.path, "/api/admin/homepage-statistics/")
+        if statistic_id is None:
+            self.send_json(400, {"error": "Invalid statistic path."})
+            return
+        with database() as connection:
+            cursor = connection.execute("DELETE FROM homepage_statistics WHERE id = ?", (statistic_id,))
+            if cursor.rowcount == 0:
+                self.send_json(404, {"error": "Statistic not found."})
+                return
+        self.send_json(200, {"ok": True})
+
     def handle_admin_leadership_list(self) -> None:
         if not self.require_admin():
             return
@@ -2361,14 +2758,16 @@ class ApiHandler(BaseHTTPRequestHandler):
             cursor = connection.execute(
                 """
                 INSERT INTO leadership_members (
-                    fullName, designation, biography, image, displayOrder, active, createdAt, updatedAt
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                    fullName, designation, roleDescription, biography, image, imageUrl, displayOrder, active, createdAt, updatedAt
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     clean["fullName"],
                     clean["designation"],
+                    clean["roleDescription"],
                     clean["biography"],
                     clean["image"],
+                    clean["imageUrl"],
                     clean["displayOrder"],
                     clean["active"],
                     timestamp,
@@ -2401,14 +2800,17 @@ class ApiHandler(BaseHTTPRequestHandler):
             connection.execute(
                 """
                 UPDATE leadership_members
-                SET fullName = ?, designation = ?, biography = ?, image = ?, displayOrder = ?, active = ?, updatedAt = ?
+                SET fullName = ?, designation = ?, roleDescription = ?, biography = ?, image = ?, imageUrl = ?,
+                    displayOrder = ?, active = ?, updatedAt = ?
                 WHERE id = ?
                 """,
                 (
                     clean["fullName"],
                     clean["designation"],
+                    clean["roleDescription"],
                     clean["biography"],
                     clean["image"],
+                    clean["imageUrl"],
                     clean["displayOrder"],
                     clean["active"],
                     timestamp,
@@ -2813,8 +3215,11 @@ class ApiHandler(BaseHTTPRequestHandler):
             local_fertilizers = connection.execute("SELECT COUNT(*) FROM local_fertilizers").fetchone()[0]
             imported_fertilizers = connection.execute("SELECT COUNT(*) FROM imported_fertilizers").fetchone()[0]
             company_stories = connection.execute("SELECT COUNT(*) FROM company_stories").fetchone()[0]
+            company_contents = connection.execute("SELECT COUNT(*) FROM company_contents").fetchone()[0]
             company_milestones = connection.execute("SELECT COUNT(*) FROM company_milestones").fetchone()[0]
+            company_timelines = connection.execute("SELECT COUNT(*) FROM company_timelines").fetchone()[0]
             leadership_members = connection.execute("SELECT COUNT(*) FROM leadership_members").fetchone()[0]
+            homepage_statistics = connection.execute("SELECT COUNT(*) FROM homepage_statistics").fetchone()[0]
             total_users = connection.execute("SELECT COUNT(*) FROM users WHERE role = 'USER'").fetchone()[0]
             new_users_today = connection.execute(
                 "SELECT COUNT(*) FROM users WHERE role = 'USER' AND createdAt LIKE ?",
@@ -2871,8 +3276,11 @@ class ApiHandler(BaseHTTPRequestHandler):
                 "localFertilizers": local_fertilizers,
                 "importedFertilizers": imported_fertilizers,
                 "companyStories": company_stories,
+                "companyContents": company_contents,
                 "companyMilestones": company_milestones,
+                "companyTimelines": company_timelines,
                 "leadershipMembers": leadership_members,
+                "homepageStatistics": homepage_statistics,
                 "totalUsers": total_users,
                 "newUsersToday": new_users_today,
                 "totalEnquiries": total_enquiries,
