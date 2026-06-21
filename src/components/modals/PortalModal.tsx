@@ -8,6 +8,7 @@ import { useAuthStore } from '../../stores/authStore'
 import { fetchAdminSummary, type AdminSummary } from '../../services/api'
 import { FertilizerManager } from '../admin/FertilizerManager'
 import { CompanyProfileManager } from '../admin/CompanyProfileManager'
+import { SuccessStoryManager } from '../admin/SuccessStoryManager'
 
 function initials(name?: string | null, email?: string | null) {
   const source = name || email || 'GW'
@@ -240,6 +241,7 @@ function AdminPanel() {
     { value: summary.companyTimelines || summary.companyMilestones || 0, label: 'Journey timeline', desc: 'Company journey records' },
     { value: summary.leadershipMembers || 0, label: 'Leadership profiles', desc: 'Directors and management' },
     { value: summary.homepageStatistics || 0, label: 'Homepage stats', desc: 'Impact statistics' },
+    { value: summary.successStories || 0, label: 'Success stories', desc: 'Farmer case studies' },
   ] : []
 
   return (
@@ -318,6 +320,10 @@ function LeadershipAdminPanel() {
   return <CompanyProfileManager section="leadership" />
 }
 
+function SuccessStoriesAdminPanel() {
+  return <SuccessStoryManager />
+}
+
 export function PortalModal() {
   const isOpen = usePortalStore((s) => s.isOpen)
   const closePortal = usePortalStore((s) => s.closePortal)
@@ -352,9 +358,10 @@ export function PortalModal() {
     companyMilestones: CompanyMilestonesAdminPanel,
     homepageStatistics: HomepageStatisticsAdminPanel,
     leadershipMembers: LeadershipAdminPanel,
+    successStories: SuccessStoriesAdminPanel,
   }
 
-  const adminPanels = ['admin', 'localFertilizers', 'importedFertilizers', 'companyStories', 'companyMilestones', 'homepageStatistics', 'leadershipMembers']
+  const adminPanels = ['admin', 'localFertilizers', 'importedFertilizers', 'companyStories', 'companyMilestones', 'homepageStatistics', 'leadershipMembers', 'successStories']
   const safePanel = role !== 'admin' && adminPanels.includes(activePanel) ? 'dashboard' : activePanel
   const ActivePanelComponent = panels[safePanel] ?? DashboardPanel
 
@@ -396,6 +403,7 @@ export function PortalModal() {
               { id: 'companyMilestones', icon: 'T', label: 'Manage Timeline' },
               { id: 'homepageStatistics', icon: '#', label: 'Manage Statistics' },
               { id: 'leadershipMembers', icon: 'T', label: 'Manage Leadership' },
+              { id: 'successStories', icon: 'S', label: 'Manage Success Stories' },
             ] : []),
           ].map((item) => (
             <button
