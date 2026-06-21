@@ -77,7 +77,10 @@ COMPANY_STORY_FIELDS = [
     "status",
 ]
 COMPANY_MILESTONE_FIELDS = ["year", "title", "description", "image", "displayOrder"]
-LEADERSHIP_FIELDS = ["fullName", "designation", "biography", "image", "displayOrder", "active"]
+LEADERSHIP_FIELDS = ["fullName", "designation", "roleDescription", "biography", "image", "imageUrl", "displayOrder", "active"]
+COMPANY_CONTENT_FIELDS = ["sectionKey", "title", "subtitle", "content", "language", "displayOrder", "status"]
+COMPANY_TIMELINE_FIELDS = ["year", "title", "description", "impactMetric", "language", "displayOrder", "status"]
+HOMEPAGE_STATISTIC_FIELDS = ["label", "value", "description", "displayOrder", "active"]
 
 
 def now_iso() -> str:
@@ -118,6 +121,13 @@ def database() -> sqlite3.Connection:
     connection = sqlite3.connect(DB_PATH)
     connection.row_factory = sqlite3.Row
     return connection
+
+
+def ensure_columns(connection: sqlite3.Connection, table: str, columns: dict[str, str]) -> None:
+    existing = {row["name"] for row in connection.execute(f"PRAGMA table_info({table})").fetchall()}
+    for name, definition in columns.items():
+        if name not in existing:
+            connection.execute(f"ALTER TABLE {table} ADD COLUMN {name} {definition}")
 
 
 def ensure_app_schema() -> None:
@@ -274,6 +284,20 @@ def ensure_app_schema() -> None:
                 UNIQUE(slug, language)
             );
 
+            CREATE TABLE IF NOT EXISTS company_contents (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                sectionKey TEXT NOT NULL,
+                title TEXT NOT NULL,
+                subtitle TEXT,
+                content TEXT NOT NULL,
+                language TEXT NOT NULL DEFAULT 'en',
+                displayOrder INTEGER NOT NULL DEFAULT 0,
+                status TEXT NOT NULL DEFAULT 'published',
+                createdAt TEXT NOT NULL,
+                updatedAt TEXT NOT NULL,
+                UNIQUE(sectionKey, language)
+            );
+
             CREATE TABLE IF NOT EXISTS company_milestones (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 year TEXT NOT NULL,
@@ -297,12 +321,28 @@ def ensure_app_schema() -> None:
                 FOREIGN KEY (milestoneId) REFERENCES company_milestones(id)
             );
 
+            CREATE TABLE IF NOT EXISTS company_timelines (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                year TEXT NOT NULL,
+                title TEXT NOT NULL,
+                description TEXT NOT NULL,
+                impactMetric TEXT,
+                language TEXT NOT NULL DEFAULT 'en',
+                displayOrder INTEGER NOT NULL DEFAULT 0,
+                status TEXT NOT NULL DEFAULT 'published',
+                createdAt TEXT NOT NULL,
+                updatedAt TEXT NOT NULL,
+                UNIQUE(year, title, language)
+            );
+
             CREATE TABLE IF NOT EXISTS leadership_members (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 fullName TEXT NOT NULL,
                 designation TEXT NOT NULL,
+                roleDescription TEXT,
                 biography TEXT NOT NULL,
                 image TEXT,
+                imageUrl TEXT,
                 displayOrder INTEGER NOT NULL DEFAULT 0,
                 active INTEGER NOT NULL DEFAULT 1,
                 createdAt TEXT NOT NULL,
@@ -321,6 +361,18 @@ def ensure_app_schema() -> None:
                 FOREIGN KEY (leadershipMemberId) REFERENCES leadership_members(id)
             );
 
+            CREATE TABLE IF NOT EXISTS homepage_statistics (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                label TEXT NOT NULL,
+                value TEXT NOT NULL,
+                description TEXT,
+                displayOrder INTEGER NOT NULL DEFAULT 0,
+                active INTEGER NOT NULL DEFAULT 1,
+                createdAt TEXT NOT NULL,
+                updatedAt TEXT NOT NULL,
+                UNIQUE(label)
+            );
+
             CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
             CREATE INDEX IF NOT EXISTS idx_enquiries_user ON enquiries(userId);
             CREATE INDEX IF NOT EXISTS idx_enquiries_status ON enquiries(status);
@@ -332,12 +384,24 @@ def ensure_app_schema() -> None:
             CREATE INDEX IF NOT EXISTS idx_local_fertilizers_category ON local_fertilizers(category);
             CREATE INDEX IF NOT EXISTS idx_imported_fertilizers_category ON imported_fertilizers(category);
             CREATE INDEX IF NOT EXISTS idx_company_stories_lookup ON company_stories(language, status, displayOrder);
+            CREATE INDEX IF NOT EXISTS idx_company_contents_lookup ON company_contents(language, status, displayOrder);
             CREATE INDEX IF NOT EXISTS idx_company_milestones_order ON company_milestones(displayOrder);
+            CREATE INDEX IF NOT EXISTS idx_company_timelines_lookup ON company_timelines(language, status, displayOrder);
             CREATE INDEX IF NOT EXISTS idx_leadership_members_active ON leadership_members(active, displayOrder);
+            CREATE INDEX IF NOT EXISTS idx_homepage_statistics_active ON homepage_statistics(active, displayOrder);
             """
+        )
+        ensure_columns(
+            connection,
+            "leadership_members",
+            {
+                "roleDescription": "TEXT",
+                "imageUrl": "TEXT",
+            },
         )
     seed_fertilizers()
     seed_company_content()
+    seed_company_profile_content()
 
 
 def ensure_database() -> None:
@@ -725,6 +789,257 @@ def seed_company_content() -> None:
                     )
 
 
+def seed_company_profile_content() -> None:
+    created_at = now_iso()
+    company_contents = [
+        {
+            "sectionKey": "company_introduction",
+            "title": "Introduction",
+            "subtitle": "Green Wings Farmers Producer Company Limited",
+            "content": "\n\n".join(
+                [
+                    "Green Wings Farmers Producer Company was established on 4 March 2023 under the Government of India’s “Formation and Promotion of 10,000 Farmer Producer Organizations (FPOs)” scheme. The company received financial support from NABARD under this initiative.",
+                    "Green Wings Farmers Producer Company was established with the objective of ensuring the progress and prosperity of farmers and securing a brighter future for them. The company was formed to bring farmers together so that they could receive fair and remunerative prices for their agricultural produce. Another key objective was to help farmers reduce their cultivation costs by collectively procuring seeds, fertilizers, and other agricultural inputs at more affordable rates.",
+                    "In addition, the Board of Directors adopted a policy of promoting Natural Farming and Organic Farming, while actively encouraging and creating awareness about these sustainable agricultural practices among farmers.",
+                    "The Chief Executive Officer, Mr. Tushar Gorakhanath Shelke, envisioned that the agricultural produce of the company should reach markets beyond Yeola Taluka and Nashik District. His goal was to ensure that the company’s produce was marketed not only across Maharashtra and India, but also in international markets. With this vision, the company decided to enter the field of exports as well.",
+                    "At the same time, Chairman Mr. Malhari Runjaba Jadhav and Secretary Mr. Nandkishor Shriram Shinde adopted a strategy focused on the processing and value addition of agricultural produce, with the aim of helping farmers obtain better prices and enhanced value for their products.",
+                    "Through these initiatives, Green Wings Farmers Producer Company continues to work towards empowering farmers, promoting sustainable agriculture, increasing farm incomes, and creating access to domestic as well as international markets.",
+                ]
+            ),
+            "language": "en",
+            "displayOrder": 1,
+            "status": "published",
+        },
+        {
+            "sectionKey": "vision",
+            "title": "Vision",
+            "subtitle": "",
+            "content": "To empower farmers by connecting them with fair markets, sustainable farming practices, value-added processing opportunities, and domestic as well as international agricultural trade networks.",
+            "language": "en",
+            "displayOrder": 2,
+            "status": "published",
+        },
+        {
+            "sectionKey": "mission",
+            "title": "Mission",
+            "subtitle": "",
+            "content": "To unite farmers under a strong Farmer Producer Organisation, reduce their input costs through collective procurement, promote natural and organic farming, support value addition of agricultural produce, and help farmers receive better returns through market linkage and export-oriented growth.",
+            "language": "en",
+            "displayOrder": 3,
+            "status": "published",
+        },
+    ]
+    leadership_rows = [
+        {
+            "fullName": "Mr. Malhari Runjaba Jadhav",
+            "designation": "Chairman",
+            "roleDescription": "",
+            "biography": "",
+            "imageUrl": "",
+            "displayOrder": 1,
+            "active": 1,
+        },
+        {
+            "fullName": "Mr. Manik Ramchandra Rasal",
+            "designation": "Vice Chairman",
+            "roleDescription": "",
+            "biography": "",
+            "imageUrl": "",
+            "displayOrder": 2,
+            "active": 1,
+        },
+        {
+            "fullName": "Mr. Nandkishor Shriram Shinde",
+            "designation": "Secretary",
+            "roleDescription": "",
+            "biography": "",
+            "imageUrl": "",
+            "displayOrder": 3,
+            "active": 1,
+        },
+        {
+            "fullName": "Mrs. Varsha Vishwambhar Patil",
+            "designation": "Director",
+            "roleDescription": "",
+            "biography": "",
+            "imageUrl": "",
+            "displayOrder": 4,
+            "active": 1,
+        },
+        {
+            "fullName": "Mr. Tushar Gorakhanath Shelke",
+            "designation": "Director and Chief Executive Officer",
+            "roleDescription": "Mr. Tushar Gorakhanath Shelke serves as Director and Chief Executive Officer of Green Wings Farmers Producer Company. He leads the company’s operational management and export-oriented growth vision.",
+            "biography": "Mr. Tushar Gorakhanath Shelke serves as Director and Chief Executive Officer of Green Wings Farmers Producer Company. He leads the company’s operational management and export-oriented growth vision.",
+            "imageUrl": "",
+            "displayOrder": 5,
+            "active": 1,
+        },
+    ]
+    timeline_rows = [
+        {
+            "year": "2023",
+            "title": "Company Established",
+            "description": "Green Wings Farmers Producer Company was established on 4 March 2023 under the Government of India’s Formation and Promotion of 10,000 Farmer Producer Organizations scheme, with financial support from NABARD.",
+            "impactMetric": "Official FPO registration under national FPO promotion initiative",
+            "displayOrder": 1,
+        },
+        {
+            "year": "2023",
+            "title": "Government Onion Procurement Started",
+            "description": "The company began its work through government onion procurement under NAFED in collaboration with Mahakisan Vriddhi Agro Federation.",
+            "impactMetric": "First major procurement activity launched",
+            "displayOrder": 2,
+        },
+        {
+            "year": "2023",
+            "title": "Summer Onion Procurement",
+            "description": "In its first year, the company purchased 3,453 quintals of summer onion from farmers and supplied it to NAFED. Farmers received at least ₹2 per kg more than the market committee rate, helping each trolley earn approximately ₹5,000 more.",
+            "impactMetric": "3,453 quintals procured, 150+ farmers directly benefited",
+            "displayOrder": 3,
+        },
+        {
+            "year": "2023",
+            "title": "Red Onion Procurement",
+            "description": "The company later received another opportunity for red onion procurement. Under this activity, it purchased 5,861 quintals of onion from farmers and helped more than 200 farmers benefit from better pricing. Farmers received an average of ₹4 per kg more, which increased farmer satisfaction and strengthened membership.",
+            "impactMetric": "5,861 quintals procured, 200+ farmers benefited",
+            "displayOrder": 4,
+        },
+        {
+            "year": "2023",
+            "title": "Membership Growth",
+            "description": "After successful onion procurement activities, farmers joined the company as members, increasing the company’s membership base to 323.",
+            "impactMetric": "323 members",
+            "displayOrder": 5,
+        },
+        {
+            "year": "2023",
+            "title": "First-Year Turnover",
+            "description": "Due to these procurement activities, the company achieved a turnover of approximately ₹2 crore in its first year. All farmer payments were transferred online directly to their bank accounts.",
+            "impactMetric": "₹2 crore first-year turnover",
+            "displayOrder": 6,
+        },
+        {
+            "year": "2024",
+            "title": "Continued Independent Procurement",
+            "description": "Due to changes in government and NAFED procurement policies, and payment delays from Mahakisan Vriddhi Federation, the company did not receive further government onion procurement work. However, Green Wings continued its activities independently and carried on onion procurement at the local level.",
+            "impactMetric": "Independent procurement activities continued",
+            "displayOrder": 7,
+        },
+        {
+            "year": "2024",
+            "title": "Seeds and Organic Fertilizer Support",
+            "description": "The company continued supporting farmers by supplying seeds and organic fertilizers, helping farmers access important agricultural inputs.",
+            "impactMetric": "Farmer input support continued",
+            "displayOrder": 8,
+        },
+        {
+            "year": "2025",
+            "title": "Membership Crossed 600+",
+            "description": "Through consistent farmer support, procurement activities, and input supply services, Green Wings Farmers Producer Company expanded its membership base to more than 600 farmers.",
+            "impactMetric": "600+ members",
+            "displayOrder": 9,
+        },
+    ]
+    statistics = [
+        ("Farmers Connected", "600+", "", 1),
+        ("Summer Onion Procured", "3,453 Quintals", "", 2),
+        ("Red Onion Procured", "5,861 Quintals", "", 3),
+        ("First-Year Turnover", "₹2 Crore", "", 4),
+        ("Farmers Benefited", "350+", "", 5),
+    ]
+    with database() as connection:
+        for item in company_contents:
+            connection.execute(
+                """
+                INSERT OR IGNORE INTO company_contents (
+                    sectionKey, title, subtitle, content, language, displayOrder, status, createdAt, updatedAt
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    item["sectionKey"],
+                    item["title"],
+                    item["subtitle"],
+                    item["content"],
+                    item["language"],
+                    item["displayOrder"],
+                    item["status"],
+                    created_at,
+                    created_at,
+                ),
+            )
+
+        for item in leadership_rows:
+            existing = connection.execute(
+                "SELECT * FROM leadership_members WHERE fullName = ?",
+                (item["fullName"],),
+            ).fetchone()
+            if not existing:
+                connection.execute(
+                    """
+                    INSERT INTO leadership_members (
+                        fullName, designation, roleDescription, biography, image, imageUrl,
+                        displayOrder, active, createdAt, updatedAt
+                    ) VALUES (?, ?, ?, ?, '', ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        item["fullName"],
+                        item["designation"],
+                        item["roleDescription"],
+                        item["biography"],
+                        item["imageUrl"],
+                        item["displayOrder"],
+                        item["active"],
+                        created_at,
+                        created_at,
+                    ),
+                )
+                continue
+
+            updates: list[str] = []
+            values: list[object] = []
+            for field in ("roleDescription", "imageUrl"):
+                if item[field] and not str(existing[field] or "").strip():
+                    updates.append(f"{field} = ?")
+                    values.append(item[field])
+            if item["biography"] and not str(existing["biography"] or "").strip():
+                updates.append("biography = ?")
+                values.append(item["biography"])
+            if updates:
+                updates.append("updatedAt = ?")
+                values.append(created_at)
+                values.append(existing["id"])
+                connection.execute(f"UPDATE leadership_members SET {', '.join(updates)} WHERE id = ?", values)
+
+        for item in timeline_rows:
+            connection.execute(
+                """
+                INSERT OR IGNORE INTO company_timelines (
+                    year, title, description, impactMetric, language, displayOrder, status, createdAt, updatedAt
+                ) VALUES (?, ?, ?, ?, 'en', ?, 'published', ?, ?)
+                """,
+                (
+                    item["year"],
+                    item["title"],
+                    item["description"],
+                    item["impactMetric"],
+                    item["displayOrder"],
+                    created_at,
+                    created_at,
+                ),
+            )
+
+        for label, value, description, order in statistics:
+            connection.execute(
+                """
+                INSERT OR IGNORE INTO homepage_statistics (
+                    label, value, description, displayOrder, active, createdAt, updatedAt
+                ) VALUES (?, ?, ?, ?, 1, ?, ?)
+                """,
+                (label, value, description, order, created_at, created_at),
+            )
+
+
 def rate_limited(key: str, limit: int, window_seconds: int) -> bool:
     current = time.time()
     entries = [stamp for stamp in RATE_LIMITS.get(key, []) if current - stamp < window_seconds]
@@ -948,6 +1263,21 @@ def row_to_company_story(row: sqlite3.Row) -> dict:
     }
 
 
+def row_to_company_content(row: sqlite3.Row) -> dict:
+    return {
+        "id": row["id"],
+        "sectionKey": row["sectionKey"],
+        "title": row["title"],
+        "subtitle": row["subtitle"] or "",
+        "content": row["content"],
+        "language": row["language"],
+        "displayOrder": row["displayOrder"],
+        "status": row["status"],
+        "createdAt": row["createdAt"],
+        "updatedAt": row["updatedAt"],
+    }
+
+
 def row_to_company_milestone(row: sqlite3.Row, translation: sqlite3.Row | None = None) -> dict:
     return {
         "id": row["id"],
@@ -963,15 +1293,47 @@ def row_to_company_milestone(row: sqlite3.Row, translation: sqlite3.Row | None =
     }
 
 
+def row_to_company_timeline(row: sqlite3.Row) -> dict:
+    return {
+        "id": row["id"],
+        "year": row["year"],
+        "title": row["title"],
+        "description": row["description"],
+        "impactMetric": row["impactMetric"] or "",
+        "language": row["language"],
+        "displayOrder": row["displayOrder"],
+        "status": row["status"],
+        "createdAt": row["createdAt"],
+        "updatedAt": row["updatedAt"],
+    }
+
+
+def row_to_homepage_statistic(row: sqlite3.Row) -> dict:
+    return {
+        "id": row["id"],
+        "label": row["label"],
+        "value": row["value"],
+        "description": row["description"] or "",
+        "displayOrder": row["displayOrder"],
+        "active": bool(row["active"]),
+        "createdAt": row["createdAt"],
+        "updatedAt": row["updatedAt"],
+    }
+
+
 def row_to_leadership_member(row: sqlite3.Row, translation: sqlite3.Row | None = None) -> dict:
+    image_url = row["imageUrl"] or row["image"] or ""
     return {
         "id": row["id"],
         "fullName": row["fullName"],
         "designation": translation["designation"] if translation and translation["designation"] else row["designation"],
+        "roleDescription": row["roleDescription"] or "",
         "biography": translation["biography"] if translation and translation["biography"] else row["biography"],
         "baseDesignation": row["designation"],
+        "baseRoleDescription": row["roleDescription"] or "",
         "baseBiography": row["biography"],
-        "image": row["image"],
+        "image": image_url,
+        "imageUrl": image_url,
         "displayOrder": row["displayOrder"],
         "active": bool(row["active"]),
         "createdAt": row["createdAt"],
@@ -991,6 +1353,18 @@ def company_story_payload(body: dict) -> tuple[dict, list[str]]:
     return clean, errors
 
 
+def company_content_payload(body: dict) -> tuple[dict, list[str]]:
+    clean = {field: str(body.get(field, "")).strip() for field in COMPANY_CONTENT_FIELDS}
+    clean["language"] = clean["language"] if clean["language"] in SUPPORTED_LANGUAGES else "en"
+    clean["status"] = clean["status"] if clean["status"] in {"draft", "published", "archived"} else "published"
+    try:
+        clean["displayOrder"] = int(body.get("displayOrder", 0))
+    except (TypeError, ValueError):
+        clean["displayOrder"] = 0
+    errors = [f"{field} is required." for field in ["sectionKey", "title", "content", "language"] if not clean.get(field)]
+    return clean, errors
+
+
 def company_milestone_payload(body: dict) -> tuple[dict, list[str]]:
     clean = {field: str(body.get(field, "")).strip() for field in COMPANY_MILESTONE_FIELDS}
     try:
@@ -1001,8 +1375,35 @@ def company_milestone_payload(body: dict) -> tuple[dict, list[str]]:
     return clean, errors
 
 
+def company_timeline_payload(body: dict) -> tuple[dict, list[str]]:
+    clean = {field: str(body.get(field, "")).strip() for field in COMPANY_TIMELINE_FIELDS}
+    clean["language"] = clean["language"] if clean["language"] in SUPPORTED_LANGUAGES else "en"
+    clean["status"] = clean["status"] if clean["status"] in {"draft", "published", "archived"} else "published"
+    try:
+        clean["displayOrder"] = int(body.get("displayOrder", 0))
+    except (TypeError, ValueError):
+        clean["displayOrder"] = 0
+    errors = [f"{field} is required." for field in ["year", "title", "description", "language"] if not clean.get(field)]
+    return clean, errors
+
+
+def homepage_statistic_payload(body: dict) -> tuple[dict, list[str]]:
+    clean = {field: str(body.get(field, "")).strip() for field in HOMEPAGE_STATISTIC_FIELDS}
+    try:
+        clean["displayOrder"] = int(body.get("displayOrder", 0))
+    except (TypeError, ValueError):
+        clean["displayOrder"] = 0
+    clean["active"] = 1 if body.get("active", True) in {True, 1, "1", "true", "active", "yes"} else 0
+    errors = [f"{field} is required." for field in ["label", "value"] if not clean.get(field)]
+    return clean, errors
+
+
 def leadership_payload(body: dict) -> tuple[dict, list[str]]:
     clean = {field: str(body.get(field, "")).strip() for field in LEADERSHIP_FIELDS}
+    if not clean["imageUrl"]:
+        clean["imageUrl"] = clean["image"]
+    if not clean["image"]:
+        clean["image"] = clean["imageUrl"]
     try:
         clean["displayOrder"] = int(body.get("displayOrder", 0))
     except (TypeError, ValueError):
@@ -1076,6 +1477,28 @@ def story_collection(connection: sqlite3.Connection, language: str) -> list[dict
     return sorted(by_slug.values(), key=lambda item: (item["displayOrder"], item["title"]))
 
 
+def content_collection(connection: sqlite3.Connection, language: str, only_public: bool = True) -> list[dict]:
+    clauses = ["language IN ('en', ?)"]
+    params: list[object] = [language]
+    if only_public:
+        clauses.append("status = 'published'")
+    rows = connection.execute(
+        f"""
+        SELECT * FROM company_contents
+        WHERE {' AND '.join(clauses)}
+        ORDER BY displayOrder, sectionKey
+        """,
+        params,
+    ).fetchall()
+    by_key: dict[str, dict] = {}
+    for row in rows:
+        item = row_to_company_content(row)
+        current = by_key.get(item["sectionKey"])
+        if not current or item["language"] == language:
+            by_key[item["sectionKey"]] = item
+    return sorted(by_key.values(), key=lambda item: (item["displayOrder"], item["sectionKey"]))
+
+
 def milestone_collection(connection: sqlite3.Connection, language: str, only_public: bool = True) -> list[dict]:
     rows = connection.execute("SELECT * FROM company_milestones ORDER BY displayOrder, year").fetchall()
     milestones: list[dict] = []
@@ -1108,6 +1531,37 @@ def milestone_collection(connection: sqlite3.Connection, language: str, only_pub
             milestone["translations"] = translations
         milestones.append(milestone)
     return milestones
+
+
+def timeline_collection(connection: sqlite3.Connection, language: str, only_public: bool = True) -> list[dict]:
+    clauses = ["language IN ('en', ?)"]
+    params: list[object] = [language]
+    if only_public:
+        clauses.append("status = 'published'")
+    rows = connection.execute(
+        f"""
+        SELECT * FROM company_timelines
+        WHERE {' AND '.join(clauses)}
+        ORDER BY displayOrder, year
+        """,
+        params,
+    ).fetchall()
+    by_identity: dict[str, dict] = {}
+    for row in rows:
+        item = row_to_company_timeline(row)
+        key = f"{item['year']}::{item['title']}"
+        current = by_identity.get(key)
+        if not current or item["language"] == language:
+            by_identity[key] = item
+    return sorted(by_identity.values(), key=lambda item: (item["displayOrder"], item["year"], item["title"]))
+
+
+def statistic_collection(connection: sqlite3.Connection, only_active: bool = True) -> list[dict]:
+    where = "WHERE active = 1" if only_active else ""
+    rows = connection.execute(
+        f"SELECT * FROM homepage_statistics {where} ORDER BY displayOrder, label"
+    ).fetchall()
+    return [row_to_homepage_statistic(row) for row in rows]
 
 
 def leadership_collection(connection: sqlite3.Connection, language: str, only_active: bool = True) -> list[dict]:
@@ -1338,8 +1792,17 @@ class ApiHandler(BaseHTTPRequestHandler):
         if parsed.path == "/api/admin/company-stories":
             self.handle_admin_company_story_list(parsed)
             return
+        if parsed.path == "/api/admin/company-contents":
+            self.handle_admin_company_content_list(parsed)
+            return
         if parsed.path == "/api/admin/company-milestones":
             self.handle_admin_company_milestone_list()
+            return
+        if parsed.path == "/api/admin/company-timelines":
+            self.handle_admin_company_timeline_list(parsed)
+            return
+        if parsed.path == "/api/admin/homepage-statistics":
+            self.handle_admin_homepage_statistic_list()
             return
         if parsed.path == "/api/admin/leadership-members":
             self.handle_admin_leadership_list()
@@ -1390,8 +1853,17 @@ class ApiHandler(BaseHTTPRequestHandler):
         if parsed.path == "/api/admin/company-stories":
             self.handle_create_company_story()
             return
+        if parsed.path == "/api/admin/company-contents":
+            self.handle_create_company_content()
+            return
         if parsed.path == "/api/admin/company-milestones":
             self.handle_create_company_milestone()
+            return
+        if parsed.path == "/api/admin/company-timelines":
+            self.handle_create_company_timeline()
+            return
+        if parsed.path == "/api/admin/homepage-statistics":
+            self.handle_create_homepage_statistic()
             return
         if parsed.path == "/api/admin/leadership-members":
             self.handle_create_leadership_member()
@@ -1406,8 +1878,17 @@ class ApiHandler(BaseHTTPRequestHandler):
         if parsed.path.startswith("/api/admin/company-stories/"):
             self.handle_update_company_story(parsed)
             return
+        if parsed.path.startswith("/api/admin/company-contents/"):
+            self.handle_update_company_content(parsed)
+            return
         if parsed.path.startswith("/api/admin/company-milestones/"):
             self.handle_update_company_milestone(parsed)
+            return
+        if parsed.path.startswith("/api/admin/company-timelines/"):
+            self.handle_update_company_timeline(parsed)
+            return
+        if parsed.path.startswith("/api/admin/homepage-statistics/"):
+            self.handle_update_homepage_statistic(parsed)
             return
         if parsed.path.startswith("/api/admin/leadership-members/"):
             self.handle_update_leadership_member(parsed)
@@ -1422,8 +1903,17 @@ class ApiHandler(BaseHTTPRequestHandler):
         if parsed.path.startswith("/api/admin/company-stories/"):
             self.handle_delete_company_story(parsed)
             return
+        if parsed.path.startswith("/api/admin/company-contents/"):
+            self.handle_delete_company_content(parsed)
+            return
         if parsed.path.startswith("/api/admin/company-milestones/"):
             self.handle_delete_company_milestone(parsed)
+            return
+        if parsed.path.startswith("/api/admin/company-timelines/"):
+            self.handle_delete_company_timeline(parsed)
+            return
+        if parsed.path.startswith("/api/admin/homepage-statistics/"):
+            self.handle_delete_homepage_statistic(parsed)
             return
         if parsed.path.startswith("/api/admin/leadership-members/"):
             self.handle_delete_leadership_member(parsed)
@@ -1504,19 +1994,144 @@ class ApiHandler(BaseHTTPRequestHandler):
     def handle_company_content(self, parsed) -> None:
         language = requested_language(parse_qs(parsed.query))
         with database() as connection:
+            contents = content_collection(connection, language)
             stories = story_collection(connection, language)
+            timelines = timeline_collection(connection, language)
             milestones = milestone_collection(connection, language)
+            statistics = statistic_collection(connection)
             leadership = leadership_collection(connection, language)
         self.send_json(
             200,
             {
                 "language": language,
+                "contents": contents,
+                "contentByKey": {item["sectionKey"]: item for item in contents},
                 "stories": stories,
                 "storiesBySlug": {story["slug"]: story for story in stories},
+                "timelines": timelines,
                 "milestones": milestones,
+                "statistics": statistics,
                 "leadership": leadership,
             },
         )
+
+    def handle_admin_company_content_list(self, parsed) -> None:
+        if not self.require_admin():
+            return
+        query = parse_qs(parsed.query)
+        search = query.get("search", [""])[0].strip()
+        language = query.get("language", [""])[0].strip()
+        status = query.get("status", [""])[0].strip()
+        clauses: list[str] = []
+        params: list[str] = []
+        if search:
+            clauses.append("(title LIKE ? OR sectionKey LIKE ? OR content LIKE ?)")
+            params.extend([f"%{search}%", f"%{search}%", f"%{search}%"])
+        if language:
+            clauses.append("language = ?")
+            params.append(language)
+        if status:
+            clauses.append("status = ?")
+            params.append(status)
+        where = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+        with database() as connection:
+            rows = connection.execute(
+                f"SELECT * FROM company_contents {where} ORDER BY displayOrder, sectionKey, language",
+                params,
+            ).fetchall()
+            contents = [row_to_company_content(row) for row in rows]
+        self.send_json(200, {"contents": contents})
+
+    def handle_create_company_content(self) -> None:
+        if not self.require_admin():
+            return
+        body = self.read_json()
+        clean, errors = company_content_payload(body)
+        if errors:
+            self.send_json(400, {"error": "Please complete the content form.", "details": errors})
+            return
+        timestamp = now_iso()
+        try:
+            with database() as connection:
+                cursor = connection.execute(
+                    """
+                    INSERT INTO company_contents (
+                        sectionKey, title, subtitle, content, language, displayOrder, status, createdAt, updatedAt
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        clean["sectionKey"],
+                        clean["title"],
+                        clean["subtitle"],
+                        clean["content"],
+                        clean["language"],
+                        clean["displayOrder"],
+                        clean["status"],
+                        timestamp,
+                        timestamp,
+                    ),
+                )
+                row = connection.execute("SELECT * FROM company_contents WHERE id = ?", (cursor.lastrowid,)).fetchone()
+            self.send_json(201, {"content": row_to_company_content(row)})
+        except sqlite3.IntegrityError:
+            self.send_json(409, {"error": "A content section with this key and language already exists."})
+
+    def handle_update_company_content(self, parsed) -> None:
+        if not self.require_admin():
+            return
+        content_id = self.id_from_path(parsed.path, "/api/admin/company-contents/")
+        if content_id is None:
+            self.send_json(400, {"error": "Invalid content path."})
+            return
+        body = self.read_json()
+        clean, errors = company_content_payload(body)
+        if errors:
+            self.send_json(400, {"error": "Please complete the content form.", "details": errors})
+            return
+        timestamp = now_iso()
+        try:
+            with database() as connection:
+                existing = connection.execute("SELECT 1 FROM company_contents WHERE id = ?", (content_id,)).fetchone()
+                if not existing:
+                    self.send_json(404, {"error": "Content section not found."})
+                    return
+                connection.execute(
+                    """
+                    UPDATE company_contents
+                    SET sectionKey = ?, title = ?, subtitle = ?, content = ?, language = ?,
+                        displayOrder = ?, status = ?, updatedAt = ?
+                    WHERE id = ?
+                    """,
+                    (
+                        clean["sectionKey"],
+                        clean["title"],
+                        clean["subtitle"],
+                        clean["content"],
+                        clean["language"],
+                        clean["displayOrder"],
+                        clean["status"],
+                        timestamp,
+                        content_id,
+                    ),
+                )
+                row = connection.execute("SELECT * FROM company_contents WHERE id = ?", (content_id,)).fetchone()
+            self.send_json(200, {"content": row_to_company_content(row)})
+        except sqlite3.IntegrityError:
+            self.send_json(409, {"error": "A content section with this key and language already exists."})
+
+    def handle_delete_company_content(self, parsed) -> None:
+        if not self.require_admin():
+            return
+        content_id = self.id_from_path(parsed.path, "/api/admin/company-contents/")
+        if content_id is None:
+            self.send_json(400, {"error": "Invalid content path."})
+            return
+        with database() as connection:
+            cursor = connection.execute("DELETE FROM company_contents WHERE id = ?", (content_id,))
+            if cursor.rowcount == 0:
+                self.send_json(404, {"error": "Content section not found."})
+                return
+        self.send_json(200, {"ok": True})
 
     def handle_admin_company_story_list(self, parsed) -> None:
         if not self.require_admin():
