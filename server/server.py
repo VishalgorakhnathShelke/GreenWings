@@ -67,6 +67,17 @@ FERTILIZER_KINDS = {
     "local": ("local_fertilizers", "local_fertilizer_translations"),
     "imported": ("imported_fertilizers", "imported_fertilizer_translations"),
 }
+COMPANY_STORY_FIELDS = [
+    "title",
+    "slug",
+    "language",
+    "content",
+    "featuredImage",
+    "displayOrder",
+    "status",
+]
+COMPANY_MILESTONE_FIELDS = ["year", "title", "description", "image", "displayOrder"]
+LEADERSHIP_FIELDS = ["fullName", "designation", "biography", "image", "displayOrder", "active"]
 
 
 def now_iso() -> str:
@@ -249,6 +260,67 @@ def ensure_app_schema() -> None:
                 FOREIGN KEY (fertilizerId) REFERENCES imported_fertilizers(id)
             );
 
+            CREATE TABLE IF NOT EXISTS company_stories (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                title TEXT NOT NULL,
+                slug TEXT NOT NULL,
+                language TEXT NOT NULL,
+                content TEXT NOT NULL,
+                featuredImage TEXT,
+                displayOrder INTEGER NOT NULL DEFAULT 0,
+                status TEXT NOT NULL DEFAULT 'published',
+                createdAt TEXT NOT NULL,
+                updatedAt TEXT NOT NULL,
+                UNIQUE(slug, language)
+            );
+
+            CREATE TABLE IF NOT EXISTS company_milestones (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                year TEXT NOT NULL,
+                title TEXT NOT NULL,
+                description TEXT NOT NULL,
+                image TEXT,
+                displayOrder INTEGER NOT NULL DEFAULT 0,
+                createdAt TEXT NOT NULL,
+                updatedAt TEXT NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS company_milestone_translations (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                milestoneId INTEGER NOT NULL,
+                language TEXT NOT NULL,
+                title TEXT,
+                description TEXT,
+                createdAt TEXT NOT NULL,
+                updatedAt TEXT NOT NULL,
+                UNIQUE(milestoneId, language),
+                FOREIGN KEY (milestoneId) REFERENCES company_milestones(id)
+            );
+
+            CREATE TABLE IF NOT EXISTS leadership_members (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                fullName TEXT NOT NULL,
+                designation TEXT NOT NULL,
+                biography TEXT NOT NULL,
+                image TEXT,
+                displayOrder INTEGER NOT NULL DEFAULT 0,
+                active INTEGER NOT NULL DEFAULT 1,
+                createdAt TEXT NOT NULL,
+                updatedAt TEXT NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS leadership_member_translations (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                leadershipMemberId INTEGER NOT NULL,
+                language TEXT NOT NULL,
+                designation TEXT,
+                biography TEXT,
+                createdAt TEXT NOT NULL,
+                updatedAt TEXT NOT NULL,
+                UNIQUE(leadershipMemberId, language),
+                FOREIGN KEY (leadershipMemberId) REFERENCES leadership_members(id)
+            );
+
             CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
             CREATE INDEX IF NOT EXISTS idx_enquiries_user ON enquiries(userId);
             CREATE INDEX IF NOT EXISTS idx_enquiries_status ON enquiries(status);
@@ -259,9 +331,13 @@ def ensure_app_schema() -> None:
             CREATE INDEX IF NOT EXISTS idx_imported_fertilizers_status ON imported_fertilizers(status);
             CREATE INDEX IF NOT EXISTS idx_local_fertilizers_category ON local_fertilizers(category);
             CREATE INDEX IF NOT EXISTS idx_imported_fertilizers_category ON imported_fertilizers(category);
+            CREATE INDEX IF NOT EXISTS idx_company_stories_lookup ON company_stories(language, status, displayOrder);
+            CREATE INDEX IF NOT EXISTS idx_company_milestones_order ON company_milestones(displayOrder);
+            CREATE INDEX IF NOT EXISTS idx_leadership_members_active ON leadership_members(active, displayOrder);
             """
         )
     seed_fertilizers()
+    seed_company_content()
 
 
 def ensure_database() -> None:
@@ -413,6 +489,240 @@ def insert_fertilizer_row(connection: sqlite3.Connection, table: str, payload: d
         values,
     )
     return int(cursor.lastrowid)
+
+
+def seed_company_content() -> None:
+    created_at = now_iso()
+    story_sections = [
+        ("home-hero", "From the Farms of Yeola (Nashik) to the World", "GreenWings connects farmer knowledge, natural farming values and market-ready systems so rural prosperity can travel from local fields to global opportunities.", "/assets/greenwings-community.png", 1),
+        ("home-stat-farmers", "Farmers Connected: 1,100+", "A growing community of farmers is connected through GreenWings training, advisory, input support and market-linkage programmes.", "", 2),
+        ("community-knowledge-sharing", "Knowledge Sharing", "GreenWings creates farmer learning circles where practical field experience, scientific guidance and seasonal crop planning are shared openly.", "/assets/greenwings-hero.png", 10),
+        ("community-farmer-networking", "Farmer Networking", "The platform strengthens farmer-to-farmer relationships so members can collaborate on cultivation, aggregation, market access and collective growth.", "/assets/greenwings-community.png", 11),
+        ("community-training-programs", "Training Programs", "Training programmes help farmers adopt better practices in soil health, crop nutrition, post-harvest handling and digital market readiness.", "/assets/greenwings-hero.png", 12),
+        ("community-innovation", "Innovation", "GreenWings encourages practical innovation through agri-technology, data-led decisions, climate-aware cultivation and value-chain partnerships.", "/assets/greenwings-community.png", 13),
+        ("community-learning", "Learning", "Continuous learning keeps farmers prepared for changing weather, market demand, input choices, quality standards and export opportunities.", "/assets/greenwings-hero.png", 14),
+        ("community-sustainable-agriculture", "Sustainable Agriculture", "Sustainable agriculture is promoted through natural farming, responsible input use, soil improvement and water-conscious cultivation.", "/assets/greenwings-community.png", 15),
+        ("company-introduction", "Company Introduction", "GREEN WINGS FARMERS PRODUCER COMPANY LIMITED is a farmer-owned organisation founded to connect farmers with inputs, knowledge, technology, processing, value addition and better markets.", "/assets/greenwings-hero.png", 20),
+        ("our-journey", "Our Journey", "GreenWings began in 2023 with a clear purpose: unite farmers around trust, learning, collaboration and long-term agricultural growth.", "/assets/greenwings-community.png", 21),
+        ("vision", "Vision", "To build a trusted farmer-led agricultural ecosystem that carries the strength of Yeola and Nashik farming communities to national and international markets.", "", 22),
+        ("mission", "Mission", "To empower farmers through training, natural farming support, input guidance, aggregation, processing, value addition and market connectivity.", "", 23),
+        ("core-values", "Core Values", "Trust, transparency, farmer-first decision making, sustainability, innovation, community ownership and shared prosperity guide GreenWings.", "", 24),
+        ("export-vision", "Export Vision", "GreenWings aims to prepare farmer produce for premium markets through quality systems, traceability, grading, packaging and buyer readiness.", "", 25),
+        ("natural-farming-initiative", "Natural Farming Initiative", "The natural farming initiative promotes soil health, reduced chemical dependency, local resources, biodiversity and resilient production systems.", "", 26),
+        ("farmer-empowerment-strategy", "Farmer Empowerment Strategy", "The farmer empowerment strategy focuses on knowledge access, group strength, digital connectivity, finance readiness and better bargaining power.", "", 27),
+        ("processing-value-addition-strategy", "Processing & Value Addition Strategy", "GreenWings plans to support grading, primary processing, packaging, storage and value-added products that increase farmer income.", "", 28),
+    ]
+    story_translations = {
+        "hi": {
+            "home-hero": ("येवला (नाशिक) के खेतों से दुनिया तक", "ग्रीनविंग्स किसान ज्ञान, प्राकृतिक खेती और बाजार-तैयार प्रणालियों को जोड़ता है ताकि ग्रामीण समृद्धि स्थानीय खेतों से वैश्विक अवसरों तक पहुंचे।"),
+            "home-stat-farmers": ("किसान जुड़े: 1,100+", "ग्रीनविंग्स प्रशिक्षण, सलाह, इनपुट सहयोग और बाजार संपर्क के माध्यम से किसानों का बढ़ता समुदाय जोड़ रहा है।"),
+            "community-knowledge-sharing": ("ज्ञान साझा करना", "ग्रीनविंग्स किसान सीखने के समूह बनाता है जहां खेत का अनुभव, वैज्ञानिक सलाह और मौसमी फसल योजना खुले रूप से साझा की जाती है।"),
+            "community-farmer-networking": ("किसान नेटवर्किंग", "यह मंच किसानों के बीच सहयोग को मजबूत करता है ताकि खेती, संग्रह, बाजार पहुंच और सामूहिक विकास में साझेदारी बढ़े।"),
+            "community-training-programs": ("प्रशिक्षण कार्यक्रम", "प्रशिक्षण कार्यक्रम किसानों को मिट्टी स्वास्थ्य, फसल पोषण, कटाई के बाद प्रबंधन और डिजिटल बाजार तैयारी में बेहतर अभ्यास अपनाने में मदद करते हैं।"),
+            "community-innovation": ("नवाचार", "ग्रीनविंग्स कृषि तकनीक, डेटा आधारित निर्णय, जलवायु-सजग खेती और मूल्य-श्रृंखला साझेदारी के माध्यम से व्यावहारिक नवाचार को बढ़ावा देता है।"),
+            "community-learning": ("लगातार सीखना", "लगातार सीखने से किसान बदलते मौसम, बाजार मांग, इनपुट विकल्प, गुणवत्ता मानक और निर्यात अवसरों के लिए तैयार रहते हैं।"),
+            "community-sustainable-agriculture": ("टिकाऊ कृषि", "टिकाऊ कृषि को प्राकृतिक खेती, जिम्मेदार इनपुट उपयोग, मिट्टी सुधार और जल-सचेत खेती के माध्यम से बढ़ावा दिया जाता है।"),
+            "company-introduction": ("कंपनी परिचय", "ग्रीन विंग्स फार्मर्स प्रोड्यूसर कंपनी लिमिटेड किसानों को इनपुट, ज्ञान, तकनीक, प्रसंस्करण, मूल्यवर्धन और बेहतर बाजारों से जोड़ने वाला किसान-स्वामित्व संगठन है।"),
+            "our-journey": ("हमारी यात्रा", "ग्रीनविंग्स की शुरुआत 2023 में विश्वास, सीख, सहयोग और दीर्घकालीन कृषि विकास के उद्देश्य से हुई।"),
+            "vision": ("दृष्टि", "येवला और नाशिक के किसानों की शक्ति को राष्ट्रीय और अंतरराष्ट्रीय बाजारों तक पहुंचाने वाला भरोसेमंद किसान-नेतृत्व कृषि तंत्र बनाना।"),
+            "mission": ("मिशन", "प्रशिक्षण, प्राकृतिक खेती सहयोग, इनपुट मार्गदर्शन, aggregation, प्रसंस्करण, मूल्यवर्धन और बाजार संपर्क से किसानों को सशक्त बनाना।"),
+            "core-values": ("मुख्य मूल्य", "विश्वास, पारदर्शिता, किसान-प्रथम निर्णय, स्थिरता, नवाचार, सामुदायिक स्वामित्व और साझा समृद्धि।"),
+            "export-vision": ("निर्यात दृष्टि", "गुणवत्ता प्रणाली, traceability, grading, packaging और buyer readiness के माध्यम से किसान उत्पाद को प्रीमियम बाजारों के लिए तैयार करना।"),
+            "natural-farming-initiative": ("प्राकृतिक खेती पहल", "मिट्टी के स्वास्थ्य, कम रासायनिक निर्भरता, स्थानीय संसाधनों, जैव विविधता और लचीली उत्पादन प्रणाली को बढ़ावा देना।"),
+            "farmer-empowerment-strategy": ("किसान सशक्तिकरण रणनीति", "ज्ञान, समूह शक्ति, डिजिटल कनेक्टिविटी, वित्तीय तैयारी और बेहतर सौदेबाजी शक्ति पर केंद्रित रणनीति।"),
+            "processing-value-addition-strategy": ("प्रसंस्करण और मूल्यवर्धन रणनीति", "grading, primary processing, packaging, storage और value-added products से किसानों की आय बढ़ाना।"),
+        },
+        "mr": {
+            "home-hero": ("येवला (नाशिक) च्या शेतातून जगभर", "ग्रीनविंग्स शेतकरी ज्ञान, नैसर्गिक शेती मूल्ये आणि बाजारपेठेसाठी तयार प्रणाली जोडून ग्रामीण समृद्धी जागतिक संधींपर्यंत पोहोचवते."),
+            "home-stat-farmers": ("जोडलेले शेतकरी: 1,100+", "ग्रीनविंग्स प्रशिक्षण, सल्ला, इनपुट सहाय्य आणि बाजार जोडणीद्वारे वाढता शेतकरी समुदाय जोडत आहे."),
+            "community-knowledge-sharing": ("ज्ञानाची देवाणघेवाण", "ग्रीनविंग्स शेतकरी शिक्षण गट तयार करते जिथे प्रत्यक्ष शेतातील अनुभव, वैज्ञानिक मार्गदर्शन आणि हंगामी पीक नियोजन खुलेपणाने शेअर केले जाते."),
+            "community-farmer-networking": ("शेतकरी नेटवर्किंग", "हे व्यासपीठ शेतकरी-ते-शेतकरी नाते मजबूत करते, ज्यामुळे लागवड, संकलन, बाजार प्रवेश आणि सामूहिक वाढीत सहकार्य वाढते."),
+            "community-training-programs": ("प्रशिक्षण कार्यक्रम", "प्रशिक्षण कार्यक्रम शेतकऱ्यांना माती आरोग्य, पीक पोषण, काढणीनंतरची हाताळणी आणि डिजिटल बाजार तयारीतील चांगल्या पद्धती स्वीकारण्यास मदत करतात."),
+            "community-innovation": ("नवोन्मेष", "ग्रीनविंग्स कृषी तंत्रज्ञान, माहितीआधारित निर्णय, हवामान-जाणिवेची शेती आणि मूल्यसाखळी भागीदारीद्वारे व्यावहारिक नवोन्मेषाला प्रोत्साहन देते."),
+            "community-learning": ("सतत शिकणे", "सतत शिकण्यामुळे शेतकरी बदलते हवामान, बाजार मागणी, इनपुट निवड, गुणवत्ता मानके आणि निर्यात संधींसाठी तयार राहतात."),
+            "community-sustainable-agriculture": ("शाश्वत शेती", "नैसर्गिक शेती, जबाबदार इनपुट वापर, माती सुधारणा आणि पाणी-जाणिवेच्या लागवडीद्वारे शाश्वत शेतीला प्रोत्साहन दिले जाते."),
+            "company-introduction": ("कंपनी परिचय", "ग्रीन विंग्स फार्मर्स प्रोड्यूसर कंपनी लिमिटेड ही शेतकऱ्यांना इनपुट, ज्ञान, तंत्रज्ञान, प्रक्रिया, मूल्यवर्धन आणि चांगल्या बाजारपेठांशी जोडणारी शेतकरी-मालकीची संस्था आहे."),
+            "our-journey": ("आमचा प्रवास", "ग्रीनविंग्सची सुरुवात 2023 मध्ये विश्वास, शिक्षण, सहकार्य आणि दीर्घकालीन कृषी विकासाच्या उद्देशाने झाली."),
+            "vision": ("दृष्टी", "येवला आणि नाशिकच्या शेतकरी समुदायाची ताकद राष्ट्रीय आणि आंतरराष्ट्रीय बाजारपेठांपर्यंत नेणारी विश्वासार्ह शेतकरी-नेतृत्व कृषि व्यवस्था उभारणे."),
+            "mission": ("मिशन", "प्रशिक्षण, नैसर्गिक शेती सहाय्य, इनपुट मार्गदर्शन, aggregation, प्रक्रिया, मूल्यवर्धन आणि बाजार जोडणीद्वारे शेतकऱ्यांना सक्षम करणे."),
+            "core-values": ("मूल्ये", "विश्वास, पारदर्शकता, शेतकरी-प्रथम निर्णय, शाश्वतता, नवोन्मेष, समुदाय मालकी आणि सामायिक समृद्धी."),
+            "export-vision": ("निर्यात दृष्टी", "गुणवत्ता प्रणाली, traceability, grading, packaging आणि buyer readiness द्वारे शेतमाल प्रीमियम बाजारपेठांसाठी तयार करणे."),
+            "natural-farming-initiative": ("नैसर्गिक शेती उपक्रम", "मातीचे आरोग्य, कमी रासायनिक अवलंबित्व, स्थानिक संसाधने, जैवविविधता आणि लवचिक उत्पादन प्रणालींना प्रोत्साहन देणे."),
+            "farmer-empowerment-strategy": ("शेतकरी सक्षमीकरण रणनीती", "ज्ञान, समूह शक्ती, डिजिटल जोडणी, वित्तीय तयारी आणि चांगल्या सौदेबाजी शक्तीवर केंद्रित रणनीती."),
+            "processing-value-addition-strategy": ("प्रक्रिया आणि मूल्यवर्धन रणनीती", "grading, primary processing, packaging, storage आणि value-added products द्वारे शेतकऱ्यांचे उत्पन्न वाढवणे."),
+        },
+    }
+    with database() as connection:
+        if connection.execute("SELECT COUNT(*) FROM company_stories").fetchone()[0] == 0:
+            for slug, title, content, image, order in story_sections:
+                connection.execute(
+                    """
+                    INSERT INTO company_stories (title, slug, language, content, featuredImage, displayOrder, status, createdAt, updatedAt)
+                    VALUES (?, ?, 'en', ?, ?, ?, 'published', ?, ?)
+                    """,
+                    (title, slug, content, image, order, created_at, created_at),
+                )
+                for language in ("hi", "mr"):
+                    localized_title, localized_content = story_translations.get(language, {}).get(slug, (title, content))
+                    connection.execute(
+                        """
+                        INSERT INTO company_stories (title, slug, language, content, featuredImage, displayOrder, status, createdAt, updatedAt)
+                        VALUES (?, ?, ?, ?, ?, ?, 'published', ?, ?)
+                        """,
+                        (localized_title, slug, language, localized_content, image, order, created_at, created_at),
+                    )
+
+        if connection.execute("SELECT COUNT(*) FROM company_milestones").fetchone()[0] == 0:
+            milestone_rows = [
+                (
+                    "2023",
+                    "Company Formation",
+                    "GreenWings was formally established as a farmer producer company to organise farmers around shared growth.",
+                    "/assets/greenwings-community.png",
+                    1,
+                    {
+                        "hi": ("कंपनी स्थापना", "ग्रीनविंग्स को साझा विकास के लिए किसानों को संगठित करने वाली किसान उत्पादक कंपनी के रूप में औपचारिक रूप से स्थापित किया गया।"),
+                        "mr": ("कंपनी स्थापना", "सामायिक वाढीसाठी शेतकऱ्यांना संघटित करणारी शेतकरी उत्पादक कंपनी म्हणून ग्रीनविंग्सची औपचारिक स्थापना झाली."),
+                    },
+                ),
+                (
+                    "2023",
+                    "Natural Farming Initiative",
+                    "The company began promoting soil health, natural farming awareness and responsible input usage.",
+                    "/assets/greenwings-hero.png",
+                    2,
+                    {
+                        "hi": ("प्राकृतिक खेती पहल", "कंपनी ने मिट्टी स्वास्थ्य, प्राकृतिक खेती जागरूकता और जिम्मेदार इनपुट उपयोग को बढ़ावा देना शुरू किया।"),
+                        "mr": ("नैसर्गिक शेती उपक्रम", "कंपनीने माती आरोग्य, नैसर्गिक शेती जागरूकता आणि जबाबदार इनपुट वापराला प्रोत्साहन देण्यास सुरुवात केली."),
+                    },
+                ),
+                (
+                    "2024",
+                    "Farmer Growth Milestones",
+                    "Farmer participation expanded through village meetings, training programmes and collective planning.",
+                    "/assets/greenwings-community.png",
+                    3,
+                    {
+                        "hi": ("किसान विकास मील के पत्थर", "गांव बैठकों, प्रशिक्षण कार्यक्रमों और सामूहिक योजना के माध्यम से किसानों की भागीदारी बढ़ी।"),
+                        "mr": ("शेतकरी वाढीचे टप्पे", "गाव बैठका, प्रशिक्षण कार्यक्रम आणि सामूहिक नियोजनाद्वारे शेतकरी सहभाग वाढला."),
+                    },
+                ),
+                (
+                    "2025",
+                    "Export Expansion Milestones",
+                    "GreenWings started preparing farmers for export readiness through quality, grading and buyer-oriented practices.",
+                    "/assets/greenwings-hero.png",
+                    4,
+                    {
+                        "hi": ("निर्यात विस्तार मील के पत्थर", "ग्रीनविंग्स ने गुणवत्ता, ग्रेडिंग और खरीदार-केंद्रित पद्धतियों के माध्यम से किसानों को निर्यात तैयारी के लिए तैयार करना शुरू किया।"),
+                        "mr": ("निर्यात विस्ताराचे टप्पे", "ग्रीनविंग्सने गुणवत्ता, ग्रेडिंग आणि खरेदीदार-केंद्रित पद्धतींद्वारे शेतकऱ्यांना निर्यात तयारीसाठी तयार करणे सुरू केले."),
+                    },
+                ),
+                (
+                    "2026",
+                    "Processing and Value Addition Milestones",
+                    "The organisation began shaping plans for grading, packaging, primary processing and value-added products.",
+                    "/assets/greenwings-community.png",
+                    5,
+                    {
+                        "hi": ("प्रसंस्करण और मूल्यवर्धन मील के पत्थर", "संगठन ने ग्रेडिंग, पैकेजिंग, प्राथमिक प्रसंस्करण और मूल्य-वर्धित उत्पादों की योजनाएं बनाना शुरू किया।"),
+                        "mr": ("प्रक्रिया आणि मूल्यवर्धनाचे टप्पे", "संस्थेने ग्रेडिंग, पॅकेजिंग, प्राथमिक प्रक्रिया आणि मूल्यवर्धित उत्पादनांच्या योजना आकारास आणण्यास सुरुवात केली."),
+                    },
+                ),
+            ]
+            for year, title, description, image, order, translations in milestone_rows:
+                cursor = connection.execute(
+                    """
+                    INSERT INTO company_milestones (year, title, description, image, displayOrder, createdAt, updatedAt)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (year, title, description, image, order, created_at, created_at),
+                )
+                milestone_id = int(cursor.lastrowid)
+                for language, (localized_title, localized_description) in translations.items():
+                    connection.execute(
+                        """
+                        INSERT INTO company_milestone_translations (milestoneId, language, title, description, createdAt, updatedAt)
+                        VALUES (?, ?, ?, ?, ?, ?)
+                        """,
+                        (milestone_id, language, localized_title, localized_description, created_at, created_at),
+                    )
+
+        if connection.execute("SELECT COUNT(*) FROM leadership_members").fetchone()[0] == 0:
+            leaders = [
+                (
+                    "Mr. Malhari Runjaba Jadhav",
+                    "Chairman",
+                    "Provides strategic direction for GreenWings with a focus on farmer trust, governance and collective rural development.",
+                    "/assets/greenwings-community.png",
+                    1,
+                    {
+                        "hi": ("अध्यक्ष", "किसान विश्वास, सुशासन और सामूहिक ग्रामीण विकास पर ध्यान देते हुए ग्रीनविंग्स को रणनीतिक दिशा प्रदान करते हैं।"),
+                        "mr": ("अध्यक्ष", "शेतकरी विश्वास, सुशासन आणि सामूहिक ग्रामीण विकासावर लक्ष केंद्रित करून ग्रीनविंग्सला धोरणात्मक दिशा देतात."),
+                    },
+                ),
+                (
+                    "Mr. Manik Ramchandra Rasal",
+                    "Vice Chairman",
+                    "Supports organisational planning, member coordination and practical implementation of farmer-first programmes.",
+                    "/assets/greenwings-hero.png",
+                    2,
+                    {
+                        "hi": ("उपाध्यक्ष", "संगठनात्मक योजना, सदस्य समन्वय और किसान-प्रथम कार्यक्रमों के व्यावहारिक कार्यान्वयन में सहयोग करते हैं।"),
+                        "mr": ("उपाध्यक्ष", "संस्थात्मक नियोजन, सदस्य समन्वय आणि शेतकरी-प्रथम कार्यक्रमांच्या प्रत्यक्ष अंमलबजावणीत सहकार्य करतात."),
+                    },
+                ),
+                (
+                    "Mr. Nandkishor Shriram Shinde",
+                    "Secretary",
+                    "Oversees documentation, coordination and member communication for transparent company operations.",
+                    "/assets/greenwings-community.png",
+                    3,
+                    {
+                        "hi": ("सचिव", "पारदर्शी कंपनी संचालन के लिए दस्तावेजीकरण, समन्वय और सदस्य संचार की देखरेख करते हैं।"),
+                        "mr": ("सचिव", "पारदर्शक कंपनी कामकाजासाठी दस्तऐवजीकरण, समन्वय आणि सदस्य संवादाची देखरेख करतात."),
+                    },
+                ),
+                (
+                    "Mrs. Varsha Vishwambhar Patil",
+                    "Director",
+                    "Represents community development priorities and encourages inclusive participation across farmer groups.",
+                    "/assets/greenwings-hero.png",
+                    4,
+                    {
+                        "hi": ("निदेशक", "सामुदायिक विकास प्राथमिकताओं का प्रतिनिधित्व करती हैं और किसान समूहों में समावेशी भागीदारी को प्रोत्साहित करती हैं।"),
+                        "mr": ("संचालक", "समुदाय विकासाच्या प्राधान्यांचे प्रतिनिधित्व करतात आणि शेतकरी गटांमध्ये समावेशक सहभागाला प्रोत्साहन देतात."),
+                    },
+                ),
+                (
+                    "Mr. Tushar Gorakhanath Shelke",
+                    "Director and Chief Executive Officer",
+                    "Leads GreenWings operations, digital strategy, farmer services and market-connectivity initiatives.",
+                    "/assets/greenwings-community.png",
+                    5,
+                    {
+                        "hi": ("निदेशक और मुख्य कार्यकारी अधिकारी", "ग्रीनविंग्स संचालन, डिजिटल रणनीति, किसान सेवाओं और बाजार-संपर्क पहलों का नेतृत्व करते हैं।"),
+                        "mr": ("संचालक आणि मुख्य कार्यकारी अधिकारी", "ग्रीनविंग्सचे कामकाज, डिजिटल धोरण, शेतकरी सेवा आणि बाजार-जोडणी उपक्रमांचे नेतृत्व करतात."),
+                    },
+                ),
+            ]
+            for full_name, designation, biography, image, order, translations in leaders:
+                cursor = connection.execute(
+                    """
+                    INSERT INTO leadership_members (fullName, designation, biography, image, displayOrder, active, createdAt, updatedAt)
+                    VALUES (?, ?, ?, ?, ?, 1, ?, ?)
+                    """,
+                    (full_name, designation, biography, image, order, created_at, created_at),
+                )
+                member_id = int(cursor.lastrowid)
+                for language, (localized_designation, localized_biography) in translations.items():
+                    connection.execute(
+                        """
+                        INSERT INTO leadership_member_translations (leadershipMemberId, language, designation, biography, createdAt, updatedAt)
+                        VALUES (?, ?, ?, ?, ?, ?)
+                        """,
+                        (member_id, language, localized_designation, localized_biography, created_at, created_at),
+                    )
 
 
 def rate_limited(key: str, limit: int, window_seconds: int) -> bool:
@@ -623,6 +933,218 @@ def upsert_fertilizer_translations(
         )
 
 
+def row_to_company_story(row: sqlite3.Row) -> dict:
+    return {
+        "id": row["id"],
+        "title": row["title"],
+        "slug": row["slug"],
+        "language": row["language"],
+        "content": row["content"],
+        "featuredImage": row["featuredImage"],
+        "displayOrder": row["displayOrder"],
+        "status": row["status"],
+        "createdAt": row["createdAt"],
+        "updatedAt": row["updatedAt"],
+    }
+
+
+def row_to_company_milestone(row: sqlite3.Row, translation: sqlite3.Row | None = None) -> dict:
+    return {
+        "id": row["id"],
+        "year": row["year"],
+        "title": translation["title"] if translation and translation["title"] else row["title"],
+        "description": translation["description"] if translation and translation["description"] else row["description"],
+        "baseTitle": row["title"],
+        "baseDescription": row["description"],
+        "image": row["image"],
+        "displayOrder": row["displayOrder"],
+        "createdAt": row["createdAt"],
+        "updatedAt": row["updatedAt"],
+    }
+
+
+def row_to_leadership_member(row: sqlite3.Row, translation: sqlite3.Row | None = None) -> dict:
+    return {
+        "id": row["id"],
+        "fullName": row["fullName"],
+        "designation": translation["designation"] if translation and translation["designation"] else row["designation"],
+        "biography": translation["biography"] if translation and translation["biography"] else row["biography"],
+        "baseDesignation": row["designation"],
+        "baseBiography": row["biography"],
+        "image": row["image"],
+        "displayOrder": row["displayOrder"],
+        "active": bool(row["active"]),
+        "createdAt": row["createdAt"],
+        "updatedAt": row["updatedAt"],
+    }
+
+
+def company_story_payload(body: dict) -> tuple[dict, list[str]]:
+    clean = {field: str(body.get(field, "")).strip() for field in COMPANY_STORY_FIELDS}
+    clean["language"] = clean["language"] if clean["language"] in SUPPORTED_LANGUAGES else "en"
+    clean["status"] = clean["status"] if clean["status"] in {"draft", "published", "archived"} else "published"
+    try:
+        clean["displayOrder"] = int(body.get("displayOrder", 0))
+    except (TypeError, ValueError):
+        clean["displayOrder"] = 0
+    errors = [f"{field} is required." for field in ["title", "slug", "language", "content"] if not clean.get(field)]
+    return clean, errors
+
+
+def company_milestone_payload(body: dict) -> tuple[dict, list[str]]:
+    clean = {field: str(body.get(field, "")).strip() for field in COMPANY_MILESTONE_FIELDS}
+    try:
+        clean["displayOrder"] = int(body.get("displayOrder", 0))
+    except (TypeError, ValueError):
+        clean["displayOrder"] = 0
+    errors = [f"{field} is required." for field in ["year", "title", "description"] if not clean.get(field)]
+    return clean, errors
+
+
+def leadership_payload(body: dict) -> tuple[dict, list[str]]:
+    clean = {field: str(body.get(field, "")).strip() for field in LEADERSHIP_FIELDS}
+    try:
+        clean["displayOrder"] = int(body.get("displayOrder", 0))
+    except (TypeError, ValueError):
+        clean["displayOrder"] = 0
+    clean["active"] = 1 if body.get("active", True) in {True, 1, "1", "true", "active", "yes"} else 0
+    errors = [f"{field} is required." for field in ["fullName", "designation", "biography"] if not clean.get(field)]
+    return clean, errors
+
+
+def upsert_milestone_translations(connection: sqlite3.Connection, milestone_id: int, translations: dict, timestamp: str) -> None:
+    if not isinstance(translations, dict):
+        return
+    for language, values in translations.items():
+        if language not in {"hi", "mr"} or not isinstance(values, dict):
+            continue
+        title = str(values.get("title", "")).strip()
+        description = str(values.get("description", "")).strip()
+        if not title and not description:
+            continue
+        connection.execute(
+            """
+            INSERT INTO company_milestone_translations (milestoneId, language, title, description, createdAt, updatedAt)
+            VALUES (?, ?, ?, ?, ?, ?)
+            ON CONFLICT(milestoneId, language) DO UPDATE SET
+                title = excluded.title,
+                description = excluded.description,
+                updatedAt = excluded.updatedAt
+            """,
+            (milestone_id, language, title, description, timestamp, timestamp),
+        )
+
+
+def upsert_leadership_translations(connection: sqlite3.Connection, member_id: int, translations: dict, timestamp: str) -> None:
+    if not isinstance(translations, dict):
+        return
+    for language, values in translations.items():
+        if language not in {"hi", "mr"} or not isinstance(values, dict):
+            continue
+        designation = str(values.get("designation", "")).strip()
+        biography = str(values.get("biography", "")).strip()
+        if not designation and not biography:
+            continue
+        connection.execute(
+            """
+            INSERT INTO leadership_member_translations (leadershipMemberId, language, designation, biography, createdAt, updatedAt)
+            VALUES (?, ?, ?, ?, ?, ?)
+            ON CONFLICT(leadershipMemberId, language) DO UPDATE SET
+                designation = excluded.designation,
+                biography = excluded.biography,
+                updatedAt = excluded.updatedAt
+            """,
+            (member_id, language, designation, biography, timestamp, timestamp),
+        )
+
+
+def story_collection(connection: sqlite3.Connection, language: str) -> list[dict]:
+    rows = connection.execute(
+        """
+        SELECT * FROM company_stories
+        WHERE status = 'published' AND language IN ('en', ?)
+        ORDER BY displayOrder, title
+        """,
+        (language,),
+    ).fetchall()
+    by_slug: dict[str, dict] = {}
+    for row in rows:
+        item = row_to_company_story(row)
+        current = by_slug.get(item["slug"])
+        if not current or item["language"] == language:
+            by_slug[item["slug"]] = item
+    return sorted(by_slug.values(), key=lambda item: (item["displayOrder"], item["title"]))
+
+
+def milestone_collection(connection: sqlite3.Connection, language: str, only_public: bool = True) -> list[dict]:
+    rows = connection.execute("SELECT * FROM company_milestones ORDER BY displayOrder, year").fetchall()
+    milestones: list[dict] = []
+    for row in rows:
+        translation = None
+        translations = {}
+        if language != "en":
+            translation = connection.execute(
+                """
+                SELECT * FROM company_milestone_translations
+                WHERE milestoneId = ? AND language = ?
+                """,
+                (row["id"], language),
+            ).fetchone()
+        if not only_public:
+            translations = {
+                item["language"]: {"title": item["title"], "description": item["description"]}
+                for item in connection.execute(
+                    """
+                    SELECT language, title, description
+                    FROM company_milestone_translations
+                    WHERE milestoneId = ?
+                    ORDER BY language
+                    """,
+                    (row["id"],),
+                ).fetchall()
+            }
+        milestone = row_to_company_milestone(row, translation)
+        if translations:
+            milestone["translations"] = translations
+        milestones.append(milestone)
+    return milestones
+
+
+def leadership_collection(connection: sqlite3.Connection, language: str, only_active: bool = True) -> list[dict]:
+    where = "WHERE active = 1" if only_active else ""
+    rows = connection.execute(f"SELECT * FROM leadership_members {where} ORDER BY displayOrder, fullName").fetchall()
+    members: list[dict] = []
+    for row in rows:
+        translation = None
+        translations = {}
+        if language != "en":
+            translation = connection.execute(
+                """
+                SELECT * FROM leadership_member_translations
+                WHERE leadershipMemberId = ? AND language = ?
+                """,
+                (row["id"], language),
+            ).fetchone()
+        if not only_active:
+            translations = {
+                item["language"]: {"designation": item["designation"], "biography": item["biography"]}
+                for item in connection.execute(
+                    """
+                    SELECT language, designation, biography
+                    FROM leadership_member_translations
+                    WHERE leadershipMemberId = ?
+                    ORDER BY language
+                    """,
+                    (row["id"],),
+                ).fetchall()
+            }
+        member = row_to_leadership_member(row, translation)
+        if translations:
+            member["translations"] = translations
+        members.append(member)
+    return members
+
+
 def validate_registration(payload: dict) -> list[str]:
     required_fields = [
         "firstName",
@@ -810,6 +1332,18 @@ class ApiHandler(BaseHTTPRequestHandler):
         if parsed.path == "/api/admin/summary":
             self.handle_admin_summary()
             return
+        if parsed.path == "/api/company-content":
+            self.handle_company_content(parsed)
+            return
+        if parsed.path == "/api/admin/company-stories":
+            self.handle_admin_company_story_list(parsed)
+            return
+        if parsed.path == "/api/admin/company-milestones":
+            self.handle_admin_company_milestone_list()
+            return
+        if parsed.path == "/api/admin/leadership-members":
+            self.handle_admin_leadership_list()
+            return
         if parsed.path == "/api/admin/fertilizers":
             self.handle_admin_fertilizer_list(parsed)
             return
@@ -853,6 +1387,15 @@ class ApiHandler(BaseHTTPRequestHandler):
         if parsed.path == "/api/admin/fertilizers":
             self.handle_create_fertilizer(parsed)
             return
+        if parsed.path == "/api/admin/company-stories":
+            self.handle_create_company_story()
+            return
+        if parsed.path == "/api/admin/company-milestones":
+            self.handle_create_company_milestone()
+            return
+        if parsed.path == "/api/admin/leadership-members":
+            self.handle_create_leadership_member()
+            return
         self.send_json(404, {"error": "Not found"})
 
     def do_PUT(self) -> None:
@@ -860,12 +1403,30 @@ class ApiHandler(BaseHTTPRequestHandler):
         if parsed.path.startswith("/api/admin/fertilizers/"):
             self.handle_update_fertilizer(parsed)
             return
+        if parsed.path.startswith("/api/admin/company-stories/"):
+            self.handle_update_company_story(parsed)
+            return
+        if parsed.path.startswith("/api/admin/company-milestones/"):
+            self.handle_update_company_milestone(parsed)
+            return
+        if parsed.path.startswith("/api/admin/leadership-members/"):
+            self.handle_update_leadership_member(parsed)
+            return
         self.send_json(404, {"error": "Not found"})
 
     def do_DELETE(self) -> None:
         parsed = urlparse(self.path)
         if parsed.path.startswith("/api/admin/fertilizers/"):
             self.handle_delete_fertilizer(parsed)
+            return
+        if parsed.path.startswith("/api/admin/company-stories/"):
+            self.handle_delete_company_story(parsed)
+            return
+        if parsed.path.startswith("/api/admin/company-milestones/"):
+            self.handle_delete_company_milestone(parsed)
+            return
+        if parsed.path.startswith("/api/admin/leadership-members/"):
+            self.handle_delete_leadership_member(parsed)
             return
         self.send_json(404, {"error": "Not found"})
 
@@ -885,6 +1446,378 @@ class ApiHandler(BaseHTTPRequestHandler):
             return kind, int(parts[1])
         except ValueError:
             return None, None
+
+    def require_admin(self) -> bool:
+        user = self.current_user()
+        if not user or user.get("role") != "admin":
+            self.send_json(403, {"error": "Admin access required"})
+            return False
+        return True
+
+    def id_from_path(self, path: str, prefix: str) -> int | None:
+        parts = path.removeprefix(prefix).strip("/").split("/")
+        if len(parts) != 1 or not parts[0]:
+            return None
+        try:
+            return int(parts[0])
+        except ValueError:
+            return None
+
+    def milestone_admin_record(self, connection: sqlite3.Connection, milestone_id: int) -> dict | None:
+        row = connection.execute("SELECT * FROM company_milestones WHERE id = ?", (milestone_id,)).fetchone()
+        if not row:
+            return None
+        record = row_to_company_milestone(row)
+        record["translations"] = {
+            item["language"]: {"title": item["title"], "description": item["description"]}
+            for item in connection.execute(
+                """
+                SELECT language, title, description
+                FROM company_milestone_translations
+                WHERE milestoneId = ?
+                ORDER BY language
+                """,
+                (milestone_id,),
+            ).fetchall()
+        }
+        return record
+
+    def leadership_admin_record(self, connection: sqlite3.Connection, member_id: int) -> dict | None:
+        row = connection.execute("SELECT * FROM leadership_members WHERE id = ?", (member_id,)).fetchone()
+        if not row:
+            return None
+        record = row_to_leadership_member(row)
+        record["translations"] = {
+            item["language"]: {"designation": item["designation"], "biography": item["biography"]}
+            for item in connection.execute(
+                """
+                SELECT language, designation, biography
+                FROM leadership_member_translations
+                WHERE leadershipMemberId = ?
+                ORDER BY language
+                """,
+                (member_id,),
+            ).fetchall()
+        }
+        return record
+
+    def handle_company_content(self, parsed) -> None:
+        language = requested_language(parse_qs(parsed.query))
+        with database() as connection:
+            stories = story_collection(connection, language)
+            milestones = milestone_collection(connection, language)
+            leadership = leadership_collection(connection, language)
+        self.send_json(
+            200,
+            {
+                "language": language,
+                "stories": stories,
+                "storiesBySlug": {story["slug"]: story for story in stories},
+                "milestones": milestones,
+                "leadership": leadership,
+            },
+        )
+
+    def handle_admin_company_story_list(self, parsed) -> None:
+        if not self.require_admin():
+            return
+        query = parse_qs(parsed.query)
+        search = query.get("search", [""])[0].strip()
+        language = query.get("language", [""])[0].strip()
+        status = query.get("status", [""])[0].strip()
+        clauses: list[str] = []
+        params: list[str] = []
+        if search:
+            clauses.append("(title LIKE ? OR slug LIKE ? OR content LIKE ?)")
+            params.extend([f"%{search}%", f"%{search}%", f"%{search}%"])
+        if language:
+            clauses.append("language = ?")
+            params.append(language)
+        if status:
+            clauses.append("status = ?")
+            params.append(status)
+        where = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+        with database() as connection:
+            rows = connection.execute(
+                f"SELECT * FROM company_stories {where} ORDER BY displayOrder, slug, language",
+                params,
+            ).fetchall()
+            stories = [row_to_company_story(row) for row in rows]
+        self.send_json(200, {"stories": stories})
+
+    def handle_create_company_story(self) -> None:
+        if not self.require_admin():
+            return
+        body = self.read_json()
+        clean, errors = company_story_payload(body)
+        if errors:
+            self.send_json(400, {"error": "Please complete the story form.", "details": errors})
+            return
+        timestamp = now_iso()
+        try:
+            with database() as connection:
+                cursor = connection.execute(
+                    """
+                    INSERT INTO company_stories (
+                        title, slug, language, content, featuredImage, displayOrder, status, createdAt, updatedAt
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        clean["title"],
+                        clean["slug"],
+                        clean["language"],
+                        clean["content"],
+                        clean["featuredImage"],
+                        clean["displayOrder"],
+                        clean["status"],
+                        timestamp,
+                        timestamp,
+                    ),
+                )
+                row = connection.execute("SELECT * FROM company_stories WHERE id = ?", (cursor.lastrowid,)).fetchone()
+            self.send_json(201, {"story": row_to_company_story(row)})
+        except sqlite3.IntegrityError:
+            self.send_json(409, {"error": "A story with this slug and language already exists."})
+
+    def handle_update_company_story(self, parsed) -> None:
+        if not self.require_admin():
+            return
+        story_id = self.id_from_path(parsed.path, "/api/admin/company-stories/")
+        if story_id is None:
+            self.send_json(400, {"error": "Invalid story path."})
+            return
+        body = self.read_json()
+        clean, errors = company_story_payload(body)
+        if errors:
+            self.send_json(400, {"error": "Please complete the story form.", "details": errors})
+            return
+        timestamp = now_iso()
+        try:
+            with database() as connection:
+                existing = connection.execute("SELECT 1 FROM company_stories WHERE id = ?", (story_id,)).fetchone()
+                if not existing:
+                    self.send_json(404, {"error": "Story not found."})
+                    return
+                connection.execute(
+                    """
+                    UPDATE company_stories
+                    SET title = ?, slug = ?, language = ?, content = ?, featuredImage = ?,
+                        displayOrder = ?, status = ?, updatedAt = ?
+                    WHERE id = ?
+                    """,
+                    (
+                        clean["title"],
+                        clean["slug"],
+                        clean["language"],
+                        clean["content"],
+                        clean["featuredImage"],
+                        clean["displayOrder"],
+                        clean["status"],
+                        timestamp,
+                        story_id,
+                    ),
+                )
+                row = connection.execute("SELECT * FROM company_stories WHERE id = ?", (story_id,)).fetchone()
+            self.send_json(200, {"story": row_to_company_story(row)})
+        except sqlite3.IntegrityError:
+            self.send_json(409, {"error": "A story with this slug and language already exists."})
+
+    def handle_delete_company_story(self, parsed) -> None:
+        if not self.require_admin():
+            return
+        story_id = self.id_from_path(parsed.path, "/api/admin/company-stories/")
+        if story_id is None:
+            self.send_json(400, {"error": "Invalid story path."})
+            return
+        with database() as connection:
+            cursor = connection.execute("DELETE FROM company_stories WHERE id = ?", (story_id,))
+            if cursor.rowcount == 0:
+                self.send_json(404, {"error": "Story not found."})
+                return
+        self.send_json(200, {"ok": True})
+
+    def handle_admin_company_milestone_list(self) -> None:
+        if not self.require_admin():
+            return
+        with database() as connection:
+            milestones = milestone_collection(connection, "en", only_public=False)
+        self.send_json(200, {"milestones": milestones})
+
+    def handle_create_company_milestone(self) -> None:
+        if not self.require_admin():
+            return
+        body = self.read_json()
+        clean, errors = company_milestone_payload(body)
+        if errors:
+            self.send_json(400, {"error": "Please complete the milestone form.", "details": errors})
+            return
+        timestamp = now_iso()
+        with database() as connection:
+            cursor = connection.execute(
+                """
+                INSERT INTO company_milestones (year, title, description, image, displayOrder, createdAt, updatedAt)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    clean["year"],
+                    clean["title"],
+                    clean["description"],
+                    clean["image"],
+                    clean["displayOrder"],
+                    timestamp,
+                    timestamp,
+                ),
+            )
+            milestone_id = int(cursor.lastrowid)
+            upsert_milestone_translations(connection, milestone_id, body.get("translations", {}), timestamp)
+            record = self.milestone_admin_record(connection, milestone_id)
+        self.send_json(201, {"milestone": record})
+
+    def handle_update_company_milestone(self, parsed) -> None:
+        if not self.require_admin():
+            return
+        milestone_id = self.id_from_path(parsed.path, "/api/admin/company-milestones/")
+        if milestone_id is None:
+            self.send_json(400, {"error": "Invalid milestone path."})
+            return
+        body = self.read_json()
+        clean, errors = company_milestone_payload(body)
+        if errors:
+            self.send_json(400, {"error": "Please complete the milestone form.", "details": errors})
+            return
+        timestamp = now_iso()
+        with database() as connection:
+            existing = connection.execute("SELECT 1 FROM company_milestones WHERE id = ?", (milestone_id,)).fetchone()
+            if not existing:
+                self.send_json(404, {"error": "Milestone not found."})
+                return
+            connection.execute(
+                """
+                UPDATE company_milestones
+                SET year = ?, title = ?, description = ?, image = ?, displayOrder = ?, updatedAt = ?
+                WHERE id = ?
+                """,
+                (
+                    clean["year"],
+                    clean["title"],
+                    clean["description"],
+                    clean["image"],
+                    clean["displayOrder"],
+                    timestamp,
+                    milestone_id,
+                ),
+            )
+            upsert_milestone_translations(connection, milestone_id, body.get("translations", {}), timestamp)
+            record = self.milestone_admin_record(connection, milestone_id)
+        self.send_json(200, {"milestone": record})
+
+    def handle_delete_company_milestone(self, parsed) -> None:
+        if not self.require_admin():
+            return
+        milestone_id = self.id_from_path(parsed.path, "/api/admin/company-milestones/")
+        if milestone_id is None:
+            self.send_json(400, {"error": "Invalid milestone path."})
+            return
+        with database() as connection:
+            connection.execute("DELETE FROM company_milestone_translations WHERE milestoneId = ?", (milestone_id,))
+            cursor = connection.execute("DELETE FROM company_milestones WHERE id = ?", (milestone_id,))
+            if cursor.rowcount == 0:
+                self.send_json(404, {"error": "Milestone not found."})
+                return
+        self.send_json(200, {"ok": True})
+
+    def handle_admin_leadership_list(self) -> None:
+        if not self.require_admin():
+            return
+        with database() as connection:
+            leadership = leadership_collection(connection, "en", only_active=False)
+        self.send_json(200, {"leadership": leadership})
+
+    def handle_create_leadership_member(self) -> None:
+        if not self.require_admin():
+            return
+        body = self.read_json()
+        clean, errors = leadership_payload(body)
+        if errors:
+            self.send_json(400, {"error": "Please complete the leadership form.", "details": errors})
+            return
+        timestamp = now_iso()
+        with database() as connection:
+            cursor = connection.execute(
+                """
+                INSERT INTO leadership_members (
+                    fullName, designation, biography, image, displayOrder, active, createdAt, updatedAt
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    clean["fullName"],
+                    clean["designation"],
+                    clean["biography"],
+                    clean["image"],
+                    clean["displayOrder"],
+                    clean["active"],
+                    timestamp,
+                    timestamp,
+                ),
+            )
+            member_id = int(cursor.lastrowid)
+            upsert_leadership_translations(connection, member_id, body.get("translations", {}), timestamp)
+            record = self.leadership_admin_record(connection, member_id)
+        self.send_json(201, {"member": record})
+
+    def handle_update_leadership_member(self, parsed) -> None:
+        if not self.require_admin():
+            return
+        member_id = self.id_from_path(parsed.path, "/api/admin/leadership-members/")
+        if member_id is None:
+            self.send_json(400, {"error": "Invalid leadership member path."})
+            return
+        body = self.read_json()
+        clean, errors = leadership_payload(body)
+        if errors:
+            self.send_json(400, {"error": "Please complete the leadership form.", "details": errors})
+            return
+        timestamp = now_iso()
+        with database() as connection:
+            existing = connection.execute("SELECT 1 FROM leadership_members WHERE id = ?", (member_id,)).fetchone()
+            if not existing:
+                self.send_json(404, {"error": "Leadership member not found."})
+                return
+            connection.execute(
+                """
+                UPDATE leadership_members
+                SET fullName = ?, designation = ?, biography = ?, image = ?, displayOrder = ?, active = ?, updatedAt = ?
+                WHERE id = ?
+                """,
+                (
+                    clean["fullName"],
+                    clean["designation"],
+                    clean["biography"],
+                    clean["image"],
+                    clean["displayOrder"],
+                    clean["active"],
+                    timestamp,
+                    member_id,
+                ),
+            )
+            upsert_leadership_translations(connection, member_id, body.get("translations", {}), timestamp)
+            record = self.leadership_admin_record(connection, member_id)
+        self.send_json(200, {"member": record})
+
+    def handle_delete_leadership_member(self, parsed) -> None:
+        if not self.require_admin():
+            return
+        member_id = self.id_from_path(parsed.path, "/api/admin/leadership-members/")
+        if member_id is None:
+            self.send_json(400, {"error": "Invalid leadership member path."})
+            return
+        with database() as connection:
+            connection.execute("DELETE FROM leadership_member_translations WHERE leadershipMemberId = ?", (member_id,))
+            cursor = connection.execute("DELETE FROM leadership_members WHERE id = ?", (member_id,))
+            if cursor.rowcount == 0:
+                self.send_json(404, {"error": "Leadership member not found."})
+                return
+        self.send_json(200, {"ok": True})
 
     def handle_fertilizer_list(self, parsed) -> None:
         query = parse_qs(parsed.query)
@@ -1264,6 +2197,9 @@ class ApiHandler(BaseHTTPRequestHandler):
             subtypes = connection.execute("SELECT COUNT(*) FROM subtypes").fetchone()[0]
             local_fertilizers = connection.execute("SELECT COUNT(*) FROM local_fertilizers").fetchone()[0]
             imported_fertilizers = connection.execute("SELECT COUNT(*) FROM imported_fertilizers").fetchone()[0]
+            company_stories = connection.execute("SELECT COUNT(*) FROM company_stories").fetchone()[0]
+            company_milestones = connection.execute("SELECT COUNT(*) FROM company_milestones").fetchone()[0]
+            leadership_members = connection.execute("SELECT COUNT(*) FROM leadership_members").fetchone()[0]
             total_users = connection.execute("SELECT COUNT(*) FROM users WHERE role = 'USER'").fetchone()[0]
             new_users_today = connection.execute(
                 "SELECT COUNT(*) FROM users WHERE role = 'USER' AND createdAt LIKE ?",
@@ -1319,6 +2255,9 @@ class ApiHandler(BaseHTTPRequestHandler):
                 "subtypes": subtypes,
                 "localFertilizers": local_fertilizers,
                 "importedFertilizers": imported_fertilizers,
+                "companyStories": company_stories,
+                "companyMilestones": company_milestones,
+                "leadershipMembers": leadership_members,
                 "totalUsers": total_users,
                 "newUsersToday": new_users_today,
                 "totalEnquiries": total_enquiries,
