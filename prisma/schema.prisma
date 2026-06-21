@@ -232,3 +232,58 @@ model HomepageStatistic {
 
   @@index([active, displayOrder])
 }
+
+model SuccessStory {
+  id               Int      @id @default(autoincrement())
+  farmerName       String
+  farmerPhone      String?
+  title            String
+  slug             String
+  location         String?
+  village          String?
+  district         String?
+  cropType         String?
+  landArea         String?
+  storyCategory    String?
+  shortQuote       String?  @db.Text
+  shortSummary     String?  @db.Text
+  fullStory        String   @db.Text
+  challenge        String?  @db.Text
+  solution         String?  @db.Text
+  result           String?  @db.Text
+  yieldBefore      String?
+  yieldAfter       String?
+  priceBenefit     String?
+  additionalIncome String?
+  fertilizerUsed   String?
+  seedUsed         String?
+  marketSupport    String?  @db.Text
+  profileImage     String?
+  coverImage       String?
+  language         String   @default("en")
+  displayOrder     Int      @default(0)
+  featured         Boolean  @default(false)
+  status           String   @default("published")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  media SuccessStoryMedia[]
+
+  @@unique([slug, language])
+  @@index([language, status, featured, displayOrder])
+}
+
+model SuccessStoryMedia {
+  id             Int      @id @default(autoincrement())
+  successStoryId Int
+  mediaType      String   @default("image")
+  mediaUrl       String
+  caption        String?
+  displayOrder   Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  successStory SuccessStory @relation(fields: [successStoryId], references: [id], onDelete: Cascade)
+
+  @@index([successStoryId, displayOrder])
+}
