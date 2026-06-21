@@ -91,6 +91,9 @@ export interface AdminSummary {
   subtypes: number
   localFertilizers?: number
   importedFertilizers?: number
+  companyStories?: number
+  companyMilestones?: number
+  leadershipMembers?: number
   totalUsers: number
   newUsersToday: number
   totalEnquiries: number
@@ -104,6 +107,60 @@ export interface AdminSummary {
 }
 
 export type FertilizerKind = 'local' | 'imported'
+
+export interface CompanyStory {
+  id: number
+  title: string
+  slug: string
+  language: Lang
+  content: string
+  featuredImage: string
+  displayOrder: number
+  status: 'draft' | 'published' | 'archived' | string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface CompanyMilestone {
+  id: number
+  year: string
+  title: string
+  description: string
+  baseTitle?: string
+  baseDescription?: string
+  image: string
+  displayOrder: number
+  translations?: Record<'hi' | 'mr', { title?: string; description?: string }>
+  createdAt: string
+  updatedAt: string
+}
+
+export interface LeadershipMember {
+  id: number
+  fullName: string
+  designation: string
+  biography: string
+  baseDesignation?: string
+  baseBiography?: string
+  image: string
+  displayOrder: number
+  active: boolean
+  translations?: Record<'hi' | 'mr', { designation?: string; biography?: string }>
+  createdAt: string
+  updatedAt: string
+}
+
+export interface CompanyContent {
+  language: Lang
+  stories: CompanyStory[]
+  storiesBySlug: Record<string, CompanyStory>
+  milestones: CompanyMilestone[]
+  leadership: LeadershipMember[]
+}
+
+export type CompanyStoryPayload = Omit<CompanyStory, 'id' | 'createdAt' | 'updatedAt'>
+export type CompanyMilestonePayload = Omit<CompanyMilestone, 'id' | 'baseTitle' | 'baseDescription' | 'createdAt' | 'updatedAt'>
+export type LeadershipPayload = Omit<LeadershipMember, 'id' | 'baseDesignation' | 'baseBiography' | 'createdAt' | 'updatedAt'>
 
 export interface Fertilizer {
   id: number
@@ -175,6 +232,102 @@ export async function fetchFertilizers(kind: FertilizerKind, lang: Lang = 'en', 
 
 export async function fetchFertilizer(kind: FertilizerKind, id: string | number, lang: Lang = 'en') {
   return apiRequest<{ fertilizer: Fertilizer }>(`/api/fertilizers/${kind}/${id}?lang=${lang}`)
+}
+
+export async function fetchCompanyContent(lang: Lang = 'en') {
+  return apiRequest<CompanyContent>(`/api/company-content?lang=${lang}`)
+}
+
+export async function fetchAdminCompanyStories(token: string, filters?: { search?: string; language?: string; status?: string }) {
+  const params = new URLSearchParams()
+  if (filters?.search) params.set('search', filters.search)
+  if (filters?.language) params.set('language', filters.language)
+  if (filters?.status) params.set('status', filters.status)
+  const query = params.toString() ? `?${params.toString()}` : ''
+  return apiRequest<{ stories: CompanyStory[] }>(`/api/admin/company-stories${query}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export async function createAdminCompanyStory(token: string, payload: CompanyStoryPayload) {
+  return apiRequest<{ story: CompanyStory }>('/api/admin/company-stories', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function updateAdminCompanyStory(token: string, id: number, payload: CompanyStoryPayload) {
+  return apiRequest<{ story: CompanyStory }>(`/api/admin/company-stories/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function deleteAdminCompanyStory(token: string, id: number) {
+  return apiRequest<{ ok: boolean }>(`/api/admin/company-stories/${id}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export async function fetchAdminCompanyMilestones(token: string) {
+  return apiRequest<{ milestones: CompanyMilestone[] }>('/api/admin/company-milestones', {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export async function createAdminCompanyMilestone(token: string, payload: CompanyMilestonePayload) {
+  return apiRequest<{ milestone: CompanyMilestone }>('/api/admin/company-milestones', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function updateAdminCompanyMilestone(token: string, id: number, payload: CompanyMilestonePayload) {
+  return apiRequest<{ milestone: CompanyMilestone }>(`/api/admin/company-milestones/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function deleteAdminCompanyMilestone(token: string, id: number) {
+  return apiRequest<{ ok: boolean }>(`/api/admin/company-milestones/${id}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export async function fetchAdminLeadershipMembers(token: string) {
+  return apiRequest<{ leadership: LeadershipMember[] }>('/api/admin/leadership-members', {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export async function createAdminLeadershipMember(token: string, payload: LeadershipPayload) {
+  return apiRequest<{ member: LeadershipMember }>('/api/admin/leadership-members', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function updateAdminLeadershipMember(token: string, id: number, payload: LeadershipPayload) {
+  return apiRequest<{ member: LeadershipMember }>(`/api/admin/leadership-members/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function deleteAdminLeadershipMember(token: string, id: number) {
+  return apiRequest<{ ok: boolean }>(`/api/admin/leadership-members/${id}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  })
 }
 
 export async function fetchAdminFertilizers(token: string, kind: FertilizerKind, filters?: { search?: string; category?: string; status?: string }) {
