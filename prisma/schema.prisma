@@ -78,11 +78,24 @@ model LocalFertilizerTranslation {
   language     String
   name         String?
   category     String?
+  countryOfOrigin String?
   description  String?         @db.Text
   content      String?         @db.Text
   uses         String?         @db.Text
+  applyOnCrops String?         @db.Text
+  doNotApplyOn String?         @db.Text
+  applicationMethod String?    @db.Text
+  recommendedStage String?
+  season       String?
+  temperatureRange String?
+  soilType     String?
   benefits     String?         @db.Text
   precautions  String?         @db.Text
+  approvalBody String?         @db.Text
+  regionalRecommendations String? @db.Text
+  brand        String?
+  importCertifications String? @db.Text
+  internationalSpecifications String? @db.Text
   createdAt    DateTime        @default(now())
   updatedAt    DateTime        @updatedAt
 
@@ -97,11 +110,24 @@ model ImportedFertilizerTranslation {
   language     String
   name         String?
   category     String?
+  countryOfOrigin String?
   description  String?            @db.Text
   content      String?            @db.Text
   uses         String?            @db.Text
+  applyOnCrops String?            @db.Text
+  doNotApplyOn String?            @db.Text
+  applicationMethod String?       @db.Text
+  recommendedStage String?
+  season       String?
+  temperatureRange String?
+  soilType     String?
   benefits     String?            @db.Text
   precautions  String?            @db.Text
+  approvalBody String?            @db.Text
+  regionalRecommendations String? @db.Text
+  brand        String?
+  importCertifications String?    @db.Text
+  internationalSpecifications String? @db.Text
   createdAt    DateTime           @default(now())
   updatedAt    DateTime           @updatedAt
 
