@@ -301,8 +301,31 @@ export interface Fertilizer {
   updatedAt: string
 }
 
+export type FertilizerTranslationPayload = Partial<Pick<Fertilizer,
+  'name'
+  | 'category'
+  | 'countryOfOrigin'
+  | 'description'
+  | 'content'
+  | 'uses'
+  | 'applyOnCrops'
+  | 'doNotApplyOn'
+  | 'applicationMethod'
+  | 'recommendedStage'
+  | 'season'
+  | 'temperatureRange'
+  | 'soilType'
+  | 'benefits'
+  | 'precautions'
+  | 'approvalBody'
+  | 'regionalRecommendations'
+  | 'brand'
+  | 'importCertifications'
+  | 'internationalSpecifications'
+>>
+
 export type FertilizerPayload = Omit<Fertilizer, 'id' | 'kind' | 'language' | 'displayName' | 'displayCategory' | 'localizedDescription' | 'localizedContent' | 'localizedUses' | 'localizedBenefits' | 'localizedPrecautions' | 'createdAt' | 'updatedAt'> & {
-  translations?: Record<'hi' | 'mr', Partial<Pick<Fertilizer, 'name' | 'category' | 'description' | 'content' | 'uses' | 'benefits' | 'precautions'>>>
+  translations?: Record<'hi' | 'mr', FertilizerTranslationPayload>
 }
 
 async function apiRequest<T>(path: string, options?: RequestInit): Promise<T> {

@@ -7,6 +7,7 @@ import {
   type Fertilizer,
   type FertilizerKind,
   type FertilizerPayload,
+  type FertilizerTranslationPayload,
 } from '../../services/api'
 import { useAuthStore } from '../../stores/authStore'
 
@@ -42,6 +43,31 @@ const blankPayload: FertilizerPayload = {
 }
 
 const inputClass = 'border border-line bg-white px-3 py-2 text-xs outline-none focus:border-green'
+
+type TranslationField = keyof FertilizerTranslationPayload
+
+const translationFields: Array<{ field: TranslationField; label: string; multiline?: boolean }> = [
+  { field: 'name', label: 'Name' },
+  { field: 'category', label: 'Category' },
+  { field: 'countryOfOrigin', label: 'Country of origin' },
+  { field: 'description', label: 'Description', multiline: true },
+  { field: 'content', label: 'Nutrient content', multiline: true },
+  { field: 'uses', label: 'Uses', multiline: true },
+  { field: 'applyOnCrops', label: 'Suitable crops', multiline: true },
+  { field: 'doNotApplyOn', label: 'Unsuitable crops', multiline: true },
+  { field: 'applicationMethod', label: 'Application method', multiline: true },
+  { field: 'recommendedStage', label: 'Recommended stage' },
+  { field: 'season', label: 'Season' },
+  { field: 'temperatureRange', label: 'Temperature range' },
+  { field: 'soilType', label: 'Soil type' },
+  { field: 'benefits', label: 'Benefits', multiline: true },
+  { field: 'precautions', label: 'Precautions', multiline: true },
+  { field: 'approvalBody', label: 'Government approval', multiline: true },
+  { field: 'regionalRecommendations', label: 'Regional recommendations', multiline: true },
+  { field: 'brand', label: 'Brand' },
+  { field: 'importCertifications', label: 'Import certifications', multiline: true },
+  { field: 'internationalSpecifications', label: 'International specifications', multiline: true },
+]
 
 function payloadFromFertilizer(fertilizer: Fertilizer): FertilizerPayload {
   return {
@@ -105,7 +131,7 @@ export function FertilizerManager({ kind }: { kind: FertilizerKind }) {
     setForm((current) => ({ ...current, [field]: value }))
   }
 
-  const updateTranslation = (language: 'hi' | 'mr', field: 'name' | 'description', value: string) => {
+  const updateTranslation = (language: 'hi' | 'mr', field: TranslationField, value: string) => {
     setForm((current) => ({
       ...current,
       translations: {
@@ -242,12 +268,35 @@ export function FertilizerManager({ kind }: { kind: FertilizerKind }) {
 
         <div className="border border-dashed border-line p-4 grid gap-2">
           <strong className="text-xs text-ink">Multilingual content</strong>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <input onChange={(event) => updateTranslation('hi', 'name', event.target.value)} placeholder="Hindi name" className={inputClass} />
-            <input onChange={(event) => updateTranslation('mr', 'name', event.target.value)} placeholder="Marathi name" className={inputClass} />
-            <textarea onChange={(event) => updateTranslation('hi', 'description', event.target.value)} placeholder="Hindi description" className={`${inputClass} min-h-[60px]`} />
-            <textarea onChange={(event) => updateTranslation('mr', 'description', event.target.value)} placeholder="Marathi description" className={`${inputClass} min-h-[60px]`} />
-          </div>
+          <p className="text-[11px] text-muted">Add Hindi and Marathi versions for public product pages. Empty fields fall back to English.</p>
+          {(['hi', 'mr'] as const).map((language) => (
+            <div key={language} className="border border-line bg-white/70 p-3 grid gap-2">
+              <strong className="text-[11px] text-green">{language === 'hi' ? 'Hindi' : 'Marathi'} translation</strong>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {translationFields.map(({ field, label, multiline }) => {
+                  const placeholder = `${language === 'hi' ? 'Hindi' : 'Marathi'} ${label.toLowerCase()}`
+                  const value = String(form.translations?.[language]?.[field] || '')
+                  return multiline ? (
+                    <textarea
+                      key={`${language}-${field}`}
+                      value={value}
+                      onChange={(event) => updateTranslation(language, field, event.target.value)}
+                      placeholder={placeholder}
+                      className={`${inputClass} min-h-[60px]`}
+                    />
+                  ) : (
+                    <input
+                      key={`${language}-${field}`}
+                      value={value}
+                      onChange={(event) => updateTranslation(language, field, event.target.value)}
+                      placeholder={placeholder}
+                      className={inputClass}
+                    />
+                  )
+                })}
+              </div>
+            </div>
+          ))}
         </div>
 
         <label className="border border-dashed border-line p-4 text-center text-xs text-muted">
