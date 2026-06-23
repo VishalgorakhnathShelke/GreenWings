@@ -63,6 +63,28 @@ FERTILIZER_FIELDS = [
     "status",
     "documentUrl",
 ]
+FERTILIZER_TRANSLATION_FIELDS = [
+    "name",
+    "category",
+    "countryOfOrigin",
+    "description",
+    "content",
+    "uses",
+    "applyOnCrops",
+    "doNotApplyOn",
+    "applicationMethod",
+    "recommendedStage",
+    "season",
+    "temperatureRange",
+    "soilType",
+    "benefits",
+    "precautions",
+    "approvalBody",
+    "regionalRecommendations",
+    "brand",
+    "importCertifications",
+    "internationalSpecifications",
+]
 FERTILIZER_KINDS = {
     "local": ("local_fertilizers", "local_fertilizer_translations"),
     "imported": ("imported_fertilizers", "imported_fertilizer_translations"),
@@ -274,11 +296,24 @@ def ensure_app_schema() -> None:
                 language TEXT NOT NULL,
                 name TEXT,
                 category TEXT,
+                countryOfOrigin TEXT,
                 description TEXT,
                 content TEXT,
                 uses TEXT,
+                applyOnCrops TEXT,
+                doNotApplyOn TEXT,
+                applicationMethod TEXT,
+                recommendedStage TEXT,
+                season TEXT,
+                temperatureRange TEXT,
+                soilType TEXT,
                 benefits TEXT,
                 precautions TEXT,
+                approvalBody TEXT,
+                regionalRecommendations TEXT,
+                brand TEXT,
+                importCertifications TEXT,
+                internationalSpecifications TEXT,
                 createdAt TEXT NOT NULL,
                 updatedAt TEXT NOT NULL,
                 UNIQUE(fertilizerId, language),
@@ -291,11 +326,24 @@ def ensure_app_schema() -> None:
                 language TEXT NOT NULL,
                 name TEXT,
                 category TEXT,
+                countryOfOrigin TEXT,
                 description TEXT,
                 content TEXT,
                 uses TEXT,
+                applyOnCrops TEXT,
+                doNotApplyOn TEXT,
+                applicationMethod TEXT,
+                recommendedStage TEXT,
+                season TEXT,
+                temperatureRange TEXT,
+                soilType TEXT,
                 benefits TEXT,
                 precautions TEXT,
+                approvalBody TEXT,
+                regionalRecommendations TEXT,
+                brand TEXT,
+                importCertifications TEXT,
+                internationalSpecifications TEXT,
                 createdAt TEXT NOT NULL,
                 updatedAt TEXT NOT NULL,
                 UNIQUE(fertilizerId, language),
@@ -483,6 +531,9 @@ def ensure_app_schema() -> None:
                 "language": "TEXT NOT NULL DEFAULT 'en'",
             },
         )
+        fertilizer_translation_columns = {field: "TEXT" for field in FERTILIZER_TRANSLATION_FIELDS}
+        ensure_columns(connection, "local_fertilizer_translations", fertilizer_translation_columns)
+        ensure_columns(connection, "imported_fertilizer_translations", fertilizer_translation_columns)
     seed_fertilizers()
     seed_company_content()
     seed_company_profile_content()
@@ -623,6 +674,7 @@ def seed_fertilizers() -> None:
         if connection.execute("SELECT COUNT(*) FROM imported_fertilizers").fetchone()[0] == 0:
             for row in imported_rows:
                 insert_fertilizer_row(connection, "imported_fertilizers", row, created_at)
+        seed_fertilizer_translations(connection, created_at)
 
 
 def insert_fertilizer_row(connection: sqlite3.Connection, table: str, payload: dict, timestamp: str) -> int:
@@ -638,6 +690,222 @@ def insert_fertilizer_row(connection: sqlite3.Connection, table: str, payload: d
         values,
     )
     return int(cursor.lastrowid)
+
+
+def seed_fertilizer_translations(connection: sqlite3.Connection, timestamp: str) -> None:
+    seed_rows = {
+        "local": {
+            "Neem Coated Urea": {
+                "hi": {
+                    "name": "नीम लेपित यूरिया",
+                    "category": "नाइट्रोजन उर्वरक",
+                    "countryOfOrigin": "भारत",
+                    "description": "सरकार द्वारा अनुमोदित नाइट्रोजन उर्वरक, जो भारतीय खेत परिस्थितियों में नाइट्रोजन को धीरे-धीरे उपलब्ध कराने और पोषक तत्वों की हानि कम करने में मदद करता है।",
+                    "content": "नियंत्रित रिलीज के लिए नीम तेल लेप के साथ 46% नाइट्रोजन।",
+                    "uses": "अनाज, गन्ना, कपास और सब्जियों में बेसल तथा टॉप ड्रेसिंग नाइट्रोजन पोषण।",
+                    "applyOnCrops": "गेहूं, मक्का, धान, गन्ना, कपास, प्याज और पत्तेदार सब्जियां।",
+                    "doNotApplyOn": "बीज के सीधे संपर्क, जलभराव वाले खेतों और गंभीर सूखे तनाव वाली फसलों में उपयोग से बचें।",
+                    "applicationMethod": "नम मिट्टी में समान रूप से छिड़कें और हल्का मिला दें। लंबी अवधि की फसलों में विभाजित मात्रा देना बेहतर है।",
+                    "recommendedStage": "बेसल मात्रा और सक्रिय वानस्पतिक वृद्धि अवस्था।",
+                    "season": "खरीफ और रबी।",
+                    "temperatureRange": "18-35 C.",
+                    "soilType": "पर्याप्त नमी वाली जलोढ़, काली कपास और मध्यम बनावट की मिट्टी।",
+                    "benefits": "स्थिर वानस्पतिक वृद्धि, बेहतर नाइट्रोजन उपयोग दक्षता और वाष्पीकरण हानि में कमी।",
+                    "precautions": "मिट्टी परीक्षण आधारित मात्रा का उपयोग करें, दस्ताने पहनें और जल स्रोतों के पास अधिक मात्रा न डालें।",
+                    "approvalBody": "भारत सरकार के उर्वरक नियंत्रण अनुमोदित वर्ग के अंतर्गत।",
+                    "regionalRecommendations": "महाराष्ट्र में अनाज, गन्ना और प्याज के लिए मार्गदर्शित पोषण योजना के तहत अनुशंसित।",
+                },
+                "mr": {
+                    "name": "नीम लेपित युरिया",
+                    "category": "नायट्रोजन खत",
+                    "countryOfOrigin": "भारत",
+                    "description": "भारतीय शेती परिस्थितीत नायट्रोजन हळूहळू उपलब्ध करून पोषक घटकांची हानी कमी करण्यासाठी तयार केलेले शासनमान्य नायट्रोजन खत.",
+                    "content": "नियंत्रित उपलब्धतेसाठी नीम तेलाच्या लेपासह 46% नायट्रोजन.",
+                    "uses": "तृणधान्ये, ऊस, कापूस आणि भाजीपाला पिकांसाठी बेसल व टॉप ड्रेसिंग नायट्रोजन पोषण.",
+                    "applyOnCrops": "गहू, मका, भात, ऊस, कापूस, कांदा आणि पालेभाज्या.",
+                    "doNotApplyOn": "बियाण्याशी थेट संपर्क, पाणी साचलेली शेते आणि तीव्र दुष्काळ ताण असलेली पिके टाळा.",
+                    "applicationMethod": "ओलसर मातीत समप्रमाणात पसरवून हलके मिसळा. दीर्घ कालावधीच्या पिकांसाठी विभागून मात्रा देणे योग्य.",
+                    "recommendedStage": "बेसल मात्रा आणि सक्रिय वाढीची अवस्था.",
+                    "season": "खरीप आणि रबी.",
+                    "temperatureRange": "18-35 C.",
+                    "soilType": "पुरेशी ओल असलेली गाळाची, काळी कापूस व मध्यम पोताची माती.",
+                    "benefits": "समतोल वाढ, नायट्रोजन वापर कार्यक्षमता आणि उडून जाणारी हानी कमी करण्यास मदत.",
+                    "precautions": "माती परीक्षणानुसार मात्रा द्या, हातमोजे वापरा आणि पाणवठ्याजवळ अतिमात्रा टाळा.",
+                    "approvalBody": "भारत सरकारच्या खत नियंत्रण मान्य श्रेणीअंतर्गत.",
+                    "regionalRecommendations": "महाराष्ट्रात तृणधान्ये, ऊस आणि कांदा पिकांसाठी मार्गदर्शित पोषण योजनेत अनुशंसित.",
+                },
+            },
+            "City Compost Organic Manure": {
+                "hi": {
+                    "name": "सिटी कम्पोस्ट जैविक खाद",
+                    "category": "जैविक उर्वरक",
+                    "countryOfOrigin": "भारत",
+                    "description": "मिट्टी स्वास्थ्य सुधार, कार्बन वृद्धि और क्षेत्रीय खेती प्रणालियों में संतुलित सूक्ष्मजीव गतिविधि के लिए जैविक खाद विकल्प।",
+                    "content": "जैविक कार्बन, ह्यूमिक पदार्थ, द्वितीयक पोषक तत्व और लाभकारी सूक्ष्मजीव गतिविधि।",
+                    "uses": "मिट्टी सुधार, जैविक कार्बन बढ़ाने और रोपाई/बुवाई से पहले खाद के रूप में।",
+                    "applyOnCrops": "अंगूर, अनार, केला, सब्जियां, दलहन, अनाज और बागवानी फसलें।",
+                    "doNotApplyOn": "पूरी तरह पकी खाद की पुष्टि के बिना नाजुक पौधों के पास ताजा उपयोग न करें।",
+                    "applicationMethod": "भूमि तैयारी के समय डालें और जड़ क्षेत्र में अच्छी तरह मिलाएं।",
+                    "recommendedStage": "बुवाई से पहले, रोपाई से पहले और बागों में बेसिन तैयारी के समय।",
+                    "season": "पूर्व-खरीफ, पूर्व-रबी और बागों का वार्षिक पोषण चक्र।",
+                    "temperatureRange": "15-38 C.",
+                    "soilType": "कम जैविक कार्बन वाली, काली और संरचना सुधार की जरूरत वाली हल्की मिट्टियां।",
+                    "benefits": "मिट्टी की संरचना, नमी धारण क्षमता, सूक्ष्मजीव गतिविधि और दीर्घकालीन पोषक उपलब्धता में सुधार।",
+                    "precautions": "केवल परिपक्व कम्पोस्ट का उपयोग करें और भंडारण में इसे सघन रासायनिक उर्वरकों के साथ सीधे न मिलाएं।",
+                    "approvalBody": "सरकारी मिट्टी स्वास्थ्य सुधार कार्यक्रमों से जुड़ा जैविक इनपुट।",
+                    "regionalRecommendations": "नाशिक और येवला के बागों में जैविक कार्बन पुनर्निर्माण के लिए उपयोगी।",
+                },
+                "mr": {
+                    "name": "सिटी कम्पोस्ट सेंद्रिय खत",
+                    "category": "सेंद्रिय खत",
+                    "countryOfOrigin": "भारत",
+                    "description": "मातीचे आरोग्य सुधारणा, कार्बन वाढ आणि प्रादेशिक शेती पद्धतींमध्ये संतुलित सूक्ष्मजीव क्रियेसाठी सेंद्रिय खताचा पर्याय.",
+                    "content": "सेंद्रिय कार्बन, ह्युमिक घटक, दुय्यम पोषक घटक आणि उपयुक्त सूक्ष्मजीव क्रिया.",
+                    "uses": "माती सुधारणा, सेंद्रिय कार्बन वाढ आणि लागवडीपूर्व खत म्हणून वापर.",
+                    "applyOnCrops": "द्राक्षे, डाळिंब, केळी, भाजीपाला, कडधान्ये, तृणधान्ये आणि फळबाग पिके.",
+                    "doNotApplyOn": "खत पूर्णपणे परिपक्व असल्याची खात्री नसल्यास कोवळ्या रोपांजवळ ताजा वापर टाळा.",
+                    "applicationMethod": "जमीन तयारीच्या वेळी टाका आणि मुळांच्या भागात व्यवस्थित मिसळा.",
+                    "recommendedStage": "पेरणीपूर्वी, लागवडीपूर्वी आणि बागेतील बेसिन तयारीच्या वेळी.",
+                    "season": "पूर्व-खरीप, पूर्व-रबी आणि बागांचा वार्षिक पोषण चक्र.",
+                    "temperatureRange": "15-38 C.",
+                    "soilType": "कमी सेंद्रिय कार्बन असलेली, काळी आणि रचना सुधारण्याची गरज असलेली हलकी माती.",
+                    "benefits": "मातीची रचना, ओल धारण क्षमता, सूक्ष्मजीव क्रिया आणि दीर्घकालीन पोषक उपलब्धता सुधारते.",
+                    "precautions": "परिपक्व कम्पोस्टच वापरा आणि साठवणीत तीव्र रासायनिक खतांसोबत थेट मिसळू नका.",
+                    "approvalBody": "शासकीय माती आरोग्य सुधार कार्यक्रमांशी सुसंगत सेंद्रिय इनपुट.",
+                    "regionalRecommendations": "नाशिक आणि येवला भागातील बागांसाठी सेंद्रिय कार्बन वाढवण्यास उपयुक्त.",
+                },
+            },
+        },
+        "imported": {
+            "YaraMila Complex 12-11-18": {
+                "hi": {
+                    "name": "YaraMila कॉम्प्लेक्स 12-11-18",
+                    "category": "एनपीके कॉम्प्लेक्स उर्वरक",
+                    "countryOfOrigin": "नॉर्वे",
+                    "description": "संतुलित मुख्य पोषक तत्वों और गुणवत्ता-केंद्रित फसल विकास के लिए प्रीमियम आयातित एनपीके फॉर्मुलेशन।",
+                    "content": "सल्फर, मैग्नीशियम और उपलब्ध सूक्ष्म पोषक समर्थन के साथ NPK 12-11-18।",
+                    "uses": "समान ग्रेन्यूल गुणवत्ता और अनुमानित पोषक रिलीज चाहने वाली उच्च-मूल्य फसलों के लिए संतुलित पोषण।",
+                    "applyOnCrops": "अंगूर, अनार, केला, सब्जियां, फूलों की खेती और संरक्षित खेती की फसलें।",
+                    "doNotApplyOn": "नमक-संवेदनशील नर्सरी फसलों और सिंचाई के बिना कोमल जड़ों के पास सीधे उपयोग से बचें।",
+                    "applicationMethod": "सलाह के अनुसार मिट्टी में छिड़काव, बैंड प्लेसमेंट या फर्टिगेशन कार्यक्रम में उपयोग करें।",
+                    "recommendedStage": "वानस्पतिक वृद्धि, फूल समर्थन और प्रारंभिक फल विकास।",
+                    "season": "सिंचित उच्च-मूल्य फसलों के लिए वर्षभर।",
+                    "temperatureRange": "16-34 C.",
+                    "soilType": "अच्छी जलनिकासी वाली दोमट, काली और प्रबंधित बाग मिट्टी।",
+                    "benefits": "समान वृद्धि, फूल, फल आकार और प्रीमियम गुणवत्ता उत्पादन में मदद।",
+                    "precautions": "फसल-विशिष्ट मात्रा अपनाएं, असंगत क्षारीय सामग्री से मिश्रण न करें और सूखी जगह पर रखें।",
+                    "brand": "YaraMila",
+                    "importCertifications": "आयातक गुणवत्ता दस्तावेज, बैच प्रमाणपत्र और अनुरूप उत्पाद लेबलिंग आवश्यक।",
+                    "internationalSpecifications": "घोषित पोषक संरचना और ट्रेसबिलिटी के साथ यूरोपीय ग्रेनुलेशन मानक।",
+                },
+                "mr": {
+                    "name": "YaraMila कॉम्प्लेक्स 12-11-18",
+                    "category": "एनपीके कॉम्प्लेक्स खत",
+                    "countryOfOrigin": "नॉर्वे",
+                    "description": "समतोल मुख्य पोषक पुरवठा आणि गुणवत्तापूर्ण पीक विकासासाठी प्रीमियम आयातित एनपीके फॉर्म्युलेशन.",
+                    "content": "सल्फर, मॅग्नेशियम आणि उपलब्ध सूक्ष्म पोषक समर्थनासह NPK 12-11-18.",
+                    "uses": "एकसमान दाणेदार गुणवत्ता आणि अंदाजित पोषक उपलब्धता हवी असलेल्या उच्च-मूल्य पिकांसाठी समतोल पोषण.",
+                    "applyOnCrops": "द्राक्षे, डाळिंब, केळी, भाजीपाला, फुलशेती आणि संरक्षित शेतीतील पिके.",
+                    "doNotApplyOn": "मीठ-संवेदनशील नर्सरी पिके आणि सिंचनाशिवाय कोवळ्या मुळांजवळ थेट वापर टाळा.",
+                    "applicationMethod": "सल्ल्यानुसार मातीवर पसरवणे, बँड प्लेसमेंट किंवा फर्टिगेशन कार्यक्रमात वापरा.",
+                    "recommendedStage": "वानस्पतिक वाढ, फुलोरा समर्थन आणि प्रारंभिक फलधारणा.",
+                    "season": "सिंचित उच्च-मूल्य पिकांसाठी वर्षभर.",
+                    "temperatureRange": "16-34 C.",
+                    "soilType": "चांगला निचरा असलेली दोमट, काळी आणि व्यवस्थापित बाग माती.",
+                    "benefits": "समतोल वाढ, फुलोरा, फळांचा आकार आणि प्रीमियम दर्जाचे उत्पादन यास मदत.",
+                    "precautions": "पीकनिहाय मात्रा पाळा, विसंगत क्षारीय पदार्थांशी मिश्रण टाळा आणि कोरड्या ठिकाणी साठवा.",
+                    "brand": "YaraMila",
+                    "importCertifications": "आयात गुणवत्ता कागदपत्रे, बॅच प्रमाणपत्र आणि अनुरूप उत्पादन लेबलिंग आवश्यक.",
+                    "internationalSpecifications": "घोषित पोषक संरचना आणि ट्रेसेबिलिटीसह युरोपीय दाणेदार मानके.",
+                },
+            },
+            "Haifa Multi-K Potassium Nitrate": {
+                "hi": {
+                    "name": "Haifa Multi-K पोटैशियम नाइट्रेट",
+                    "category": "जल घुलनशील उर्वरक",
+                    "countryOfOrigin": "इजराइल",
+                    "description": "प्रिसिजन फर्टिगेशन, फल गुणवत्ता और तनाव अवस्था पोषण के लिए उच्च-शुद्धता आयातित पोटैशियम नाइट्रेट।",
+                    "content": "नाइट्रेट नाइट्रोजन और पूर्णतः जल-घुलनशील पोटैशियम के साथ पोटैशियम नाइट्रेट।",
+                    "uses": "फर्टिगेशन, पर्णीय छिड़काव और प्रिसिजन फसल पोषण कार्यक्रम।",
+                    "applyOnCrops": "अंगूर, अनार, केला, टमाटर, मिर्च, शिमला मिर्च, ककड़ी और निर्यात-उन्मुख सब्जियां।",
+                    "doNotApplyOn": "गंभीर जल तनाव वाली फसलों या कैल्शियम-समृद्ध असंगत टैंक मिश्रणों में उपयोग से बचें।",
+                    "applicationMethod": "कृषि विशेषज्ञ की मात्रा सलाह के अनुसार ड्रिप फर्टिगेशन या पर्णीय स्प्रे से उपयोग करें।",
+                    "recommendedStage": "फूल, फल सेटिंग, फल आकार और गुणवत्ता विकास अवस्था।",
+                    "season": "सिंचित फसल चक्र और संरक्षित खेती के मौसम।",
+                    "temperatureRange": "14-32 C.",
+                    "soilType": "प्रबंधित EC और pH वाली ड्रिप-सिंचित मिट्टियां।",
+                    "benefits": "फल आकार, रंग, शर्करा संचय और पोटैशियम-आधारित गुणवत्ता में सुधार।",
+                    "precautions": "पानी का pH और EC जांचें, अधिक पर्णीय सांद्रता से बचें और लेबल निर्देशों का पालन करें।",
+                    "brand": "Multi-K",
+                    "importCertifications": "उत्पाद आयात दस्तावेज, विश्लेषण प्रमाणपत्र और बैच ट्रेसबिलिटी आवश्यक।",
+                    "internationalSpecifications": "फर्टिगेशन प्रणालियों के लिए उच्च-शुद्धता क्रिस्टलीय जल-घुलनशील उर्वरक।",
+                },
+                "mr": {
+                    "name": "Haifa Multi-K पोटॅशियम नायट्रेट",
+                    "category": "पाण्यात विद्रव्य खत",
+                    "countryOfOrigin": "इस्रायल",
+                    "description": "प्रिसिजन फर्टिगेशन, फळ गुणवत्ता आणि ताण अवस्थेतील पोषणासाठी उच्च-शुद्धतेचे आयातित पोटॅशियम नायट्रेट.",
+                    "content": "नायट्रेट नायट्रोजन आणि पूर्णपणे पाण्यात विद्रव्य पोटॅशियमसह पोटॅशियम नायट्रेट.",
+                    "uses": "फर्टिगेशन, पानांवर फवारणी आणि अचूक पीक पोषण कार्यक्रम.",
+                    "applyOnCrops": "द्राक्षे, डाळिंब, केळी, टोमॅटो, मिरची, ढोबळी मिरची, काकडी आणि निर्याताभिमुख भाजीपाला.",
+                    "doNotApplyOn": "तीव्र पाण्याच्या ताणाखालील पिके किंवा कॅल्शियमयुक्त विसंगत टँक मिश्रणात वापर टाळा.",
+                    "applicationMethod": "कृषी तज्ज्ञांच्या मात्रेनुसार ड्रिप फर्टिगेशन किंवा पानांवरील फवारणीद्वारे वापरा.",
+                    "recommendedStage": "फुलोरा, फलधारणा, फळ वाढ आणि गुणवत्ता विकास अवस्था.",
+                    "season": "सिंचित पीक चक्र आणि संरक्षित शेती हंगाम.",
+                    "temperatureRange": "14-32 C.",
+                    "soilType": "नियंत्रित EC आणि pH असलेली ड्रिप-सिंचित माती.",
+                    "benefits": "फळांचा आकार, रंग, साखर संचय आणि पोटॅशियम-आधारित गुणवत्ता सुधारते.",
+                    "precautions": "पाण्याचा pH आणि EC तपासा, जास्त पर्णीय सांद्रता टाळा आणि लेबलवरील सूचना पाळा.",
+                    "brand": "Multi-K",
+                    "importCertifications": "उत्पादन आयात कागदपत्रे, विश्लेषण प्रमाणपत्र आणि बॅच ट्रेसेबिलिटी आवश्यक.",
+                    "internationalSpecifications": "फर्टिगेशन प्रणालींसाठी उच्च-शुद्धतेचे स्फटिकीय पाण्यात विद्रव्य खत.",
+                },
+            },
+        },
+    }
+    for kind, products in seed_rows.items():
+        table, translation_table = fertilizer_tables(kind)
+        for name, translations in products.items():
+            row = connection.execute(f"SELECT id FROM {table} WHERE name = ?", (name,)).fetchone()
+            if not row:
+                continue
+            for language, values in translations.items():
+                upsert_missing_fertilizer_translation(connection, translation_table, row["id"], language, values, timestamp)
+
+
+def upsert_missing_fertilizer_translation(
+    connection: sqlite3.Connection,
+    table: str,
+    fertilizer_id: int,
+    language: str,
+    values: dict,
+    timestamp: str,
+) -> None:
+    clean = {field: str(values.get(field, "")).strip() for field in FERTILIZER_TRANSLATION_FIELDS}
+    if not any(clean.values()):
+        return
+    columns = ["fertilizerId", "language", *FERTILIZER_TRANSLATION_FIELDS, "createdAt", "updatedAt"]
+    placeholders = ", ".join("?" for _ in columns)
+    update_clause = ",\n                ".join(
+        f"{field} = CASE WHEN {field} IS NULL OR TRIM({field}) = '' THEN excluded.{field} ELSE {field} END"
+        for field in FERTILIZER_TRANSLATION_FIELDS
+    )
+    connection.execute(
+        f"""
+        INSERT INTO {table} ({", ".join(columns)})
+        VALUES ({placeholders})
+        ON CONFLICT(fertilizerId, language) DO UPDATE SET
+                {update_clause},
+                updatedAt = excluded.updatedAt
+        """,
+        (
+            fertilizer_id,
+            language,
+            *(clean[field] for field in FERTILIZER_TRANSLATION_FIELDS),
+            timestamp,
+            timestamp,
+        ),
+    )
 
 
 def seed_company_content() -> None:
@@ -1643,6 +1911,11 @@ def row_to_fertilizer(row: sqlite3.Row, kind: str, language: str = "en", transla
     item = dict(row)
     item["kind"] = kind
     item["language"] = language
+    if translation:
+        translation_keys = set(translation.keys())
+        for field in FERTILIZER_TRANSLATION_FIELDS:
+            if field in item and field in translation_keys and translation[field]:
+                item[field] = translation[field]
     item["displayName"] = item["name"]
     item["displayCategory"] = item["category"]
     item["localizedDescription"] = item["description"]
@@ -1650,14 +1923,6 @@ def row_to_fertilizer(row: sqlite3.Row, kind: str, language: str = "en", transla
     item["localizedUses"] = item["uses"]
     item["localizedBenefits"] = item["benefits"]
     item["localizedPrecautions"] = item["precautions"]
-    if translation:
-        item["displayName"] = translation["name"] or item["name"]
-        item["displayCategory"] = translation["category"] or item["category"]
-        item["localizedDescription"] = translation["description"] or item["description"]
-        item["localizedContent"] = translation["content"] or item["content"]
-        item["localizedUses"] = translation["uses"] or item["uses"]
-        item["localizedBenefits"] = translation["benefits"] or item["benefits"]
-        item["localizedPrecautions"] = translation["precautions"] or item["precautions"]
     return item
 
 
@@ -1665,9 +1930,10 @@ def localized_fertilizer(connection: sqlite3.Connection, row: sqlite3.Row, kind:
     _, translation_table = fertilizer_tables(kind)
     translation = None
     if language != "en":
+        fields = ", ".join(FERTILIZER_TRANSLATION_FIELDS)
         translation = connection.execute(
             f"""
-            SELECT name, category, description, content, uses, benefits, precautions
+            SELECT {fields}
             FROM {translation_table}
             WHERE fertilizerId = ? AND language = ?
             """,
@@ -1705,42 +1971,27 @@ def upsert_fertilizer_translations(
     for language, values in translations.items():
         if language not in {"hi", "mr"} or not isinstance(values, dict):
             continue
-        clean = {
-            "name": str(values.get("name", "")).strip(),
-            "category": str(values.get("category", "")).strip(),
-            "description": str(values.get("description", "")).strip(),
-            "content": str(values.get("content", "")).strip(),
-            "uses": str(values.get("uses", "")).strip(),
-            "benefits": str(values.get("benefits", "")).strip(),
-            "precautions": str(values.get("precautions", "")).strip(),
-        }
+        clean = {field: str(values.get(field, "")).strip() for field in FERTILIZER_TRANSLATION_FIELDS}
         if not any(clean.values()):
             continue
+        columns = ["fertilizerId", "language", *FERTILIZER_TRANSLATION_FIELDS, "createdAt", "updatedAt"]
+        placeholders = ", ".join("?" for _ in columns)
+        update_clause = ",\n                ".join(
+            f"{field} = CASE WHEN excluded.{field} IS NOT NULL AND TRIM(excluded.{field}) != '' THEN excluded.{field} ELSE {field} END"
+            for field in FERTILIZER_TRANSLATION_FIELDS
+        )
         connection.execute(
             f"""
-            INSERT INTO {table} (
-                fertilizerId, language, name, category, description, content, uses, benefits, precautions, createdAt, updatedAt
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO {table} ({", ".join(columns)})
+            VALUES ({placeholders})
             ON CONFLICT(fertilizerId, language) DO UPDATE SET
-                name = excluded.name,
-                category = excluded.category,
-                description = excluded.description,
-                content = excluded.content,
-                uses = excluded.uses,
-                benefits = excluded.benefits,
-                precautions = excluded.precautions,
+                {update_clause},
                 updatedAt = excluded.updatedAt
             """,
             (
                 fertilizer_id,
                 language,
-                clean["name"],
-                clean["category"],
-                clean["description"],
-                clean["content"],
-                clean["uses"],
-                clean["benefits"],
-                clean["precautions"],
+                *(clean[field] for field in FERTILIZER_TRANSLATION_FIELDS),
                 timestamp,
                 timestamp,
             ),
@@ -3473,27 +3724,33 @@ class ApiHandler(BaseHTTPRequestHandler):
         search = query.get("search", [""])[0].strip()
         category = query.get("category", [""])[0].strip()
         table, _ = fertilizer_tables(kind)
-        clauses = ["status = 'active'"]
-        params: list[str] = []
-        if search:
-            clauses.append("(name LIKE ? OR category LIKE ? OR manufacturer LIKE ?)")
-            params.extend([f"%{search}%", f"%{search}%", f"%{search}%"])
-        if category:
-            clauses.append("category = ?")
-            params.append(category)
-        where = " AND ".join(clauses)
         with database() as connection:
             rows = connection.execute(
-                f"SELECT * FROM {table} WHERE {where} ORDER BY category, name",
-                params,
+                f"SELECT * FROM {table} WHERE status = 'active' ORDER BY category, name",
             ).fetchall()
             fertilizers = [localized_fertilizer(connection, row, kind, language) for row in rows]
-            categories = [
-                row["category"]
-                for row in connection.execute(
-                    f"SELECT DISTINCT category FROM {table} WHERE status = 'active' ORDER BY category"
-                ).fetchall()
+        if search:
+            needle = search.casefold()
+            fertilizers = [
+                item for item in fertilizers
+                if needle in " ".join(
+                    [
+                        item.get("displayName", ""),
+                        item.get("displayCategory", ""),
+                        item.get("manufacturer", ""),
+                        item.get("localizedDescription", ""),
+                    ]
+                ).casefold()
             ]
+        all_categories = sorted({item["displayCategory"] for item in fertilizers if item.get("displayCategory")})
+        if category:
+            category_needle = category.casefold()
+            fertilizers = [
+                item for item in fertilizers
+                if item.get("displayCategory", "").casefold() == category_needle
+                or item.get("category", "").casefold() == category_needle
+            ]
+        categories = all_categories
         self.send_json(200, {"kind": kind, "language": language, "categories": categories, "fertilizers": fertilizers})
 
     def handle_fertilizer_detail(self, parsed) -> None:
