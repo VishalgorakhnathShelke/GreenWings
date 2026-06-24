@@ -47,6 +47,14 @@ export function AboutPage() {
     () => [sections.vision, sections.mission].filter((item): item is CompanyContentSection => Boolean(item)),
     [sections],
   )
+  const timelineItems = useMemo(
+    () => [...(content?.timelines || [])].sort((first, second) => {
+      const firstYear = Number.parseInt(first.year.match(/\d{4}/)?.[0] || '0', 10)
+      const secondYear = Number.parseInt(second.year.match(/\d{4}/)?.[0] || '0', 10)
+      return secondYear - firstYear || second.displayOrder - first.displayOrder || second.title.localeCompare(first.title)
+    }),
+    [content?.timelines],
+  )
 
   return (
     <>
@@ -141,7 +149,7 @@ export function AboutPage() {
             </div>
           </Reveal>
           <div className="grid gap-4">
-            {content?.timelines.map((timeline) => (
+            {timelineItems.map((timeline) => (
               <Reveal key={timeline.id}>
                 <article className="grid grid-cols-1 md:grid-cols-[120px_1fr_220px] gap-4 border border-line bg-paper p-4 items-center">
                   <strong className="font-serif text-4xl text-green">{timeline.year}</strong>

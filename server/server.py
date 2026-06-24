@@ -42,6 +42,137 @@ SUPPORTED_LANGUAGES = {"en", "hi", "mr"}
 PASSWORD_ITERATIONS = 120_000
 EMAIL_PATTERN = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 RATE_LIMITS: dict[str, list[float]] = {}
+PHONE_RULES = {
+    "australia": {"dial": "61", "exact": {9}},
+    "bangladesh": {"dial": "880", "exact": {10}},
+    "bahrain": {"dial": "973", "exact": {8}},
+    "canada": {"dial": "1", "exact": {10}},
+    "china": {"dial": "86", "exact": {11}},
+    "france": {"dial": "33", "exact": {9}},
+    "india": {"dial": "91", "exact": {10}},
+    "japan": {"dial": "81", "exact": {10}},
+    "kuwait": {"dial": "965", "exact": {8}},
+    "nepal": {"dial": "977", "exact": {10}},
+    "oman": {"dial": "968", "exact": {8}},
+    "pakistan": {"dial": "92", "exact": {10}},
+    "qatar": {"dial": "974", "exact": {8}},
+    "saudi arabia": {"dial": "966", "exact": {9}},
+    "singapore": {"dial": "65", "exact": {8}},
+    "sri lanka": {"dial": "94", "exact": {9}},
+    "united arab emirates": {"dial": "971", "exact": {9}},
+    "united states": {"dial": "1", "exact": {10}},
+}
+PHONE_DIAL_RULES = {
+    "1": {"min": 10, "max": 10},
+    "7": {"min": 10, "max": 10},
+    "20": {"min": 10, "max": 10},
+    "27": {"min": 9, "max": 9},
+    "30": {"min": 10, "max": 10},
+    "31": {"min": 9, "max": 9},
+    "32": {"min": 8, "max": 9},
+    "33": {"min": 9, "max": 9},
+    "34": {"min": 9, "max": 9},
+    "36": {"min": 9, "max": 9},
+    "39": {"min": 9, "max": 10},
+    "40": {"min": 9, "max": 9},
+    "41": {"min": 9, "max": 9},
+    "44": {"min": 10, "max": 10},
+    "45": {"min": 8, "max": 8},
+    "46": {"min": 7, "max": 10},
+    "47": {"min": 8, "max": 8},
+    "48": {"min": 9, "max": 9},
+    "49": {"min": 10, "max": 11},
+    "51": {"min": 9, "max": 9},
+    "52": {"min": 10, "max": 10},
+    "55": {"min": 10, "max": 11},
+    "57": {"min": 10, "max": 10},
+    "60": {"min": 9, "max": 10},
+    "61": {"min": 9, "max": 9},
+    "62": {"min": 9, "max": 12},
+    "63": {"min": 10, "max": 10},
+    "64": {"min": 8, "max": 10},
+    "65": {"min": 8, "max": 8},
+    "66": {"min": 9, "max": 9},
+    "81": {"min": 10, "max": 10},
+    "82": {"min": 9, "max": 10},
+    "84": {"min": 9, "max": 10},
+    "86": {"min": 11, "max": 11},
+    "90": {"min": 10, "max": 10},
+    "91": {"min": 10, "max": 10},
+    "92": {"min": 10, "max": 10},
+    "94": {"min": 9, "max": 9},
+    "98": {"min": 10, "max": 10},
+    "212": {"min": 9, "max": 9},
+    "213": {"min": 8, "max": 9},
+    "216": {"min": 8, "max": 8},
+    "218": {"min": 9, "max": 9},
+    "221": {"min": 9, "max": 9},
+    "234": {"min": 10, "max": 10},
+    "254": {"min": 9, "max": 9},
+    "255": {"min": 9, "max": 9},
+    "256": {"min": 9, "max": 9},
+    "260": {"min": 9, "max": 9},
+    "263": {"min": 9, "max": 9},
+    "351": {"min": 9, "max": 9},
+    "352": {"min": 9, "max": 9},
+    "353": {"min": 9, "max": 9},
+    "358": {"min": 7, "max": 12},
+    "359": {"min": 8, "max": 9},
+    "370": {"min": 8, "max": 8},
+    "371": {"min": 8, "max": 8},
+    "372": {"min": 7, "max": 8},
+    "373": {"min": 8, "max": 8},
+    "374": {"min": 8, "max": 8},
+    "375": {"min": 9, "max": 9},
+    "380": {"min": 9, "max": 9},
+    "381": {"min": 8, "max": 9},
+    "382": {"min": 8, "max": 8},
+    "385": {"min": 8, "max": 9},
+    "386": {"min": 8, "max": 8},
+    "387": {"min": 8, "max": 8},
+    "389": {"min": 8, "max": 8},
+    "420": {"min": 9, "max": 9},
+    "421": {"min": 9, "max": 9},
+    "502": {"min": 8, "max": 8},
+    "503": {"min": 8, "max": 8},
+    "504": {"min": 8, "max": 8},
+    "505": {"min": 8, "max": 8},
+    "506": {"min": 8, "max": 8},
+    "507": {"min": 8, "max": 8},
+    "591": {"min": 8, "max": 8},
+    "593": {"min": 8, "max": 9},
+    "595": {"min": 9, "max": 9},
+    "598": {"min": 8, "max": 8},
+    "852": {"min": 8, "max": 8},
+    "853": {"min": 8, "max": 8},
+    "855": {"min": 8, "max": 9},
+    "856": {"min": 8, "max": 10},
+    "880": {"min": 10, "max": 10},
+    "886": {"min": 9, "max": 9},
+    "960": {"min": 7, "max": 7},
+    "961": {"min": 7, "max": 8},
+    "962": {"min": 9, "max": 9},
+    "963": {"min": 9, "max": 9},
+    "964": {"min": 10, "max": 10},
+    "965": {"min": 8, "max": 8},
+    "966": {"min": 9, "max": 9},
+    "967": {"min": 8, "max": 9},
+    "968": {"min": 8, "max": 8},
+    "970": {"min": 9, "max": 9},
+    "971": {"min": 9, "max": 9},
+    "972": {"min": 9, "max": 9},
+    "973": {"min": 8, "max": 8},
+    "974": {"min": 8, "max": 8},
+    "975": {"min": 7, "max": 8},
+    "976": {"min": 8, "max": 8},
+    "977": {"min": 10, "max": 10},
+    "992": {"min": 9, "max": 9},
+    "993": {"min": 8, "max": 8},
+    "994": {"min": 9, "max": 9},
+    "995": {"min": 9, "max": 9},
+    "996": {"min": 9, "max": 9},
+    "998": {"min": 9, "max": 9},
+}
 FERTILIZER_FIELDS = [
     "name",
     "category",
@@ -2339,8 +2470,13 @@ def content_collection(connection: sqlite3.Connection, language: str, only_publi
     return sorted(by_key.values(), key=lambda item: (item["displayOrder"], item["sectionKey"]))
 
 
+def sortable_year(value: str) -> int:
+    match = re.search(r"\d{4}", str(value))
+    return int(match.group(0)) if match else 0
+
+
 def milestone_collection(connection: sqlite3.Connection, language: str, only_public: bool = True) -> list[dict]:
-    rows = connection.execute("SELECT * FROM company_milestones ORDER BY displayOrder, year").fetchall()
+    rows = connection.execute("SELECT * FROM company_milestones ORDER BY year DESC, displayOrder DESC").fetchall()
     milestones: list[dict] = []
     for row in rows:
         translation = None
@@ -2370,7 +2506,7 @@ def milestone_collection(connection: sqlite3.Connection, language: str, only_pub
         if translations:
             milestone["translations"] = translations
         milestones.append(milestone)
-    return milestones
+    return sorted(milestones, key=lambda item: (sortable_year(item["year"]), item["displayOrder"], item["title"]), reverse=True)
 
 
 def timeline_collection(connection: sqlite3.Connection, language: str, only_public: bool = True) -> list[dict]:
@@ -2382,7 +2518,7 @@ def timeline_collection(connection: sqlite3.Connection, language: str, only_publ
         f"""
         SELECT * FROM company_timelines
         WHERE {' AND '.join(clauses)}
-        ORDER BY displayOrder, year
+        ORDER BY year DESC, displayOrder DESC
         """,
         params,
     ).fetchall()
@@ -2393,7 +2529,11 @@ def timeline_collection(connection: sqlite3.Connection, language: str, only_publ
         current = by_identity.get(key)
         if not current or item["language"] == language:
             by_identity[key] = item
-    return sorted(by_identity.values(), key=lambda item: (item["displayOrder"], item["year"], item["title"]))
+    return sorted(
+        by_identity.values(),
+        key=lambda item: (sortable_year(item["year"]), item["displayOrder"], item["title"]),
+        reverse=True,
+    )
 
 
 def statistic_collection(connection: sqlite3.Connection, only_active: bool = True) -> list[dict]:
@@ -2510,6 +2650,52 @@ def leadership_collection(connection: sqlite3.Connection, language: str, only_ac
     return members
 
 
+def phone_rule_for_country(country: str) -> dict:
+    country_key = country.strip().lower()
+    rule = PHONE_RULES.get(country_key)
+    if rule:
+        return rule
+    return {"dial": "", "min": 4, "max": 15}
+
+
+def normalized_mobile_number(mobile_number: str, country: str) -> tuple[str, str]:
+    digits = re.sub(r"\D", "", mobile_number)
+    rule = phone_rule_for_country(country)
+    dial = str(rule.get("dial", ""))
+    national = digits
+    if dial and national.startswith(dial):
+        national = national[len(dial):]
+    if national.startswith("0") and dial:
+        national_without_zero = national[1:]
+        exact = rule.get("exact")
+        if exact and len(national_without_zero) in exact:
+            national = national_without_zero
+        elif not exact and len(national_without_zero) >= int(rule.get("min", 4)):
+            national = national_without_zero
+    normalized = f"+{dial} {national}" if dial else mobile_number.strip()
+    return national, normalized
+
+
+def validate_mobile_number(mobile_number: str, country: str) -> str:
+    national, _ = normalized_mobile_number(mobile_number, country)
+    rule = phone_rule_for_country(country)
+    if not national:
+        return "Please enter a mobile number."
+    exact = rule.get("exact")
+    if exact and len(national) not in exact:
+        required = " or ".join(str(length) for length in sorted(exact))
+        return f"Please enter a valid mobile number for {country}. It must be {required} digits after the country code."
+    min_length = int(rule.get("min", min(exact) if exact else 4))
+    max_length = int(rule.get("max", max(exact) if exact else 15))
+    if len(national) < min_length or len(national) > max_length:
+        if min_length == max_length:
+            return f"Please enter a valid mobile number for {country}. It must be {max_length} digits after the country code."
+        return f"Please enter a valid mobile number for {country}. It must be {min_length}-{max_length} digits after the country code."
+    if len(re.sub(r"\D", "", mobile_number)) > 15:
+        return "Mobile number must not exceed the international 15 digit limit."
+    return ""
+
+
 def validate_registration(payload: dict) -> list[str]:
     required_fields = [
         "firstName",
@@ -2533,9 +2719,9 @@ def validate_registration(payload: dict) -> list[str]:
     password = str(payload.get("password", ""))
     if password and len(password) < 8:
         errors.append("Password must be at least 8 characters.")
-    mobile = re.sub(r"\D", "", str(payload.get("mobileNumber", "")))
-    if mobile and len(mobile) < 10:
-        errors.append("Please enter a valid mobile number.")
+    mobile_error = validate_mobile_number(str(payload.get("mobileNumber", "")), str(payload.get("country", "")))
+    if mobile_error:
+        errors.append(mobile_error)
     return errors
 
 
@@ -3914,10 +4100,14 @@ class ApiHandler(BaseHTTPRequestHandler):
 
         created_at = now_iso()
         email = str(body.get("email", "")).strip().lower()
+        _, clean_mobile = normalized_mobile_number(
+            str(body.get("mobileNumber", "")),
+            str(body.get("country", "")).strip(),
+        )
         clean = {
             "firstName": str(body.get("firstName", "")).strip(),
             "lastName": str(body.get("lastName", "")).strip(),
-            "mobileNumber": str(body.get("mobileNumber", "")).strip(),
+            "mobileNumber": clean_mobile,
             "email": email,
             "passwordHash": hash_password(str(body.get("password", ""))),
             "interest": str(body.get("interest", "")).strip(),
