@@ -6,6 +6,15 @@ import { BrandMark } from '../layout/BrandMark'
 import { useAuthStore } from '../../stores/authStore'
 import { loginAdmin, loginUser, registerUser, type RegisterPayload } from '../../services/api'
 import { useEnquiryStore } from '../../stores/enquiryStore'
+import {
+  defaultPhoneCountry,
+  formatInternationalPhone,
+  getPhoneCountryByIso,
+  onlyPhoneDigits,
+  phoneCountries,
+  phoneLengthHint,
+  validateNationalPhone,
+} from '../../data/phoneCountries'
 
 const initialRegistration: RegisterPayload = {
   firstName: '',
@@ -37,11 +46,15 @@ export function LoginModal() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [registration, setRegistration] = useState<RegisterPayload>(initialRegistration)
+  const [phoneCountryIso, setPhoneCountryIso] = useState(defaultPhoneCountry.iso2)
+  const [nationalPhone, setNationalPhone] = useState('')
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const setMember = useAuthStore((s) => s.setMember)
   const setAdmin = useAuthStore((s) => s.setAdmin)
   const loadEnquiries = useEnquiryStore((s) => s.loadEnquiries)
+  const selectedPhoneCountry = getPhoneCountryByIso(phoneCountryIso)
+  const phoneHint = phoneLengthHint(selectedPhoneCountry)
 
   if (!isOpen) return null
 
@@ -81,10 +94,22 @@ export function LoginModal() {
     setSubmitting(true)
     setError('')
     try {
-      const result = await registerUser(registration)
+      const phoneError = validateNationalPhone(selectedPhoneCountry, nationalPhone)
+      if (phoneError) {
+        setError(phoneError)
+        return
+      }
+      const payload = {
+        ...registration,
+        country: selectedPhoneCountry.name,
+        mobileNumber: formatInternationalPhone(selectedPhoneCountry, nationalPhone),
+      }
+      const result = await registerUser(payload)
       setMember(result.user.email, result.token, result.user)
       await openSignedInPortal(result.token, 'member')
       setRegistration(initialRegistration)
+      setPhoneCountryIso(defaultPhoneCountry.iso2)
+      setNationalPhone('')
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : 'Unable to create account')
     } finally {
@@ -94,6 +119,17 @@ export function LoginModal() {
 
   const updateRegistration = (field: keyof RegisterPayload, value: string) => {
     setRegistration((current) => ({ ...current, [field]: value }))
+  }
+
+  const updatePhoneCountry = (iso2: string) => {
+    const country = getPhoneCountryByIso(iso2)
+    setPhoneCountryIso(country.iso2)
+    setNationalPhone((current) => onlyPhoneDigits(current).slice(0, country.maxLength))
+    setRegistration((current) => ({ ...current, country: country.name }))
+  }
+
+  const updateNationalPhone = (value: string) => {
+    setNationalPhone(onlyPhoneDigits(value).slice(0, selectedPhoneCountry.maxLength))
   }
 
   return (
@@ -208,14 +244,38 @@ export function LoginModal() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <label className="grid gap-2 text-[10px] font-bold">
-                <span>Mobile number</span>
-                <input value={registration.mobileNumber} onChange={(e) => updateRegistration('mobileNumber', e.target.value)} placeholder="+91 98765 43210" className={inputClass} required />
+                <span>Phone country</span>
+                <select value={phoneCountryIso} onChange={(e) => updatePhoneCountry(e.target.value)} className={inputClass} required>
+                  {phoneCountries.map((country) => (
+                    <option key={country.iso2} value={country.iso2}>
+                      {country.name} ({country.dialCode})
+                    </option>
+                  ))}
+                </select>
               </label>
               <label className="grid gap-2 text-[10px] font-bold">
                 <span>Email</span>
                 <input type="email" value={registration.email} onChange={(e) => updateRegistration('email', e.target.value)} className={inputClass} required />
               </label>
             </div>
+
+            <label className="grid gap-2 text-[10px] font-bold">
+              <span>Mobile number</span>
+              <div className="grid grid-cols-[92px_1fr]">
+                <span className="p-3.5 border border-line border-r-0 bg-cream text-ink font-bold">{selectedPhoneCountry.dialCode}</span>
+                <input
+                  value={nationalPhone}
+                  onChange={(e) => updateNationalPhone(e.target.value)}
+                  placeholder={selectedPhoneCountry.example}
+                  className={inputClass}
+                  inputMode="numeric"
+                  maxLength={selectedPhoneCountry.maxLength}
+                  pattern="[0-9]*"
+                  required
+                />
+              </div>
+              <small className="text-[10px] text-muted font-normal">{phoneHint}</small>
+            </label>
 
             <label className="grid gap-2 text-[10px] font-bold">
               <span>Password</span>
@@ -251,7 +311,7 @@ export function LoginModal() {
               </label>
               <label className="grid gap-2 text-[10px] font-bold">
                 <span>Country</span>
-                <input value={registration.country} onChange={(e) => updateRegistration('country', e.target.value)} className={inputClass} required />
+                <input value={selectedPhoneCountry.name} readOnly className={`${inputClass} bg-cream`} required />
               </label>
             </div>
 
