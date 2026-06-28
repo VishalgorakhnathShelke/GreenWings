@@ -3,6 +3,7 @@ import { useLanguageStore } from '../stores/languageStore'
 import { categories } from '../data/categories'
 import { Reveal } from '../components/shared/Reveal'
 import { catalogueCopy, localizeCategory } from '../services/catalogLocalization'
+import { DatabaseCropCatalogue } from '../components/products/DatabaseCropCatalogue'
 
 export function ProductsPage() {
   const t = useLanguageStore((state) => state.t)
@@ -54,6 +55,7 @@ export function ProductsPage() {
         </div>
 
         <p className="text-[10px] text-muted leading-relaxed mt-8">{t('catalogueNote')}</p>
+        <DatabaseCropCatalogue />
       </div>
     </section>
   )

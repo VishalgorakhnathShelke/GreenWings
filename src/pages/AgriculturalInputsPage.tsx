@@ -130,13 +130,85 @@ const copyByLanguage: Record<Lang, InputsCopy> = {
   },
 }
 
+const localizedCopyByLanguage: Record<Lang, InputsCopy> = {
+  en: copyByLanguage.en,
+  hi: {
+    pageEyebrow: 'कृषि इनपुट',
+    pageTitle: 'आधुनिक और पारंपरिक खेती के लिए उर्वरक सहयोग.',
+    pageDescription: 'फसल उपयुक्तता, उपयोग विधि, सुरक्षा निर्देश और उत्पाद दस्तावेजों के साथ स्थानीय और आयातित उर्वरक कैटलॉग देखें.',
+    localCardTitle: 'स्थानीय उर्वरक',
+    localCardText: 'भारतीय निर्माता, सरकारी अनुमोदित उत्पाद, जैविक और रासायनिक विकल्प.',
+    importedCardTitle: 'आयातित उर्वरक',
+    importedCardText: 'आयात प्रमाणन, वैश्विक ब्रांड और प्रीमियम पोषक फॉर्मुलेशन.',
+    labels: {
+      manufacturer: 'निर्माता',
+      origin: 'मूल देश',
+      viewDetails: 'उत्पाद विवरण देखें ->',
+      allCategories: 'सभी श्रेणियां',
+      product: 'उत्पाद',
+      products: 'उत्पाद',
+      loading: 'उर्वरक उत्पाद लोड हो रहे हैं...',
+      fallbackImage: 'ग्रीनविंग्स इनपुट',
+      unableToLoad: 'उर्वरक लोड नहीं हो सके',
+      searchPrefix: 'खोजें',
+    },
+    sections: {
+      local: {
+        eyebrow: 'भारतीय कृषि इनपुट',
+        title: 'स्थानीय उर्वरक',
+        text: 'महाराष्ट्र की खेती के लिए उपयुक्त सरकारी अनुमोदित भारतीय उत्पाद, क्षेत्रीय सिफारिशें, जैविक और रासायनिक उर्वरक विकल्प.',
+      },
+      imported: {
+        eyebrow: 'प्रीमियम वैश्विक पोषण',
+        title: 'आयातित उर्वरक',
+        text: 'उच्च-मूल्य फसलों और प्रिसिजन खेती के लिए अंतरराष्ट्रीय ब्रांड, आयात देश जानकारी, प्रमाणन और प्रीमियम पोषक फॉर्मुलेशन.',
+      },
+    },
+  },
+  mr: {
+    pageEyebrow: 'कृषी इनपुट',
+    pageTitle: 'आधुनिक आणि पारंपरिक शेतीसाठी खत सहाय्य.',
+    pageDescription: 'पीक उपयुक्तता, वापर पद्धत, सुरक्षा सूचना आणि उत्पादन कागदपत्रांसह स्थानिक व आयातित खतांचे स्वतंत्र कॅटलॉग पहा.',
+    localCardTitle: 'स्थानिक खते',
+    localCardText: 'भारतीय उत्पादक, शासनमान्य उत्पादने, सेंद्रिय आणि रासायनिक पर्याय.',
+    importedCardTitle: 'आयातित खते',
+    importedCardText: 'आयात प्रमाणपत्रे, जागतिक ब्रँड आणि प्रीमियम पोषक फॉर्म्युलेशन.',
+    labels: {
+      manufacturer: 'उत्पादक',
+      origin: 'मूळ देश',
+      viewDetails: 'उत्पादन तपशील पहा ->',
+      allCategories: 'सर्व श्रेणी',
+      product: 'उत्पादन',
+      products: 'उत्पादने',
+      loading: 'खत उत्पादने लोड होत आहेत...',
+      fallbackImage: 'ग्रीनविंग्स इनपुट',
+      unableToLoad: 'खते लोड करता आली नाहीत',
+      searchPrefix: 'शोधा',
+    },
+    sections: {
+      local: {
+        eyebrow: 'भारतीय कृषी इनपुट',
+        title: 'स्थानिक खते',
+        text: 'महाराष्ट्रातील शेतीसाठी उपयुक्त शासनमान्य भारतीय उत्पादने, प्रादेशिक शिफारसी, सेंद्रिय आणि रासायनिक खत पर्याय.',
+      },
+      imported: {
+        eyebrow: 'प्रीमियम जागतिक पोषण',
+        title: 'आयातित खते',
+        text: 'उच्च-मूल्य पिके आणि अचूक शेतीसाठी आंतरराष्ट्रीय ब्रँड, आयात देश माहिती, प्रमाणपत्रे आणि प्रीमियम पोषक फॉर्म्युलेशन.',
+      },
+    },
+  },
+}
+
+void copyByLanguage
+
 function FertilizerCard({ fertilizer, copy }: { fertilizer: Fertilizer; copy: InputsCopy }) {
   const path = `/agricultural-inputs/${fertilizer.kind}/${fertilizer.id}`
   return (
     <article className="border border-line bg-white p-5 grid gap-4 hover:shadow-lg transition-shadow">
       <div className="aspect-[4/3] bg-cream border border-line overflow-hidden grid place-items-center">
-        {fertilizer.imageUrl ? (
-          <img src={fertilizer.imageUrl} alt={fertilizer.displayName} className="w-full h-full object-cover" />
+        {fertilizer.imageUrl || fertilizer.image_link || fertilizer.imageLink ? (
+          <img src={fertilizer.imageUrl || fertilizer.image_link || fertilizer.imageLink} alt={fertilizer.displayName} className="w-full h-full object-cover" />
         ) : (
           <span className="text-green text-sm font-bold">{copy.labels.fallbackImage}</span>
         )}
@@ -165,7 +237,7 @@ function FertilizerSection({ kind }: { kind: FertilizerKind }) {
   const [category, setCategory] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const copy = copyByLanguage[lang]
+  const copy = localizedCopyByLanguage[lang]
   const section = copy.sections[kind]
 
   useEffect(() => {
@@ -222,7 +294,7 @@ function FertilizerSection({ kind }: { kind: FertilizerKind }) {
 
 export function AgriculturalInputsPage() {
   const lang = useLanguageStore((s) => s.lang)
-  const copy = copyByLanguage[lang]
+  const copy = localizedCopyByLanguage[lang]
 
   return (
     <main className="bg-gradient-to-b from-paper via-cream to-[#edf4df]">

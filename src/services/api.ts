@@ -2,7 +2,10 @@ import type { Lang } from '../data/translations'
 
 export interface DatabaseSubtype {
   subtype_id: number
+  variety_id?: number
+  crop_id?: number
   subtype_name: string
+  variety_name?: string
   display_name: string
   language: Lang
   scientific_name: string | null
@@ -15,12 +18,23 @@ export interface DatabaseSubtype {
   localized_description: string | null
   info: string
   localized_info: string
+  image_link?: string
+  imageLink?: string
+  image_url?: string
+  image_urls?: string[]
 }
 
 export interface DatabaseProduct {
   produce_id: number
+  crop_id?: number
+  category_id?: number
   type: string
   display_type: string
+  category_group?: string
+  localized_category_group?: string
+  category_slug?: string
+  category_info?: string
+  localized_category_info?: string
   name: string
   display_name: string
   language: Lang
@@ -36,7 +50,28 @@ export interface DatabaseProduct {
   localized_description: string | null
   info: string
   localized_info: string
+  image_link?: string
+  imageLink?: string
+  image_url?: string
+  image_urls?: string[]
   subtypes: DatabaseSubtype[]
+}
+
+export interface CropCategory {
+  id: number
+  name: string
+  displayName: string
+  slug: string
+  description: string
+  localizedDescription: string
+  info: string
+  localizedInfo: string
+  image_link: string
+  imageLink: string
+  sourceUrls: string
+  displayOrder: number
+  status: string
+  language: Lang
 }
 
 export interface AuthUser {
@@ -143,11 +178,14 @@ export interface CompanyMilestone {
   year: string
   title: string
   description: string
+  impactMetric?: string
+  language?: Lang
+  status?: 'draft' | 'published' | 'archived' | string
   baseTitle?: string
   baseDescription?: string
   image: string
   displayOrder: number
-  translations?: Record<'hi' | 'mr', { title?: string; description?: string }>
+  translations?: Record<'hi' | 'mr', { title?: string; description?: string; impactMetric?: string }>
   createdAt: string
   updatedAt: string
 }
@@ -290,6 +328,8 @@ export interface Fertilizer {
   precautions: string
   localizedPrecautions: string
   imageUrl?: string
+  image_link?: string
+  imageLink?: string
   status: 'active' | 'draft' | 'inactive' | string
   documentUrl?: string
   approvalBody?: string
@@ -317,6 +357,7 @@ export type FertilizerTranslationPayload = Partial<Pick<Fertilizer,
   | 'soilType'
   | 'benefits'
   | 'precautions'
+  | 'image_link'
   | 'approvalBody'
   | 'regionalRecommendations'
   | 'brand'
@@ -358,6 +399,10 @@ export async function fetchDatabaseProducts(type?: string, lang: Lang = 'en'): P
   const query = `?${params.toString()}`
   const payload = await apiRequest<{ products: DatabaseProduct[] }>(`/api/products${query}`)
   return payload.products
+}
+
+export async function fetchCropCategories(lang: Lang = 'en') {
+  return apiRequest<{ language: Lang; categories: CropCategory[] }>(`/api/crop-categories?lang=${lang}`, { cache: 'no-store' })
 }
 
 export async function fetchFertilizers(kind: FertilizerKind, lang: Lang = 'en', filters?: { search?: string; category?: string }) {

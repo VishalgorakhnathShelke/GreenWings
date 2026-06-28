@@ -130,6 +130,74 @@ const copyByLanguage: Record<Lang, {
   },
 }
 
+const localizedCopyByLanguage: typeof copyByLanguage = {
+  en: copyByLanguage.en,
+  hi: {
+    back: 'कृषि इनपुट पर वापस जाएं',
+    imported: 'आयातित उर्वरक',
+    local: 'स्थानीय उर्वरक',
+    manufacturer: 'निर्माता',
+    origin: 'मूल देश',
+    season: 'मौसम',
+    loading: 'उर्वरक उत्पाद लोड हो रहा है...',
+    unableToLoad: 'उर्वरक लोड नहीं हो सका',
+    recommendedStage: 'अनुशंसित अवस्था',
+    temperature: 'तापमान',
+    soil: 'मिट्टी',
+    downloadCta: 'उत्पाद दस्तावेज डाउनलोड करें',
+    documentPending: 'उत्पाद दस्तावेज admin upload के बाद उपलब्ध होगा.',
+    sections: {
+      overview: 'उत्पाद परिचय',
+      content: 'पोषक तत्व सामग्री',
+      benefits: 'लाभ',
+      suitable: 'उपयुक्त फसलें',
+      unsuitable: 'अनुपयुक्त फसलें',
+      application: 'उपयोग निर्देश',
+      seasonal: 'मौसमी सिफारिशें',
+      safety: 'सुरक्षा सावधानियां',
+      regional: 'क्षेत्रीय सिफारिशें',
+      approval: 'सरकारी अनुमोदन',
+      brand: 'ब्रांड जानकारी',
+      certifications: 'आयात प्रमाणन',
+      specifications: 'अंतरराष्ट्रीय विनिर्देश',
+      documents: 'डाउनलोड योग्य उत्पाद दस्तावेज',
+    },
+  },
+  mr: {
+    back: 'कृषी इनपुटकडे परत जा',
+    imported: 'आयातित खत',
+    local: 'स्थानिक खत',
+    manufacturer: 'उत्पादक',
+    origin: 'मूळ देश',
+    season: 'हंगाम',
+    loading: 'खत उत्पादन लोड होत आहे...',
+    unableToLoad: 'खत लोड करता आले नाही',
+    recommendedStage: 'शिफारस केलेली अवस्था',
+    temperature: 'तापमान',
+    soil: 'माती',
+    downloadCta: 'उत्पादन दस्तऐवज डाउनलोड करा',
+    documentPending: 'उत्पादन दस्तऐवज admin upload नंतर उपलब्ध होईल.',
+    sections: {
+      overview: 'उत्पादन परिचय',
+      content: 'पोषक घटक',
+      benefits: 'फायदे',
+      suitable: 'योग्य पिके',
+      unsuitable: 'अयोग्य पिके',
+      application: 'वापर सूचना',
+      seasonal: 'हंगामी शिफारसी',
+      safety: 'सुरक्षा सूचना',
+      regional: 'प्रादेशिक शिफारसी',
+      approval: 'शासकीय मान्यता',
+      brand: 'ब्रँड माहिती',
+      certifications: 'आयात प्रमाणपत्रे',
+      specifications: 'आंतरराष्ट्रीय तपशील',
+      documents: 'डाउनलोड करण्यायोग्य उत्पादन दस्तऐवज',
+    },
+  },
+}
+
+void copyByLanguage
+
 function DetailBlock({ title, body }: { title: string; body?: string }) {
   if (!body) return null
   return (
@@ -143,7 +211,7 @@ function DetailBlock({ title, body }: { title: string; body?: string }) {
 export function FertilizerProfilePage() {
   const { kind, id } = useParams()
   const lang = useLanguageStore((s) => s.lang)
-  const copy = copyByLanguage[lang]
+  const copy = localizedCopyByLanguage[lang]
   const [fertilizer, setFertilizer] = useState<Fertilizer | null>(null)
   const [error, setError] = useState('')
   const safeKind = kind === 'imported' ? 'imported' : 'local'
@@ -198,8 +266,8 @@ export function FertilizerProfilePage() {
         </div>
         <div className="border border-line bg-white p-4 shadow-lg">
           <div className="aspect-[4/3] bg-cream grid place-items-center overflow-hidden">
-            {fertilizer.imageUrl ? (
-              <img src={fertilizer.imageUrl} alt={fertilizer.displayName} className="w-full h-full object-cover" />
+            {fertilizer.imageUrl || fertilizer.image_link || fertilizer.imageLink ? (
+              <img src={fertilizer.imageUrl || fertilizer.image_link || fertilizer.imageLink} alt={fertilizer.displayName} className="w-full h-full object-cover" />
             ) : (
               <span className="font-serif text-3xl text-green">GreenWings</span>
             )}
