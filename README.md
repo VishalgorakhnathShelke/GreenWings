@@ -430,6 +430,33 @@ Keep these running while the client tests:
 
 Do not use quick tunnels as production hosting.
 
+## Data Sync Scripts
+
+### Crop Variety Image Sync
+
+The project includes an automated image synchronization script (`server/scripts/sync_crop_variety_images.py`) to download and attach high-quality images to the 180+ crop varieties in the database.
+
+Features of the sync pipeline:
+- **Prioritized Sources**: Fetches verified images first from Wikidata P18 properties and Wikimedia Commons APIs.
+- **Fallbacks**: Uses Google Programmable Search (if configured) or Bing (via `icrawler`) as a last resort.
+- **Relevance Scoring**: Automatically scores images against variety names, crop names, and negative keywords to reject irrelevant matches (e.g., advertisements or graphs).
+- **Cloudflare R2 Integration**: Uploads the downloaded images to a Cloudflare R2 bucket and stores the permanent public URLs into the local SQLite database.
+- **Review Mode**: Supports a `--review` flag to generate a `review_manifest.json` for manual curation before modifying the database.
+
+**Usage:**
+Ensure `.env` contains the required Cloudflare R2 credentials (`R2_ENDPOINT_URL`, `R2_BUCKET`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`). Then run:
+
+```bash
+# Run in review mode (generates manifest without uploading)
+python server/scripts/sync_crop_variety_images.py --review
+
+# Apply approved images from manifest
+python server/scripts/sync_crop_variety_images.py --apply-approved
+
+# Force live sync to database
+python server/scripts/sync_crop_variety_images.py --force
+```
+
 ## Git Workflow
 
 Current active branch:
