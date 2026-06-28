@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getProductBySlug } from '../data/catalog'
+import { fetchDatabaseProducts, type DatabaseProduct } from '../services/api'
 import { categories } from '../data/categories'
 import { useProductStore } from '../stores/productStore'
 import { useLoginStore } from '../stores/loginStore'
@@ -13,11 +15,13 @@ function VarietyAccordion({
   isOpen,
   onToggle,
   lang,
+  imageUrl,
 }: {
   variety: Variety
   isOpen: boolean
   onToggle: () => void
   lang: Lang
+  imageUrl?: string
 }) {
   const copy = catalogueCopy[lang]
 
@@ -41,9 +45,13 @@ function VarietyAccordion({
         <div className="border-t border-line p-6 lg:p-8" style={{ animation: 'fade-in-up 0.3s ease-out' }}>
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-8">
             <div>
-              <div className="h-52 bg-gradient-to-br from-sky/20 via-cream to-harvest/20 border border-dashed border-line flex items-center justify-center text-center text-muted text-[10px] uppercase tracking-wider p-6 rounded-sm mb-6">
-                {variety.imagePlaceholder}
-              </div>
+              {imageUrl ? (
+                <img src={imageUrl} alt={variety.name} className="h-52 w-full object-cover rounded-sm mb-6 shadow-sm border border-line" />
+              ) : (
+                <div className="h-52 bg-gradient-to-br from-sky/20 via-cream to-harvest/20 border border-dashed border-line flex items-center justify-center text-center text-muted text-[10px] uppercase tracking-wider p-6 rounded-sm mb-6">
+                  {variety.imagePlaceholder}
+                </div>
+              )}
 
               <div className="flex flex-wrap gap-2 mb-4">
                 {variety.applications.map((app) => (
@@ -93,6 +101,37 @@ export function ProductProfilePage() {
   const product = rawProduct ? localizeProduct(rawProduct, lang) : undefined
   const { openAccordion, toggleAccordion } = useProductStore()
   const openLogin = useLoginStore((s) => s.openLogin)
+  
+  const [dbProduct, setDbProduct] = useState<DatabaseProduct | null>(null)
+  
+  useEffect(() => {
+    if (rawProduct) {
+      fetchDatabaseProducts(undefined, lang)
+        .then(products => {
+          const target = (rawProduct.name || '').toLowerCase()
+          const match = products.find(p => (p.name || '').toLowerCase() === target || (p.english_name || '').toLowerCase() === target)
+          if (match) setDbProduct(match)
+        })
+        .catch(() => {})
+    }
+  }, [rawProduct, lang])
+  
+  const getImageForVariety = (varietyName: string) => {
+    if (!dbProduct) return undefined
+    const subtype = dbProduct.subtypes.find(s => {
+      const vName = (s.variety_name || '').toLowerCase()
+      const dName = (s.display_name || '').toLowerCase()
+      const target = (varietyName || '').toLowerCase()
+      if (!target) return false
+      
+      if (vName && target.includes(vName)) return true
+      if (vName && vName.includes(target)) return true
+      if (dName && dName.includes(target)) return true
+      return false
+    })
+    if (!subtype) return undefined
+    return subtype.image_link || subtype.imageLink || subtype.image_urls?.[0] || subtype.image_url || undefined
+  }
 
   if (!rawCategory || !category || !product) {
     return (
@@ -191,6 +230,7 @@ export function ProductProfilePage() {
             isOpen={openAccordion === variety.slug}
             onToggle={() => toggleAccordion(variety.slug)}
             lang={lang}
+            imageUrl={getImageForVariety(variety.name)}
           />
         ))}
       </div>
