@@ -60,7 +60,7 @@ export const categories: Category[] = [
     name: 'Export Produce',
     slug: 'export-produce',
     description: 'India produces a range of high-value agricultural commodities with strong international demand, from cashews and black pepper to turmeric and cardamom. GreenWings\' export-produce vertical focuses on quality selection, documentation readiness, traceability, and buyer connections for premium spices, tree nuts, and specialty crops destined for global markets.',
-    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/general-photos/Export%20produce.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/general-photos/Export%20Produce.png',
     icon: '✈️',
     tagline: 'Global standards, Indian origins — certified and traceable',
   },
