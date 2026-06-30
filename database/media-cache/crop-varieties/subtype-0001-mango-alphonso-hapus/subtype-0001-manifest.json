@@ -1,0 +1,63 @@
+{
+  "subtype_id": 1,
+  "crop_variety_id": 1,
+  "crop": "Mango",
+  "variety": "Alphonso (Hapus)",
+  "images": [
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0001-mango-alphonso-hapus-01-1239a97e54.jpg",
+      "source_url": "",
+      "title": "Bing: \"Mangifera indica\" Mango plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    },
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0001-mango-alphonso-hapus-02-caf580a3da.jpg",
+      "source_url": "",
+      "title": "Bing: \"Mangifera indica\" Mango plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    },
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0001-mango-alphonso-hapus-03-698f7b89d5.jpg",
+      "source_url": "",
+      "title": "Bing: \"Mangifera indica\" Mango plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    },
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0001-mango-alphonso-hapus-04-a770941ba4.jpg",
+      "source_url": "",
+      "title": "Bing: \"Mangifera indica\" Mango plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    },
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0001-mango-alphonso-hapus-05-ab8b6452e5.jpg",
+      "source_url": "",
+      "title": "Bing: \"Mangifera indica\" Mango plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    }
+  ]
+}

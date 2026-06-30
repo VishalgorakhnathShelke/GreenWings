@@ -1,0 +1,30 @@
+{
+  "subtype_id": 2,
+  "crop_variety_id": 2,
+  "crop": "Mango",
+  "variety": "Kesar",
+  "images": [
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0002-mango-kesar-01-bb2d5a1427.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/Category%3AMangifera_indica",
+      "title": "File:(Mangifera indica) Tree bark view at Kambalakonda.JPG",
+      "license": "CC BY-SA 3.0",
+      "artist": "Adityamadhav83",
+      "width": "3675",
+      "height": "2824",
+      "score": "65",
+      "source_name": "commons_category"
+    },
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0002-mango-kesar-02-7f14aecb24.jpg",
+      "source_url": "",
+      "title": "Bing: \"Mangifera indica\" Mango plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    }
+  ]
+}

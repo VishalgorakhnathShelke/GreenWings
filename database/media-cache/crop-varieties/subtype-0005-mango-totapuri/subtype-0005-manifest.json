@@ -1,0 +1,52 @@
+{
+  "subtype_id": 5,
+  "crop_variety_id": 5,
+  "crop": "Mango",
+  "variety": "Totapuri",
+  "images": [
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0005-mango-totapuri-01-05b87a86bf.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File%3AMangos_-_single_and_halved.jpg",
+      "title": "File:Mangos - single and halved.jpg",
+      "license": "CC BY-SA 4.0",
+      "artist": "Ivar Leidus",
+      "width": "8256",
+      "height": "5504",
+      "score": "45",
+      "source_name": "commons_search"
+    },
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0005-mango-totapuri-02-207790d81d.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File%3AKhairdeen%2C_alias_Pritam%2C_relishing_a_mango_at_the_dusk_of_his_life_05.jpg",
+      "title": "File:Khairdeen, alias Pritam, relishing a mango at the dusk of his life 05.jpg",
+      "license": "CC BY-SA 4.0",
+      "artist": "Satdeep Gill",
+      "width": "6550",
+      "height": "4373",
+      "score": "45",
+      "source_name": "commons_search"
+    },
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0005-mango-totapuri-04-639e4205cf.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File%3AMango_and_cross_section_edit.jpg",
+      "title": "File:Mango and cross section edit.jpg",
+      "license": "GFDL 1.2",
+      "artist": "Fir0002",
+      "width": "1793",
+      "height": "1024",
+      "score": "40",
+      "source_name": "commons_search"
+    },
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0005-mango-totapuri-05-6bfb7d657c.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File%3AApple_mango_and_cross_section_edit1.jpg",
+      "title": "File:Apple mango and cross section edit1.jpg",
+      "license": "GFDL",
+      "artist": "Muhammad Mahdi Karim",
+      "width": "2100",
+      "height": "974",
+      "score": "40",
+      "source_name": "commons_search"
+    }
+  ]
+}

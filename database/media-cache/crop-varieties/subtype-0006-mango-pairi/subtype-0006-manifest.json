@@ -1,0 +1,52 @@
+{
+  "subtype_id": 6,
+  "crop_variety_id": 6,
+  "crop": "Mango",
+  "variety": "Pairi",
+  "images": [
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0006-mango-pairi-02-743c38ae90.jpg",
+      "source_url": "",
+      "title": "Bing: \"Mangifera indica\" Mango plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    },
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0006-mango-pairi-03-94a83e5e50.jpg",
+      "source_url": "",
+      "title": "Bing: \"Mangifera indica\" Mango plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    },
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0006-mango-pairi-04-7473e67976.jpg",
+      "source_url": "",
+      "title": "Bing: \"Mangifera indica\" Mango plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    },
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0006-mango-pairi-05-191419bbaf.jpg",
+      "source_url": "",
+      "title": "Bing: \"Mangifera indica\" Mango plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    }
+  ]
+}

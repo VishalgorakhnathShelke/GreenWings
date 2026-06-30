@@ -1,0 +1,63 @@
+{
+  "subtype_id": 15,
+  "crop_variety_id": 15,
+  "crop": "Grapes",
+  "variety": "Sonaka",
+  "images": [
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0015-grapes-sonaka-01-9df97a662e.jpg",
+      "source_url": "",
+      "title": "Bing: \"Vitis vinifera\" Grapes plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    },
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0015-grapes-sonaka-02-be3684b168.jpg",
+      "source_url": "",
+      "title": "Bing: \"Vitis vinifera\" Grapes plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    },
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0015-grapes-sonaka-03-98d4c4c84d.jpg",
+      "source_url": "",
+      "title": "Bing: \"Vitis vinifera\" Grapes plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    },
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0015-grapes-sonaka-04-5e83a67ae0.jpg",
+      "source_url": "",
+      "title": "Bing: \"Vitis vinifera\" Grapes plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    },
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0015-grapes-sonaka-05-d5009f162c.jpg",
+      "source_url": "",
+      "title": "Bing: \"Vitis vinifera\" Grapes plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    }
+  ]
+}
