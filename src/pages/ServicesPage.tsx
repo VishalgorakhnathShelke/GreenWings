@@ -15,7 +15,7 @@ export function ServicesPage() {
   ]
 
   return (
-    <section className="py-24 px-[8vw]">
+    <section className="py-24 px-[8vw] bg-gradient-to-b from-paper via-cream to-[#edf4df]">
       <SectionHeading
         eyebrow={t('ourPurpose')}
         title={t('servicesTitle')}
@@ -25,14 +25,14 @@ export function ServicesPage() {
         {services.map((service, i) => (
           <Reveal key={i}>
             <article className={`border border-line p-8 lg:p-10 relative group hover:shadow-lg transition-shadow ${
-              service.featured ? 'bg-green text-white lg:row-span-2 flex flex-col justify-end' : 'bg-white'
+              service.featured ? 'bg-gradient-to-br from-leaf via-green to-soil text-white lg:row-span-2 flex flex-col justify-end' : 'bg-white/90'
             } ${i % 3 !== 2 ? 'lg:border-r-0' : ''} ${i < 3 ? 'lg:border-b' : ''}`}>
               <span className="text-[10px] font-bold opacity-40">{service.number}</span>
               <div className="text-2xl my-4">{service.icon}</div>
               <h3 className={`font-serif text-xl mb-3 ${service.featured ? 'text-white' : ''}`}>{service.title}</h3>
               <p className={`text-sm leading-relaxed mb-6 ${service.featured ? 'text-white/70' : 'text-muted'}`}>{service.text}</p>
               <a href="#" className={`text-[10px] uppercase tracking-wider font-bold no-underline ${
-                service.featured ? 'text-lime hover:text-gold' : 'text-green hover:text-lime'
+                service.featured ? 'text-harvest hover:text-sky' : 'text-green hover:text-harvest'
               }`}>
                 {service.link}
               </a>

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "api": "python server/server.py",
+    "api": "python server/run_api.py",
     "db:import": "python server/import_seed.py",
     "build": "tsc -b && vite build",
     "lint": "eslint .",

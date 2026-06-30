@@ -32,6 +32,25 @@ def main():
         if ts_file.name == "index.ts": continue
         
         content = ts_file.read_text(encoding="utf-8")
+        # Find all name and slug pairs for products (which are at the top level of the object)
+        # We assume the format is:
+        # name: 'Mango',
+        # slug: 'mango',
+        matches = re.finditer(r"name:\s*'([^']+)',\s*slug:\s*'([^']+)'", content)
+        
+        updates = {}
+        for match in matches:
+            name, slug = match.groups()
+            
+            # Skip if it's a variety (varieties also have name and slug, but we want the main crop)
+            # A simple heuristic: if it's a variety, it usually has a much longer block or is indented more.
+            # But wait, in the TS files, varieties also have `name:` and `slug:`.
+            # Let's check if the slug is the same as product slug.
+            # Actually, `heroImage` only exists on the Product, not on varieties.
+            # Let's just find `slug:` that is immediately followed by `heroImage:`!
+            pass
+            
+        # Better approach: find all blocks that have a slug and heroImage
         pattern_crop = re.compile(r"name:\s*'([^']+)',\s*slug:\s*'([^']+)',\s*heroImage:\s*'([^']+)'")
         crop_matches = pattern_crop.finditer(content)
         
@@ -41,6 +60,8 @@ def main():
             slug = match.group(2)
             current_hero = match.group(3)
             
+            # If it's already an R2 URL, maybe we skip? Or re-download to ensure it's right.
+            # Let's re-download to fix any issues.
             query = f"{name} crop plant fresh produce photo"
             print(f"\nProcessing Crop: {name} ({slug}) in {ts_file.name}")
             
@@ -54,6 +75,7 @@ def main():
             if not images:
                 continue
                 
+            # Get the first image
             img_path = images[0]
             
             key = f"crop-main/{slug}/{img_path.name}"
@@ -64,6 +86,8 @@ def main():
             url = public_url(key)
             print(f"URL: {url}")
             
+            # Replace specifically this crop's heroImage
+            # Using precise replacement to not mess up other crops
             block_pattern = rf"(slug:\s*'{slug}',\s*heroImage:\s*)'{re.escape(current_hero)}'"
             new_content = re.sub(block_pattern, rf"\g<1>'{url}'", content, count=1)
             if new_content != content:

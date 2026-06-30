@@ -189,7 +189,7 @@ export const vegetablesProducts: Product[] = [
     id: 'tomato',
     name: 'Tomato',
     slug: 'tomato',
-    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/tomato/tomato_1.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/tomato/tomato_1.jpg',
     overview:
       'Tomato is one of India\'s most economically important vegetable crops, cultivated across diverse agro-climatic zones for fresh market sales, processing, and export. India ranks among the top global tomato producers, with the crop contributing significantly to both farm incomes and nutritional security. The versatility of tomato — consumed raw, cooked, pureed, and processed — ensures robust demand across all market segments.\n\nThe Indian tomato sector has benefited from decades of systematic breeding work at IARI, ICAR-IIHR, and state agricultural universities, producing varieties optimized for specific end-uses including fresh table tomatoes, processing-grade tomatoes for sauce and paste, and cherry tomatoes for premium retail. This varietal diversity enables India to serve both high-volume domestic markets and niche export opportunities.\n\nOrganised retail chains and food processing companies are increasingly sourcing tomatoes through contract farming arrangements, ensuring consistent quality, traceability, and supply reliability. Indian tomatoes are exported to neighboring South Asian markets, the Middle East, and increasingly to premium segments in Europe and North America where Indian greenhouse-grown cherry and vine tomatoes command attractive prices.',
     keyBenefits: [

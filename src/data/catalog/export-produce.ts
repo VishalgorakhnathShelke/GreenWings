@@ -5,7 +5,7 @@ export const exportProduce: Product[] = [
     id: 'saffron',
     name: 'Saffron',
     slug: 'saffron',
-    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/saffron/saffron_1.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/saffron/saffron_1.jpg',
     overview:
       'Indian saffron, cultivated in the pristine valleys of Kashmir, is among the world\'s most prized agricultural commodities, commanding extraordinary value per kilogram for its vivid colour, complex flavour, and intense aroma. India\'s Kashmiri saffron is internationally recognised for its superior crocin content — the compound responsible for saffron\'s signature golden hue — positioning it as a benchmark quality in global spice markets. GreenWings offers certified Kashmiri saffron sourced through trusted channels with laboratory-verified purity and potency.\n\nThe cultivation of saffron in Kashmir\'s unique climate — where high altitude, cold winters, and well-drained soils create ideal growing conditions — produces a crop with distinctive organoleptic characteristics that are difficult to replicate elsewhere. Each saffron flower yields only three delicate stigmas, which are hand-picked during a narrow harvest window, making every gram a testament to extraordinary agricultural craft.\n\nIndia\'s saffron sector is supported by Geographical Indication (GI) registration, protecting the authenticity and provenance of Kashmiri saffron in international markets. GreenWings facilitates premium saffron supply for culinary, pharmaceutical, cosmetic, and wellness applications, with rigorous quality assurance including colouring strength, flavour intensity, and moisture content testing.',
     keyBenefits: [
@@ -733,7 +733,7 @@ export const exportProduce: Product[] = [
     id: 'ginger',
     name: 'Ginger',
     slug: 'ginger',
-    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/ginger/ginger_1.jpg',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/ginger/ginger_1.png',
     overview:
       'India is the world\'s largest producer of ginger, cultivating this versatile rhizome across diverse agro-climatic zones from the tropical south to the subtropical northeast. Indian ginger is globally recognised for its bold, fibrous rhizomes with high essential oil and oleoresin content, making it the preferred origin for both fresh and dried ginger trade. GreenWings offers a complete range of Indian ginger — fresh, dried, sliced, ground, and value-added — sourced from India\'s premier producing regions.\n\nThe diversity of India\'s ginger production is remarkable, with Kerala and Karnataka supplying bold, high-oleoresin varieties ideal for processing and extraction, while the northeastern states and Himachal Pradesh produce distinctive local types prized for their unique flavour profiles and traditional uses. This regional diversity enables India to serve virtually every ginger application in the global market, from fresh culinary ginger to pharmaceutical-grade oleoresin.\n\nIndia\'s ginger industry has developed sophisticated processing capabilities including washing, sorting, drying, polishing, grinding, and steam sterilisation that meet international food safety and quality standards. The country\'s established position as the world\'s leading ginger producer ensures reliable supply volumes and competitive pricing for global buyers across culinary, pharmaceutical, beverage, and confectionery sectors.',
     keyBenefits: [

@@ -13,32 +13,12 @@ dist-ssr
 *.local
 .env
 database/*.db
+database/**/*.db
+database/media-cache/
 __pycache__/
 *.pyc
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
-node_modules
-dist
-dist-ssr
-*.local
-.env
-database/*.db
-__pycache__/
-*.pyc
+.venv/
+*.egg-info/
 
 # Editor directories and files
 .vscode/*
@@ -51,8 +31,5 @@ __pycache__/
 *.sln
 *.sw?
 
-# Local image downloads
-database/sps/photos/
-database/sps/main_crops/
-database/sps/downloaded_images/
-.venv/
+cloudflared-windows-amd64.exe
+config.yml  

@@ -9,8 +9,8 @@ from pathlib import Path
 
 # DEFAULT_CSV_PATH = Path(r"C:\Users\Vishal\Downloads\sps\produce_202606291941.csv")
 # DEFAULT_IMAGE_FOLDER = Path(r"C:\Users\Vishal\Downloads\sps\images")
-DEFAULT_CSV_PATH = Path(r"C:\Users\Vishal\Documents\Codex\2026-06-13\greenwings-react\database\sps\crop.csv")
-DEFAULT_IMAGE_FOLDER = Path(r"C:\Users\Vishal\Documents\Codex\2026-06-13\greenwings-react\database\sps\main_crops")
+DEFAULT_CSV_PATH = Path(r"C:\Users\Vishal\Documents\Codex\2026-06-13\greenwings-react\database\sps\produce.csv")
+DEFAULT_IMAGE_FOLDER = Path(r"C:\Users\Vishal\Documents\Codex\2026-06-13\greenwings-react\database\sps\photos")
 
 BING_IMAGES_URL = "https://www.bing.com/images/async"
 
@@ -53,11 +53,16 @@ def safe_name(value):
 def get_name_column(csv_path=DEFAULT_CSV_PATH):
     with Path(csv_path).open(newline="", encoding="utf-8-sig") as csv_file:
         reader = csv.DictReader(csv_file)
+        fieldnames = reader.fieldnames or []
 
-        if "name" not in (reader.fieldnames or []):
-            raise ValueError("CSV does not contain a 'name' column.")
+        if "name" in fieldnames:
+            return [row["name"] for row in reader]
+        if "english_name" in fieldnames:
+            return [row["english_name"] for row in reader]
+        if "common_name" in fieldnames:
+            return [row["common_name"] for row in reader]
 
-        return [row["name"] for row in reader]
+        raise ValueError("CSV does not contain a name, english_name, or common_name column.")
 
 
 def get_produce_rows(csv_path=DEFAULT_CSV_PATH):
@@ -70,10 +75,11 @@ def first_scientific_name(scientific_name):
 
 
 def build_produce_search_query(row):
-    name = row.get("english_name") or row.get("name") or ""
+    name = row.get("english_name") or row.get("name") or row.get("common_name") or ""
     produce_type = (row.get("type") or "").strip().lower()
     category = (row.get("category") or "").strip().lower()
     scientific_name = first_scientific_name(row.get("scientific_name") or "")
+    variety_name = (row.get("variety_name") or "").strip()
 
     if produce_type == "fruit":
         context = "fruit plant photo"
@@ -90,8 +96,24 @@ def build_produce_search_query(row):
     else:
         context = "crop plant photo"
 
+    if variety_name and variety_name.lower() not in name.lower():
+        name = f"{name} {variety_name}"
+
+    if not produce_type and not category:
+        context = "produce plant photo"
+
     parts = [name, scientific_name, context]
     return " ".join(part for part in parts if part).strip()
+
+
+def get_row_display_name(row):
+    return (
+        row.get("english_name")
+        or row.get("name")
+        or row.get("common_name")
+        or row.get("variety_name")
+        or ""
+    ).strip()
 
 
 def get_existing_image_hashes(folder):
@@ -283,7 +305,7 @@ def download_images_from_csv(csv_path=DEFAULT_CSV_PATH, number_of_images=8, fold
     rows = get_produce_rows(csv_path)
 
     for row in rows:
-        name = row.get("name", "").strip()
+        name = get_row_display_name(row)
         if not name:
             continue
 

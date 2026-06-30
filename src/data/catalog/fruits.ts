@@ -495,7 +495,7 @@ export const fruitsProducts: Product[] = [
     id: 'pomegranate',
     name: 'Pomegranate',
     slug: 'pomegranate',
-    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/pomegranate/pomegranate_1.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/pomegranate/pomegranate_1.jpg',
     overview:
       'India is the world\'s largest pomegranate-producing country, with the arid and semi-arid regions of Maharashtra, Karnataka, Gujarat, and Andhra Pradesh providing ideal conditions for this resilient fruit. Indian pomegranates are globally acclaimed for their exceptionally deep ruby-red arils, high juice content, and sweet-tart flavor that has made the country the preferred sourcing origin for buyers worldwide. The sector has witnessed remarkable growth driven by rising global awareness of pomegranate\'s health-promoting properties.\n\nThe Indian pomegranate industry has invested heavily in modern post-harvest infrastructure, including hot water treatment facilities, wax coating systems, and cold storage networks that enable year-round export capability. The Bhagwa variety alone accounts for the majority of export volumes, with its uniform aril color and soft seed characteristics making it the global benchmark for premium pomegranates. India\'s counter-seasonal advantage is particularly significant for Northern Hemisphere buyers.\n\nGreenWings partners with leading pomegranate clusters in Solapur, Nashik, and Bijapur, ensuring complete traceability from orchard to destination port. Our integrated quality management system covers pre-harvest maturity assessment, automated grading, hot water treatment, and temperature-monitored container shipping to deliver consistently superior fruit to markets across Europe, the Middle East, and Asia.',
     keyBenefits: [
@@ -724,7 +724,7 @@ export const fruitsProducts: Product[] = [
     id: 'banana',
     name: 'Banana',
     slug: 'banana',
-    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/banana/banana_1.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/banana/banana_1.jpg',
     overview:
       'India is the world\'s largest banana producer, accounting for approximately 26% of global output across a remarkable spectrum of varieties adapted to diverse climatic zones from the tropical south to the subtropical north. The country cultivates both dessert and cooking banana varieties, each serving distinct market segments and culinary traditions. Indian bananas are integral to the nation\'s food security framework and are increasingly making inroads into premium export markets.\n\nThe Indian banana sector has undergone significant modernization, with tissue-cultured planting material, fertigation systems, and precision farming techniques boosting yields and quality consistency. Export-focused production in Tamil Nadu, Maharashtra, and Gujarat now meets international phytosanitary standards, enabling access to markets in the Middle East, Central Asia, and Southeast Asia. The Cavendish subgroup varieties (Grand Naine and Robusta) dominate commercial export programs.\n\nGreenWings sources bananas from GAP-certified farms across India\'s premier banana-growing districts, maintaining rigorous quality control from harvest maturity assessment through ripening chamber management. Our cold chain logistics, including temperature-controlled reefer containers, ensure that bananas reach export destinations at the precise stage of ripeness for optimal shelf life and consumer appeal.',
     keyBenefits: [
@@ -1092,7 +1092,7 @@ export const fruitsProducts: Product[] = [
     id: 'papaya',
     name: 'Papaya',
     slug: 'papaya',
-    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/papaya/papaya_1.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/papaya/papaya_1.jpg',
     overview:
       'India is one of the world\'s leading papaya producers, cultivating this tropical fruit across diverse climatic zones from the southern peninsula to the Gangetic plains. Papaya\'s rapid growth cycle, continuous fruiting habit, and high nutritional value have made it an economically important crop for Indian farmers. The fruit is marketed both as fresh produce and as a source of the enzyme papain, which has significant industrial applications.\n\nIndian papayas are gaining recognition in international markets for their vibrant orange to red flesh color, sweet flavor, and rich nutrient profile. The country\'s research institutions have developed several improved varieties that offer better disease resistance, higher yield, and more uniform fruit quality. States like Andhra Pradesh, Karnataka, Maharashtra, and West Bengal lead commercial papaya production, with both solo-type and larger varieties available for different market segments.\n\nGreenWings works with papaya growers who implement integrated pest management, proper pruning, and systematic post-harvest protocols including careful handling, temperature management, and ethylene-sensitive packaging. Our supply chain expertise ensures that papayas reach export destinations with optimal ripeness and maximum shelf life.',
     keyBenefits: [
@@ -1820,7 +1820,7 @@ export const fruitsProducts: Product[] = [
     id: 'custard-apple',
     name: 'Custard Apple',
     slug: 'custard-apple',
-    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/custard-apple/custard-apple_1.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/custard-apple/custard-apple_1.jpg',
     overview:
       'Custard apple, known as Sitaphal in Hindi, is a distinctive tropical fruit cultivated extensively across India\'s warmer regions, from the coastal belts of Andhra Pradesh and Tamil Nadu to the plains of Uttar Pradesh and the foothills of the Himalayas in Uttarakhand. The fruit is prized for its remarkably sweet, creamy flesh that resembles custard in texture, with a complex flavor profile that combines notes of vanilla, pineapple, and banana.\n\nIndia is one of the world\'s largest custard apple producers, with the fruit playing an important role in both commercial horticulture and traditional agriforestry systems. The country\'s diverse climate supports multiple cultivated and wild varieties, each adapted to specific regional conditions. Custard apple cultivation requires relatively low inputs compared to many commercial fruits, making it an attractive option for smallholder farmers.\n\nGreenWings sources custard apples from established growing regions in Andhra Pradesh, Maharashtra, and Karnataka, implementing careful post-harvest protocols including maturity-based harvesting, gentle handling to avoid skin damage, and temperature management to maintain quality during transit to export destinations.',
     keyBenefits: [

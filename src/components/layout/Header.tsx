@@ -23,6 +23,7 @@ export function Header() {
   const navLinks = [
     { label: 'navAbout', href: '/about' },
     { label: 'navServices', href: '/services' },
+    { label: 'navInputs', href: '/agricultural-inputs' },
     { label: 'navProducts', href: '/products' },
     { label: 'navImpact', href: '/impact' },
     { label: 'navStories', href: '/stories' },
@@ -34,7 +35,7 @@ export function Header() {
 
   return (
     <header className={`fixed top-0 left-0 right-0 h-[78px] flex items-center justify-between px-[4vw] z-20 transition-all duration-300 border-b ${
-      scrolled || !isHome ? 'h-[68px] bg-paper/96 text-ink shadow-[0_8px_30px_rgba(10,39,27,0.08)] backdrop-blur-16 border-line' : 'text-white border-white/16'
+      scrolled || !isHome ? 'h-[68px] bg-paper/96 text-ink shadow-[0_10px_34px_rgba(58,38,20,0.12)] backdrop-blur-16 border-harvest/30' : 'bg-deep/35 text-white border-harvest/25 backdrop-blur-sm shadow-[0_10px_34px_rgba(8,41,29,0.18)]'
     }`}>
       <Link to="/" className="flex items-center gap-2.5 no-underline text-inherit">
         <BrandMark />
@@ -49,7 +50,7 @@ export function Header() {
           <Link
             key={link.href}
             to={link.href}
-            className="text-[13px] no-underline opacity-85 hover:opacity-100 text-inherit"
+            className="text-[13px] no-underline opacity-85 hover:opacity-100 text-inherit hover:text-harvest transition-colors"
           >
             {t(link.label)}
           </Link>
@@ -81,7 +82,7 @@ export function Header() {
 
         <button
           onClick={openLogin}
-          className="hidden sm:inline-flex text-sm border border-current rounded-sm px-4 py-2 bg-transparent text-inherit cursor-pointer hover:bg-cream/20"
+          className="hidden sm:inline-flex text-sm border border-current rounded-sm px-4 py-2 bg-transparent text-inherit cursor-pointer hover:bg-harvest/20 transition-colors"
         >
           {t('memberLogin')}
         </button>
