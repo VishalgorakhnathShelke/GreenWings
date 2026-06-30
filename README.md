@@ -1,115 +1,23 @@
-
-# React + TypeScript + Vite
-
-## Start the GreenWings website locally
-
-Do not open `index.html` directly. This is a Vite React application and must run through
-the development server.
-
-On Windows, double-click `START_DEV_SERVER.cmd`, then open:
-
-`http://127.0.0.1:5173/`
-
-The launcher starts both:
-
-- React/Vite frontend: `http://127.0.0.1:5173/`
-- Local database API: `http://127.0.0.1:8787/api/health`
-
-The development database is generated from
-`database/greenwings_maharashtra_seed.sql`. The SQL seed includes an `info`
-column for both produce and subtypes. Local admin credentials are configured in
-the ignored `.env` file; copy `.env.example` when setting up another machine.
-
-Before any production deployment, replace the local credentials and token
-secret, migrate the enriched SQL seed to PostgreSQL, and use a managed secret
-store.
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
 # GreenWings
 
-GreenWings is a multilingual digital platform for **GREEN WINGS FARMERS PRODUCER COMPANY LIMITED**, a Farmer Producer Organisation (FPO) based in Jalgaon Neur, Yeola, Nashik, Maharashtra.
+GreenWings is a multilingual corporate website, member portal, agricultural catalogue, and admin management system for **GREEN WINGS FARMERS PRODUCER COMPANY LIMITED**, a Farmer Producer Organisation based in Jalgaon Neur, Yeola, Nashik, Maharashtra.
 
-The project combines a public corporate website, agricultural product catalogue, agricultural inputs module, secure member portal, enquiry management workflow, and admin dashboard.
+The platform is designed to help farmers, buyers, partners, and administrators interact with GreenWings through a modern public website, database-driven content, product information, enquiry workflows, and secured admin tools.
 
-## Project Goals
+## Project Scope
 
-- Empower farmers through digital connectivity.
-- Promote sustainable and modern agriculture.
-- Showcase GreenWings services, products, stories, and impact.
-- Help members create and track enquiries.
-- Give admins tools to manage enquiries, users, analytics, content, and agricultural input records.
+- Public-facing GreenWings website
+- Multilingual pages in English, Hindi, and Marathi
+- Products catalogue for crops, varieties, and export produce
+- Agricultural Inputs module for local and imported fertilizers
+- Success stories and company content managed from the backend
+- Member registration, login, enquiry creation, and enquiry tracking
+- Admin dashboard for users, enquiries, content, fertilizers, stories, and reports
+- Local development backend with FastAPI and SQLite
+- Cloudflare R2-compatible image storage workflow
+- PostgreSQL/Prisma planning assets for production expansion
 
-## Current Tech Stack
+## Tech Stack
 
 ### Frontend
 
@@ -117,23 +25,44 @@ The project combines a public corporate website, agricultural product catalogue,
 - TypeScript
 - Vite
 - TailwindCSS
-- Zustand
 - React Router
+- Zustand
 
-### Local Backend
+### Backend
 
-- Python HTTP server
-- SQLite development database
-- Local REST APIs under `/api`
+- Python
+- FastAPI
+- SQLAlchemy ORM
+- Pydantic validation
+- SQLite for local development
 
-### Production Target
+### Production Direction
 
 - PostgreSQL
-- Prisma ORM
-- Auth.js / NextAuth or equivalent secure auth layer
-- S3-compatible storage for production file uploads
+- Prisma ORM or SQLAlchemy migrations
+- S3-compatible object storage, currently prepared for Cloudflare R2
+- Secure authentication and role-based access control
+- Managed deployment environment with secret storage
 
-> Note: The current dev app runs with Python + SQLite. Prisma/PostgreSQL schema files are included for production migration planning.
+## Repository Structure
+
+```text
+greenwings-react/
+  src/                         React frontend source
+  public/                      Static public assets
+  server/                      FastAPI backend, migrations, and scripts
+  database/                    Local DB, seed data, SQL exports, and SPS source data
+  prisma/                      Prisma schema planning
+  docs/                        Technical documentation and ER diagrams
+  logs/                        Runtime logs only
+  archive/                     Reversible cleanup archive
+```
+
+For more detail, see:
+
+- `PROJECT_STRUCTURE.md`
+- `PROJECT_CLEANUP_PLAN.md`
+- `PROJECT_CLEANUP_REPORT.md`
 
 ## Main Features
 
@@ -141,8 +70,8 @@ The project combines a public corporate website, agricultural product catalogue,
 
 - Home
 - About
-- Services
-- Products catalogue
+- What We Do
+- Products
 - Agricultural Inputs
 - Impact
 - Stories
@@ -151,23 +80,22 @@ The project combines a public corporate website, agricultural product catalogue,
 
 ### Product Catalogue
 
-The product catalogue loads crop and subtype data from the local database.
+The catalogue is database-driven and organized by crop category, crop, and crop variety.
 
-Supported examples include:
+Supported category structure:
 
-- Fruits
-- Grains
+- Fresh Fruits
+- Grains & Cereals
 - Millets
-- Pulses
-- Oilseeds
-- Vegetables
-- Export produce
+- Pulses & Lentils
+- Fresh Vegetables
+- Oil Seeds
 
-Product pages include rich descriptions, variety details, usage notes, and multilingual content where available.
+The frontend can display translated product/category/variety data where available and safely falls back to English when a translation is missing.
 
 ### Agricultural Inputs
 
-Agricultural Inputs are split into two independent sections:
+Agricultural Inputs are split into:
 
 ```text
 Agricultural Inputs
@@ -175,7 +103,7 @@ Agricultural Inputs
 |-- Imported Fertilizers
 ```
 
-Each fertilizer detail page displays:
+Each product can include:
 
 - Product overview
 - Nutrient content
@@ -188,161 +116,85 @@ Each fertilizer detail page displays:
 - Product images
 - Downloadable product documents
 
-### Local Fertilizers
-
-Includes:
-
-- Indian manufacturers
-- Government-approved products
-- Organic and chemical options
-- Regional recommendations
-
-### Imported Fertilizers
-
-Includes:
-
-- Import country information
-- Brand information
-- Import certifications
-- Premium nutrient formulations
-- International product specifications
-
-## Member Portal
+### Member Portal
 
 Members can:
 
-- Register an account
-- Login securely
-- Manage profile information
+- Register
+- Login
+- Manage profile details
 - Create enquiries
-- Receive unique enquiry IDs
-- Track enquiry history
+- Upload or add enquiry information
+- Track enquiry status
+- View enquiry history
 
-Registration creates a user and saves the first question as an enquiry.
+### Admin Panel
 
-## Admin Panel
+Admin tools are visible only after admin authentication.
 
-Admin access is role-protected. Admin tools are visible only after admin login.
-
-Admin can manage:
+Admins can manage:
 
 - Users
 - Enquiries
-- Website analytics
-- Local Fertilizers
-- Imported Fertilizers
-
-Fertilizer management includes:
-
-- Add
-- Edit
-- Delete
-- Search
-- Filter
-- Upload image in dev preview
-- Manage multilingual content
+- Company content
+- Company timeline
+- Leadership profiles
+- Success stories
+- Local fertilizers
+- Imported fertilizers
+- Product/catalogue content
+- Multilingual content
 
 ## Multilingual Support
 
 Supported languages:
 
-- English
-- Hindi
-- Marathi
+- English (`en`)
+- Hindi (`hi`)
+- Marathi (`mr`)
 
-The language switcher is available globally. Product and fertilizer APIs support `lang=en`, `lang=hi`, and `lang=mr` where translations exist.
+Frontend language selection is stored locally. Backend APIs accept a `lang` parameter where multilingual records exist.
 
-## Important Routes
-
-### Frontend Routes
+Examples:
 
 ```text
-/                              Home
-/about                         About
-/services                      Services
-/products                      Product catalogue
-/products/:categorySlug        Product category
-/products/:categorySlug/:id    Product profile
-/agricultural-inputs           Fertilizer catalogue
-/agricultural-inputs/local/:id Local fertilizer profile
-/agricultural-inputs/imported/:id Imported fertilizer profile
-/admin/login                   Admin login
+GET /api/content/about?lang=en
+GET /api/content/about?lang=hi
+GET /api/content/about?lang=mr
 ```
 
-### API Routes
+## Local Development
 
-```text
-GET    /api/health
-GET    /api/products
-GET    /api/fertilizers?kind=local
-GET    /api/fertilizers?kind=imported
-GET    /api/fertilizers/local/:id
-GET    /api/fertilizers/imported/:id
-POST   /api/auth/register
-POST   /api/auth/login
-GET    /api/auth/me
-GET    /api/enquiries
-POST   /api/enquiries
-GET    /api/admin/summary
-GET    /api/admin/fertilizers?kind=local
-GET    /api/admin/fertilizers?kind=imported
-POST   /api/admin/fertilizers?kind=local
-POST   /api/admin/fertilizers?kind=imported
-PUT    /api/admin/fertilizers/local/:id
-PUT    /api/admin/fertilizers/imported/:id
-DELETE /api/admin/fertilizers/local/:id
-DELETE /api/admin/fertilizers/imported/:id
-POST   /api/analytics/visit
+### 1. Install Node dependencies
+
+```powershell
+npm install
 ```
 
-## Database
+### 2. Create Python virtual environment
 
-### Development Database
-
-The local development database is SQLite and is generated automatically from:
-
-```text
-database/greenwings_maharashtra_seed.sql
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python -m pip install -e .
 ```
 
-The runtime database file is created under:
+### 3. Configure environment
 
-```text
-database/greenwings.db
-```
+Create a local `.env` from `.env.example` and fill only local development values.
 
-This file is local-only and should not be committed.
+Never commit real `.env` files.
 
-### PostgreSQL and Prisma
-
-Production schema planning files:
-
-```text
-prisma/schema.prisma
-database/fertilizers_postgres.sql
-```
-
-Prisma models included:
-
-- `LocalFertilizer`
-- `ImportedFertilizer`
-- `LocalFertilizerTranslation`
-- `ImportedFertilizerTranslation`
-
-## Environment Variables
-
-Copy `.env.example` to `.env` for local development.
-
-Required local values:
+Required local variables:
 
 ```text
 ADMIN_EMAIL=
 ADMIN_PASSWORD=
 ADMIN_TOKEN_SECRET=
 API_PORT=8787
+DATABASE_URL=sqlite:///database/greenwings.db
 ```
 
-Optional email notification values:
+Optional integrations:
 
 ```text
 SMTP_HOST=
@@ -350,34 +202,33 @@ SMTP_PORT=
 SMTP_USER=
 SMTP_PASSWORD=
 EMAIL_FROM=
+R2_ENDPOINT_URL=
+R2_ACCESS_KEY_ID=
+R2_SECRET_ACCESS_KEY=
+R2_BUCKET=
+R2_PUBLIC_BASE_URL=
+R2_PREFIX=
+ANTHROPIC_API_KEY=
 ```
 
-Do not commit real secrets.
+### 4. Start backend
 
-## Run Locally
-
-Install dependencies:
-
-```bash
-npm install
-```
-
-Start frontend:
-
-```bash
-npm run dev
-```
-
-Start backend:
-
-```bash
+```powershell
 npm run api
 ```
 
-Or on Windows, use:
+Backend health check:
 
 ```text
-START_DEV_SERVER.cmd
+http://127.0.0.1:8787/api/health
+```
+
+### 5. Start frontend
+
+In another terminal:
+
+```powershell
+npm run dev
 ```
 
 Open:
@@ -386,117 +237,142 @@ Open:
 http://127.0.0.1:5173/
 ```
 
-API health check:
+### Windows shortcut
+
+You can also start the local app with:
 
 ```text
-http://127.0.0.1:8787/api/health
+START_DEV_SERVER.cmd
 ```
 
-## Build and Validate
+## Useful Scripts
 
-Run production build:
-
-```bash
-npm run build
+```powershell
+npm run dev       # Start Vite frontend
+npm run api       # Start FastAPI backend
+npm run build     # TypeScript build and Vite production build
+npm run lint      # ESLint validation
+npm run preview   # Preview production build
+npm run db:import # Import seed data into local SQLite database
 ```
 
-Run lint:
+On Windows PowerShell, if `npm` is blocked by execution policy, use:
 
-```bash
-npm run lint
+```powershell
+npm.cmd run build
+npm.cmd run lint
 ```
 
-Run backend syntax check:
+## Database
 
-```bash
-python -m py_compile server/server.py
-```
-
-## Temporary Client Preview
-
-For client testing without deployment, use Cloudflare Tunnel:
-
-```bash
-cloudflared tunnel --url http://127.0.0.1:5173
-```
-
-The generated `trycloudflare.com` link is temporary.
-
-Keep these running while the client tests:
-
-- Vite frontend on port `5173`
-- Python API on port `8787`
-- Cloudflare tunnel process
-
-Do not use quick tunnels as production hosting.
-
-## Data Sync Scripts
-
-### Crop Variety Image Sync
-
-The project includes an automated image synchronization script (`server/scripts/sync_crop_variety_images.py`) to download and attach high-quality images to the 180+ crop varieties in the database.
-
-Features of the sync pipeline:
-- **Prioritized Sources**: Fetches verified images first from Wikidata P18 properties and Wikimedia Commons APIs.
-- **Fallbacks**: Uses Google Programmable Search (if configured) or Bing (via `icrawler`) as a last resort.
-- **Relevance Scoring**: Automatically scores images against variety names, crop names, and negative keywords to reject irrelevant matches (e.g., advertisements or graphs).
-- **Cloudflare R2 Integration**: Uploads the downloaded images to a Cloudflare R2 bucket and stores the permanent public URLs into the local SQLite database.
-- **Review Mode**: Supports a `--review` flag to generate a `review_manifest.json` for manual curation before modifying the database.
-
-**Usage:**
-Ensure `.env` contains the required Cloudflare R2 credentials (`R2_ENDPOINT_URL`, `R2_BUCKET`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`). Then run:
-
-```bash
-# Run in review mode (generates manifest without uploading)
-python server/scripts/sync_crop_variety_images.py --review
-
-# Apply approved images from manifest
-python server/scripts/sync_crop_variety_images.py --apply-approved
-
-# Force live sync to database
-python server/scripts/sync_crop_variety_images.py --force
-```
-
-## Git Workflow
-
-Current active branch:
+Local development uses:
 
 ```text
-feature/application
+database/greenwings.db
 ```
 
-Check status:
+This file is local runtime data and must not be committed.
 
-```bash
-git status
+Important database areas:
+
+- `database/sps/`: source CSV/image material used by upload and sync scripts
+- `database/backups/`: local database backups
+- `database/media-cache/`: generated image cache
+- `server/migrations/`: migration and normalization scripts
+- `prisma/schema.prisma`: production schema planning
+
+## Cloudflare R2 Image Workflow
+
+Image upload scripts use Cloudflare R2-compatible S3 APIs for storage.
+
+Important rule:
+
+- Uploads use `R2_ENDPOINT_URL`
+- Frontend image display uses `R2_PUBLIC_BASE_URL`
+
+Public image URLs should not include the bucket name unless the configured public domain requires it.
+
+Example expected public URL shape:
+
+```text
+https://your-public-r2-domain.example/crop-varieties/image-name.jpg
 ```
 
-Commit format:
+## Client Preview Without Deployment
 
-```bash
-git commit -m "Add clear project change summary"
+For temporary client testing, keep three terminals running.
+
+### Terminal 1: Backend
+
+```powershell
+npm run api
 ```
 
-Push:
+### Terminal 2: Frontend
 
-```bash
-git push origin feature/application
+```powershell
+npm run dev -- --host 127.0.0.1 --port 5173
 ```
+
+### Terminal 3: Cloudflare Tunnel
+
+```powershell
+.\cloudflared-windows-amd64.exe tunnel --url http://127.0.0.1:5173
+```
+
+Cloudflare will print a temporary `trycloudflare.com` URL. Share only that URL with the client.
+
+Notes:
+
+- The link works only while the tunnel terminal stays open.
+- This is for review/testing only, not production hosting.
+- Do not expose `.env`, admin credentials, API tokens, or private database files.
+
+## Validation
+
+Run before pushing important changes:
+
+```powershell
+npm.cmd run build
+npm.cmd run lint
+python -m compileall server
+git status --short --branch
+```
+
+Known current validation note:
+
+- Production build passes.
+- Python backend compilation passes.
+- ESLint currently reports existing React hook lint issues in several admin/page components. These are documented in `PROJECT_CLEANUP_REPORT.md`.
+
+## Git Safety Rules
 
 Do not commit:
 
 - `.env`
-- local SQLite database files
+- `.env.*` except `.env.example`
+- local SQLite databases
 - Cloudflare executables
-- Cloudflare temporary config/log files
-- real secrets or tokens
+- Cloudflare temporary configs
+- runtime logs
+- generated cache files
+- real API keys, passwords, tokens, or secrets
 
-## Notes for Future Production Work
+Use clear human commit messages, for example:
 
-- Move runtime backend to Next.js API or Node.js service as planned.
-- Migrate SQLite data to PostgreSQL.
-- Use Prisma migrations.
-- Replace local image data URLs with S3-compatible uploads.
-- Add email verification workflow.
-- Add stronger production rate limiting and audit-log storage.
-- Add full admin content management for public pages.
+```bash
+git commit -m "Organize project structure and update documentation"
+```
+
+## Production Readiness Notes
+
+Before production deployment:
+
+- Move local SQLite data into managed PostgreSQL
+- Use managed secret storage
+- Harden authentication and role-based access control
+- Add email verification and production SMTP
+- Add production rate limiting and audit log retention
+- Use a custom domain for Cloudflare R2/public assets
+- Add CI checks for build, lint, and backend tests
+- Review and resolve existing ESLint hook warnings/errors
