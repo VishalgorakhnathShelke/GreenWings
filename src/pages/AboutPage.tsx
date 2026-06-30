@@ -74,7 +74,7 @@ export function AboutPage() {
         <Reveal>
           <div className="relative h-[480px] lg:h-full lg:min-h-[640px] xl:min-h-[720px]">
             <img
-              src="https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/ui-assets/farmers/serious_discussion_in_farm.png"
+              src="https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/general-photos/serious%20discussion%20in%20farm.png"
               alt="Indian farmers surveying their fields"
               className="w-full h-full object-cover rounded-sm"
             />

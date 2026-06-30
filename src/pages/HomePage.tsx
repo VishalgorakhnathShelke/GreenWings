@@ -41,7 +41,7 @@ export function HomePage() {
   return (
     <>
       <section id="home" className="relative min-h-[calc(100vh-5rem)] flex items-center justify-center text-white overflow-hidden py-12 sm:py-16">
-        <img src="https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/ui-assets/farmers/Serious_disciussion_in_another_farm.png" alt="A diverse group of Indian farmers standing together in a field at sunrise" className="absolute inset-0 w-full h-full object-cover" />
+        <img src="https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/general-photos/Serious%20disciussion%20in%20another%20farm.png" alt="A diverse group of Indian farmers standing together in a field at sunrise" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-br from-deep/78 via-leaf/50 to-clay/78" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_24%,rgba(239,184,74,0.38),transparent_30%),radial-gradient(circle_at_82%_72%,rgba(139,201,214,0.34),transparent_32%)]" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-harvest/30 via-soil/15 to-transparent" />
