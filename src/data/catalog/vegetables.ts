@@ -5,7 +5,7 @@ export const vegetablesProducts: Product[] = [
     id: 'onion',
     name: 'Onion',
     slug: 'onion',
-    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/onion/onion_1.jpg',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/onion/Onion_1.jpg',
     overview:
       'Onion is India\'s most commercially significant fresh vegetable crop, serving as an indispensable ingredient in virtually every Indian household and food service establishment. India ranks among the world\'s largest onion producers, with output spanning multiple agro-climatic zones that enable year-round supply. The crop\'s economic importance is such that price fluctuations in the onion market directly influence consumer sentiment and government trade policy.\n\nIndian onion cultivation benefits from well-established research and breeding programs at IARI, ICAR-DWR, and state agricultural universities, which have developed high-yielding, disease-resistant varieties adapted to diverse growing conditions. The country produces both red and light-red onion types, with the Nasik Red and Bangalore Rose categories recognized internationally for their pungent flavor and extended shelf life. These attributes make Indian onions particularly competitive in global trade.\n\nThe organised retail sector and export market for Indian onions have expanded significantly, driven by demand from South Asia, the Middle East, and Southeast Asia. Premium graded onions meeting APEDA specifications are exported by sea in reefer containers, with well-developed cold chain and packhouse infrastructure at major production hubs including Nashik, Bengaluru, and Pune.',
     keyBenefits: [
@@ -189,7 +189,7 @@ export const vegetablesProducts: Product[] = [
     id: 'tomato',
     name: 'Tomato',
     slug: 'tomato',
-    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/tomato/tomato_1.jpg',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/tomato/Tomato_1.jpg',
     overview:
       'Tomato is one of India\'s most economically important vegetable crops, cultivated across diverse agro-climatic zones for fresh market sales, processing, and export. India ranks among the top global tomato producers, with the crop contributing significantly to both farm incomes and nutritional security. The versatility of tomato — consumed raw, cooked, pureed, and processed — ensures robust demand across all market segments.\n\nThe Indian tomato sector has benefited from decades of systematic breeding work at IARI, ICAR-IIHR, and state agricultural universities, producing varieties optimized for specific end-uses including fresh table tomatoes, processing-grade tomatoes for sauce and paste, and cherry tomatoes for premium retail. This varietal diversity enables India to serve both high-volume domestic markets and niche export opportunities.\n\nOrganised retail chains and food processing companies are increasingly sourcing tomatoes through contract farming arrangements, ensuring consistent quality, traceability, and supply reliability. Indian tomatoes are exported to neighboring South Asian markets, the Middle East, and increasingly to premium segments in Europe and North America where Indian greenhouse-grown cherry and vine tomatoes command attractive prices.',
     keyBenefits: [

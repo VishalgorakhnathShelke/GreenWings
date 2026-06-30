@@ -5,7 +5,7 @@ export const grainsProducts: Product[] = [
     id: 'wheat',
     name: 'Wheat',
     slug: 'wheat',
-    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/wheat/wheat_1.jpg',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/wheat/Wheat_1.jpg',
     overview:
       'India is among the world\'s largest producers of wheat, cultivating this staple cereal across millions of hectares in the fertile Indo-Gangetic plains. Indian wheat is prized for its high protein content and excellent milling qualities, making it a cornerstone of both domestic food security and international commodity trade. The country\'s diverse agro-climatic zones enable the production of distinct wheat varieties, each tailored to regional preferences and end-use requirements.',
     keyBenefits: [
@@ -175,7 +175,7 @@ export const grainsProducts: Product[] = [
     id: 'rice',
     name: 'Rice',
     slug: 'rice',
-    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/rice/rice_1.jpg',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/rice/Rice_1.jpg',
     overview:
       'Rice is India\'s most cultivated crop and a pillar of the nation\'s agricultural economy, with production exceeding 130 million tonnes annually across diverse ecologies ranging from irrigated paddy fields to rain-fed upland systems. The country is the world\'s largest rice exporter, supplying premium aromatic and non-aromatic varieties to over 150 countries. India\'s genetic diversity in rice is unparalleled, encompassing long-grain Basmati, short-grain aromatic, medium-grain non-aromatic, and specialty glutinous types.',
     keyBenefits: [
@@ -371,7 +371,7 @@ export const grainsProducts: Product[] = [
     id: 'maize',
     name: 'Maize',
     slug: 'maize',
-    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/maize/maize_1.jpg',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/maize/Maize_1.jpg',
     overview:
       'Maize (Zea mays) is India\'s third most important cereal crop, with production spanning the monsoon-fed Kharif season and the post-monsoon Rabi season across diverse agro-ecological zones. The country produces over 35 million tonnes of maize annually, serving as a critical feed ingredient for the booming poultry and livestock sectors, a raw material for the starch and sweetener industry, and an increasingly important source of human nutrition through direct consumption and processed food products. India\'s maize sector is undergoing a significant transformation with the adoption of hybrid technology and improved agronomic practices.',
     keyBenefits: [
