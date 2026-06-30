@@ -145,7 +145,7 @@ export const oilseedsProducts: Product[] = [
     id: 'soybean',
     name: 'Soybean',
     slug: 'soybean',
-    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/soybean/soybean_1.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/soybean/soybean_1.webp',
     overview:
       'Soybean is India\'s fastest-growing oilseed crop, playing an increasingly central role in edible oil production, protein meal exports, and the emerging plant-based food sector. Indian soybean is predominantly grown in the central and western states under rainfed conditions, with Madhya Pradesh alone accounting for nearly half of national production. GreenWings offers graded soybean for crushing, meal export, and identity-preserved food-grade programmes.\n\nThe crop\'s dual value — as a source of premium vegetable oil and high-protein defatted meal — makes soybean strategically important for both domestic food security and India\'s agricultural export portfolio. Advanced processing infrastructure, solvent extraction plants, and quality-certified refineries ensure that Indian soybean oil and meal meet stringent international buyer requirements.\n\nWith rising global demand for plant protein, sustainable meal for aquaculture and poultry, and identity-preserved non-GM soybeans for food applications, India\'s soybean sector is positioned for continued growth. GreenWings connects quality-conscious buyers with graded lots meeting specifications for oil content, protein level, moisture, and foreign matter.',
     keyBenefits: [

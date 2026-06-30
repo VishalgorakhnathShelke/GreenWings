@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # React + TypeScript + Vite
 
 ## Start the GreenWings website locally
@@ -95,7 +95,408 @@ export default defineConfig([
   },
 ])
 ```
-=======
 # GreenWings
--GreenWings is a scalable multilingual digital platform for a Farmer Producer Organisation (FPO), combining a corporate website, agricultural product marketplace, member portal, enquiry management system, and administrative dashboard to empower farmers and connect them with markets and opportunities.
->>>>>>> 410737ad7206d2bc95688e98f9ae4c7c263cd790
+
+GreenWings is a multilingual digital platform for **GREEN WINGS FARMERS PRODUCER COMPANY LIMITED**, a Farmer Producer Organisation (FPO) based in Jalgaon Neur, Yeola, Nashik, Maharashtra.
+
+The project combines a public corporate website, agricultural product catalogue, agricultural inputs module, secure member portal, enquiry management workflow, and admin dashboard.
+
+## Project Goals
+
+- Empower farmers through digital connectivity.
+- Promote sustainable and modern agriculture.
+- Showcase GreenWings services, products, stories, and impact.
+- Help members create and track enquiries.
+- Give admins tools to manage enquiries, users, analytics, content, and agricultural input records.
+
+## Current Tech Stack
+
+### Frontend
+
+- React
+- TypeScript
+- Vite
+- TailwindCSS
+- Zustand
+- React Router
+
+### Local Backend
+
+- Python HTTP server
+- SQLite development database
+- Local REST APIs under `/api`
+
+### Production Target
+
+- PostgreSQL
+- Prisma ORM
+- Auth.js / NextAuth or equivalent secure auth layer
+- S3-compatible storage for production file uploads
+
+> Note: The current dev app runs with Python + SQLite. Prisma/PostgreSQL schema files are included for production migration planning.
+
+## Main Features
+
+### Public Website
+
+- Home
+- About
+- Services
+- Products catalogue
+- Agricultural Inputs
+- Impact
+- Stories
+- Resources
+- Contact
+
+### Product Catalogue
+
+The product catalogue loads crop and subtype data from the local database.
+
+Supported examples include:
+
+- Fruits
+- Grains
+- Millets
+- Pulses
+- Oilseeds
+- Vegetables
+- Export produce
+
+Product pages include rich descriptions, variety details, usage notes, and multilingual content where available.
+
+### Agricultural Inputs
+
+Agricultural Inputs are split into two independent sections:
+
+```text
+Agricultural Inputs
+|-- Local Fertilizers
+|-- Imported Fertilizers
+```
+
+Each fertilizer detail page displays:
+
+- Product overview
+- Nutrient content
+- Benefits
+- Suitable crops
+- Unsuitable crops
+- Application instructions
+- Seasonal recommendations
+- Safety precautions
+- Product images
+- Downloadable product documents
+
+### Local Fertilizers
+
+Includes:
+
+- Indian manufacturers
+- Government-approved products
+- Organic and chemical options
+- Regional recommendations
+
+### Imported Fertilizers
+
+Includes:
+
+- Import country information
+- Brand information
+- Import certifications
+- Premium nutrient formulations
+- International product specifications
+
+## Member Portal
+
+Members can:
+
+- Register an account
+- Login securely
+- Manage profile information
+- Create enquiries
+- Receive unique enquiry IDs
+- Track enquiry history
+
+Registration creates a user and saves the first question as an enquiry.
+
+## Admin Panel
+
+Admin access is role-protected. Admin tools are visible only after admin login.
+
+Admin can manage:
+
+- Users
+- Enquiries
+- Website analytics
+- Local Fertilizers
+- Imported Fertilizers
+
+Fertilizer management includes:
+
+- Add
+- Edit
+- Delete
+- Search
+- Filter
+- Upload image in dev preview
+- Manage multilingual content
+
+## Multilingual Support
+
+Supported languages:
+
+- English
+- Hindi
+- Marathi
+
+The language switcher is available globally. Product and fertilizer APIs support `lang=en`, `lang=hi`, and `lang=mr` where translations exist.
+
+## Important Routes
+
+### Frontend Routes
+
+```text
+/                              Home
+/about                         About
+/services                      Services
+/products                      Product catalogue
+/products/:categorySlug        Product category
+/products/:categorySlug/:id    Product profile
+/agricultural-inputs           Fertilizer catalogue
+/agricultural-inputs/local/:id Local fertilizer profile
+/agricultural-inputs/imported/:id Imported fertilizer profile
+/admin/login                   Admin login
+```
+
+### API Routes
+
+```text
+GET    /api/health
+GET    /api/products
+GET    /api/fertilizers?kind=local
+GET    /api/fertilizers?kind=imported
+GET    /api/fertilizers/local/:id
+GET    /api/fertilizers/imported/:id
+POST   /api/auth/register
+POST   /api/auth/login
+GET    /api/auth/me
+GET    /api/enquiries
+POST   /api/enquiries
+GET    /api/admin/summary
+GET    /api/admin/fertilizers?kind=local
+GET    /api/admin/fertilizers?kind=imported
+POST   /api/admin/fertilizers?kind=local
+POST   /api/admin/fertilizers?kind=imported
+PUT    /api/admin/fertilizers/local/:id
+PUT    /api/admin/fertilizers/imported/:id
+DELETE /api/admin/fertilizers/local/:id
+DELETE /api/admin/fertilizers/imported/:id
+POST   /api/analytics/visit
+```
+
+## Database
+
+### Development Database
+
+The local development database is SQLite and is generated automatically from:
+
+```text
+database/greenwings_maharashtra_seed.sql
+```
+
+The runtime database file is created under:
+
+```text
+database/greenwings.db
+```
+
+This file is local-only and should not be committed.
+
+### PostgreSQL and Prisma
+
+Production schema planning files:
+
+```text
+prisma/schema.prisma
+database/fertilizers_postgres.sql
+```
+
+Prisma models included:
+
+- `LocalFertilizer`
+- `ImportedFertilizer`
+- `LocalFertilizerTranslation`
+- `ImportedFertilizerTranslation`
+
+## Environment Variables
+
+Copy `.env.example` to `.env` for local development.
+
+Required local values:
+
+```text
+ADMIN_EMAIL=
+ADMIN_PASSWORD=
+ADMIN_TOKEN_SECRET=
+API_PORT=8787
+```
+
+Optional email notification values:
+
+```text
+SMTP_HOST=
+SMTP_PORT=
+SMTP_USER=
+SMTP_PASSWORD=
+EMAIL_FROM=
+```
+
+Do not commit real secrets.
+
+## Run Locally
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start frontend:
+
+```bash
+npm run dev
+```
+
+Start backend:
+
+```bash
+npm run api
+```
+
+Or on Windows, use:
+
+```text
+START_DEV_SERVER.cmd
+```
+
+Open:
+
+```text
+http://127.0.0.1:5173/
+```
+
+API health check:
+
+```text
+http://127.0.0.1:8787/api/health
+```
+
+## Build and Validate
+
+Run production build:
+
+```bash
+npm run build
+```
+
+Run lint:
+
+```bash
+npm run lint
+```
+
+Run backend syntax check:
+
+```bash
+python -m py_compile server/server.py
+```
+
+## Temporary Client Preview
+
+For client testing without deployment, use Cloudflare Tunnel:
+
+```bash
+cloudflared tunnel --url http://127.0.0.1:5173
+```
+
+The generated `trycloudflare.com` link is temporary.
+
+Keep these running while the client tests:
+
+- Vite frontend on port `5173`
+- Python API on port `8787`
+- Cloudflare tunnel process
+
+Do not use quick tunnels as production hosting.
+
+## Data Sync Scripts
+
+### Crop Variety Image Sync
+
+The project includes an automated image synchronization script (`server/scripts/sync_crop_variety_images.py`) to download and attach high-quality images to the 180+ crop varieties in the database.
+
+Features of the sync pipeline:
+- **Prioritized Sources**: Fetches verified images first from Wikidata P18 properties and Wikimedia Commons APIs.
+- **Fallbacks**: Uses Google Programmable Search (if configured) or Bing (via `icrawler`) as a last resort.
+- **Relevance Scoring**: Automatically scores images against variety names, crop names, and negative keywords to reject irrelevant matches (e.g., advertisements or graphs).
+- **Cloudflare R2 Integration**: Uploads the downloaded images to a Cloudflare R2 bucket and stores the permanent public URLs into the local SQLite database.
+- **Review Mode**: Supports a `--review` flag to generate a `review_manifest.json` for manual curation before modifying the database.
+
+**Usage:**
+Ensure `.env` contains the required Cloudflare R2 credentials (`R2_ENDPOINT_URL`, `R2_BUCKET`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`). Then run:
+
+```bash
+# Run in review mode (generates manifest without uploading)
+python server/scripts/sync_crop_variety_images.py --review
+
+# Apply approved images from manifest
+python server/scripts/sync_crop_variety_images.py --apply-approved
+
+# Force live sync to database
+python server/scripts/sync_crop_variety_images.py --force
+```
+
+## Git Workflow
+
+Current active branch:
+
+```text
+feature/application
+```
+
+Check status:
+
+```bash
+git status
+```
+
+Commit format:
+
+```bash
+git commit -m "Add clear project change summary"
+```
+
+Push:
+
+```bash
+git push origin feature/application
+```
+
+Do not commit:
+
+- `.env`
+- local SQLite database files
+- Cloudflare executables
+- Cloudflare temporary config/log files
+- real secrets or tokens
+
+## Notes for Future Production Work
+
+- Move runtime backend to Next.js API or Node.js service as planned.
+- Migrate SQLite data to PostgreSQL.
+- Use Prisma migrations.
+- Replace local image data URLs with S3-compatible uploads.
+- Add email verification workflow.
+- Add stronger production rate limiting and audit-log storage.
+- Add full admin content management for public pages.

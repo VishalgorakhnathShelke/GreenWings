@@ -1,0 +1,187 @@
+id,common_name,variety_name,scientific_name,english_name
+1,Mango,Alphonso (Hapus),Mangifera indica,Mango Alphonso (Hapus)
+1,Mango,Amrapali,Mangifera indica,Mango Amrapali
+1,Mango,Dasheri,Mangifera indica,Mango Dasheri
+1,Mango,Kesar,Mangifera indica,Mango Kesar
+1,Mango,Langra,Mangifera indica,Mango Langra
+1,Mango,Mallika,Mangifera indica,Mango Mallika
+1,Mango,Neelum,Mangifera indica,Mango Neelum
+1,Mango,Pairi,Mangifera indica,Mango Pairi
+1,Mango,Ratna,Mangifera indica,Mango Ratna
+1,Mango,Sindhu,Mangifera indica,Mango Sindhu
+1,Mango,Totapuri,Mangifera indica,Mango Totapuri
+1,Mango,Vanraj,Mangifera indica,Mango Vanraj
+2,Grapes,Crimson Seedless,Vitis vinifera,Grapes Crimson Seedless
+2,Grapes,Flame Seedless,Vitis vinifera,Grapes Flame Seedless
+2,Grapes,Manik Chaman,Vitis vinifera,Grapes Manik Chaman
+2,Grapes,Sharad Seedless,Vitis vinifera,Grapes Sharad Seedless
+2,Grapes,Sonaka,Vitis vinifera,Grapes Sonaka
+2,Grapes,Tas-A-Ganesh,Vitis vinifera,Grapes Tas-A-Ganesh
+2,Grapes,Thompson Seedless,Vitis vinifera,Grapes Thompson Seedless
+3,Orange,Hamlin Orange,Citrus sinensis / Citrus reticulata,Orange Hamlin Orange
+3,Orange,Mosambi (Sweet Lime),Citrus sinensis / Citrus reticulata,Orange Mosambi (Sweet Lime)
+3,Orange,Nagpur Orange,Citrus sinensis / Citrus reticulata,Orange Nagpur Orange
+3,Orange,Valencia Orange,Citrus sinensis / Citrus reticulata,Orange Valencia Orange
+4,Banana,Basrai,Musa acuminata / Musa balbisiana,Banana Basrai
+4,Banana,Dwarf Cavendish,Musa acuminata / Musa balbisiana,Banana Dwarf Cavendish
+4,Banana,Grand Naine,Musa acuminata / Musa balbisiana,Banana Grand Naine
+4,Banana,Robusta,Musa acuminata / Musa balbisiana,Banana Robusta
+4,Banana,Shrimanthi,Musa acuminata / Musa balbisiana,Banana Shrimanthi
+5,Guava,Allahabad Safeda,Psidium guajava,Guava Allahabad Safeda
+5,Guava,Lalit,Psidium guajava,Guava Lalit
+5,Guava,Lucknow-49 (Sardar),Psidium guajava,Guava Lucknow-49 (Sardar)
+5,Guava,Shweta,Psidium guajava,Guava Shweta
+6,Pomegranate,Arakta,Punica granatum,Pomegranate Arakta
+6,Pomegranate,Bhagwa,Punica granatum,Pomegranate Bhagwa
+6,Pomegranate,Ganesh,Punica granatum,Pomegranate Ganesh
+6,Pomegranate,Mridula,Punica granatum,Pomegranate Mridula
+7,Custard Apple,Balanagar,Annona squamosa / Annona reticulata,Custard Apple Balanagar
+7,Custard Apple,Red Sitafal,Annona squamosa / Annona reticulata,Custard Apple Red Sitafal
+8,Papaya,Red Lady,Carica papaya,Papaya Red Lady
+8,Papaya,Taiwan,Carica papaya,Papaya Taiwan
+9,Sapota,Cricket Ball,Manilkara zapota,Sapota Cricket Ball
+9,Sapota,Kalipatti,Manilkara zapota,Sapota Kalipatti
+10,Coconut,Dwarf,Cocos nucifera,Coconut Dwarf
+10,Coconut,West Coast Tall,Cocos nucifera,Coconut West Coast Tall
+11,Jackfruit,Local Konkan,Artocarpus heterophyllus,Jackfruit Local Konkan
+11,Jackfruit,Singapore,Artocarpus heterophyllus,Jackfruit Singapore
+12,Amla,Kanchan,Phyllanthus emblica,Amla Kanchan
+12,Amla,Krishna,Phyllanthus emblica,Amla Krishna
+12,Amla,NA-7,Phyllanthus emblica,Amla NA-7
+13,Strawberry,Camarosa,Fragaria × ananassa,Strawberry Camarosa
+13,Strawberry,Festival,Fragaria × ananassa,Strawberry Festival
+13,Strawberry,Sweet Charlie,Fragaria × ananassa,Strawberry Sweet Charlie
+14,Fig,Poona Fig (Dinkar),Ficus carica,Fig Poona Fig (Dinkar)
+15,Ber,Gola,Ziziphus mauritiana,Ber Gola
+15,Ber,Umran,Ziziphus mauritiana,Ber Umran
+16,Rice,Ambemohar,Oryza sativa,Rice Ambemohar
+16,Rice,Basmati,Oryza sativa,Rice Basmati
+16,Rice,HMT,Oryza sativa,Rice HMT
+16,Rice,Indrayani,Oryza sativa,Rice Indrayani
+16,Rice,Jaya,Oryza sativa,Rice Jaya
+16,Rice,Karjat-4,Oryza sativa,Rice Karjat-4
+16,Rice,Kolam,Oryza sativa,Rice Kolam
+16,Rice,Phule Samruddhi,Oryza sativa,Rice Phule Samruddhi
+16,Rice,Swarna,Oryza sativa,Rice Swarna
+17,Wheat,AKAW-4627,Triticum aestivum / Triticum durum,Wheat AKAW-4627
+17,Wheat,HD-2189,Triticum aestivum / Triticum durum,Wheat HD-2189
+17,Wheat,HD-2967,Triticum aestivum / Triticum durum,Wheat HD-2967
+17,Wheat,Lokwan,Triticum aestivum / Triticum durum,Wheat Lokwan
+17,Wheat,MACS-6222,Triticum aestivum / Triticum durum,Wheat MACS-6222
+17,Wheat,NIAW-34,Triticum aestivum / Triticum durum,Wheat NIAW-34
+17,Wheat,NIAW-917,Triticum aestivum / Triticum durum,Wheat NIAW-917
+18,Jowar,CSH-14,Sorghum bicolor,Jowar CSH-14
+18,Jowar,CSH-16,Sorghum bicolor,Jowar CSH-16
+18,Jowar,CSV-15,Sorghum bicolor,Jowar CSV-15
+18,Jowar,CSV-20,Sorghum bicolor,Jowar CSV-20
+18,Jowar,CSV-27,Sorghum bicolor,Jowar CSV-27
+18,Jowar,Dagadi Jowar,Sorghum bicolor,Jowar Dagadi Jowar
+18,Jowar,Maldandi,Sorghum bicolor,Jowar Maldandi
+18,Jowar,Phule Vasudha,Sorghum bicolor,Jowar Phule Vasudha
+19,Bajra,HHB-67,Pennisetum glaucum,Bajra HHB-67
+19,Bajra,ICTP-8203,Pennisetum glaucum,Bajra ICTP-8203
+19,Bajra,Phule Mahashakti,Pennisetum glaucum,Bajra Phule Mahashakti
+19,Bajra,Saburi,Pennisetum glaucum,Bajra Saburi
+19,Bajra,Shanti,Pennisetum glaucum,Bajra Shanti
+20,Maize,African Tall,Zea mays,Maize African Tall
+20,Maize,Bioseed 9681,Zea mays,Maize Bioseed 9681
+20,Maize,Deccan Hybrid-101,Zea mays,Maize Deccan Hybrid-101
+20,Maize,HQPM-1,Zea mays,Maize HQPM-1
+20,Maize,Vijay Composite,Zea mays,Maize Vijay Composite
+21,Ragi,Dapoli-1,Eleusine coracana,Ragi Dapoli-1
+21,Ragi,GPU-28,Eleusine coracana,Ragi GPU-28
+21,Ragi,GPU-67,Eleusine coracana,Ragi GPU-67
+21,Ragi,Indaf-5,Eleusine coracana,Ragi Indaf-5
+22,Kodo Millet,Local Kodra,Paspalum scrobiculatum,Kodo Millet Local Kodra
+23,Little Millet,Kutki (Local),Panicum sumatrense,Little Millet Kutki (Local)
+24,Barnyard Millet,Bhagar (Local),Echinochloa frumentacea,Barnyard Millet Bhagar (Local)
+24,Barnyard Millet,PRJ-1,Echinochloa frumentacea,Barnyard Millet PRJ-1
+25,Proso Millet,Cheena (Local),Panicum miliaceum,Proso Millet Cheena (Local)
+26,Tur (Pigeon Pea),Asha (ICPL-87119),Cajanus cajan,Tur (Pigeon Pea) Asha (ICPL-87119)
+26,Tur (Pigeon Pea),BSMR-736 (Vipula),Cajanus cajan,Tur (Pigeon Pea) BSMR-736 (Vipula)
+26,Tur (Pigeon Pea),ICPL-87119,Cajanus cajan,Tur (Pigeon Pea) ICPL-87119
+26,Tur (Pigeon Pea),Maruti,Cajanus cajan,Tur (Pigeon Pea) Maruti
+27,Chickpea,Digvijay,Cicer arietinum,Chickpea Digvijay
+27,Chickpea,JAKI-9218,Cicer arietinum,Chickpea JAKI-9218
+27,Chickpea,Vijay,Cicer arietinum,Chickpea Vijay
+27,Chickpea,Vishal,Cicer arietinum,Chickpea Vishal
+28,Urad (Black Gram),AKU-15,Vigna mungo,Urad (Black Gram) AKU-15
+28,Urad (Black Gram),TAU-1,Vigna mungo,Urad (Black Gram) TAU-1
+28,Urad (Black Gram),TPU-4,Vigna mungo,Urad (Black Gram) TPU-4
+29,Masoor (Lentil),JL-1,Lens culinaris,Masoor (Lentil) JL-1
+29,Masoor (Lentil),JL-3,Lens culinaris,Masoor (Lentil) JL-3
+29,Masoor (Lentil),KLS-218,Lens culinaris,Masoor (Lentil) KLS-218
+30,Soybean,JS-335,Glycine max,Soybean JS-335
+30,Soybean,JS-9305,Glycine max,Soybean JS-9305
+30,Soybean,MAUS-158,Glycine max,Soybean MAUS-158
+30,Soybean,MAUS-71,Glycine max,Soybean MAUS-71
+31,Groundnut,JL-24,Arachis hypogaea,Groundnut JL-24
+31,Groundnut,Phule Pragati,Arachis hypogaea,Groundnut Phule Pragati
+31,Groundnut,SB-11,Arachis hypogaea,Groundnut SB-11
+31,Groundnut,TAG-24,Arachis hypogaea,Groundnut TAG-24
+32,Sesame,AKT-64,Sesamum indicum,Sesame AKT-64
+32,Sesame,JLT-7,Sesamum indicum,Sesame JLT-7
+32,Sesame,Phule Til-1,Sesamum indicum,Sesame Phule Til-1
+33,Sunflower,KBSH-1,Helianthus annuus,Sunflower KBSH-1
+33,Sunflower,KBSH-44,Helianthus annuus,Sunflower KBSH-44
+33,Sunflower,Morden,Helianthus annuus,Sunflower Morden
+34,Sugarcane,Co-740,Saccharum officinarum,Sugarcane Co-740
+34,Sugarcane,Co-86032,Saccharum officinarum,Sugarcane Co-86032
+34,Sugarcane,Co-94012,Saccharum officinarum,Sugarcane Co-94012
+34,Sugarcane,CoC-671 (Karuppan),Saccharum officinarum,Sugarcane CoC-671 (Karuppan)
+34,Sugarcane,MS-10001 (Phule Mahadhan),Saccharum officinarum,Sugarcane MS-10001 (Phule Mahadhan)
+34,Sugarcane,Phule-265 (VSI-434),Saccharum officinarum,Sugarcane Phule-265 (VSI-434)
+35,Onion,Agrifound Light Red,Allium cepa,Onion Agrifound Light Red
+35,Onion,Bhima Kiran,Allium cepa,Onion Bhima Kiran
+35,Onion,Bhima Raj,Allium cepa,Onion Bhima Raj
+35,Onion,Bhima Super,Allium cepa,Onion Bhima Super
+35,Onion,N-2-4-1 (NHRDF),Allium cepa,Onion N-2-4-1 (NHRDF)
+35,Onion,Nasik Red (Local),Allium cepa,Onion Nasik Red (Local)
+35,Onion,Phule Samarth,Allium cepa,Onion Phule Samarth
+36,Tomato,Arka Vikas,Solanum lycopersicum,Tomato Arka Vikas
+36,Tomato,Namdhari NS-5252,Solanum lycopersicum,Tomato Namdhari NS-5252
+36,Tomato,Phule Raja,Solanum lycopersicum,Tomato Phule Raja
+36,Tomato,Pusa Ruby,Solanum lycopersicum,Tomato Pusa Ruby
+36,Tomato,Syngenta Naveen,Solanum lycopersicum,Tomato Syngenta Naveen
+37,Sweet Lime,Phule Mosambi-1,Citrus limetta,Sweet Lime Phule Mosambi-1
+37,Sweet Lime,Sathgudi,Citrus limetta,Sweet Lime Sathgudi
+37,Sweet Lime,Seedless Mosambi (Local),Citrus limetta,Sweet Lime Seedless Mosambi (Local)
+38,Garlic,Agrifound White (G-41),Allium sativum,Garlic Agrifound White (G-41)
+38,Garlic,Desi Kali (Local Black Garlic),Allium sativum,Garlic Desi Kali (Local Black Garlic)
+38,Garlic,Phule Bahugunak,Allium sativum,Garlic Phule Bahugunak
+38,Garlic,Yamuna Safed (G-1),Allium sativum,Garlic Yamuna Safed (G-1)
+39,Turmeric,Phule Swarnim,Curcuma longa,Turmeric Phule Swarnim
+39,Turmeric,Pratibha,Curcuma longa,Turmeric Pratibha
+39,Turmeric,Sangli Turmeric (Erande/Rajapuri),Curcuma longa,Turmeric Sangli Turmeric (Erande/Rajapuri)
+39,Turmeric,Selam,Curcuma longa,Turmeric Selam
+39,Turmeric,Sugandham,Curcuma longa,Turmeric Sugandham
+40,Chilli,Arka Meghana,Capsicum annuum,Chilli Arka Meghana
+40,Chilli,Byadgi Chilli,Capsicum annuum,Chilli Byadgi Chilli
+40,Chilli,Kashmiri Chilli (Maharashtra Grown),Capsicum annuum,Chilli Kashmiri Chilli (Maharashtra Grown)
+40,Chilli,Kolhapuri Chilli (Lavangi),Capsicum annuum,Chilli Kolhapuri Chilli (Lavangi)
+40,Chilli,Phule Jyoti,Capsicum annuum,Chilli Phule Jyoti
+40,Chilli,Pusa Jwala,Capsicum annuum,Chilli Pusa Jwala
+41,Ginger,Himgiri,Zingiber officinale,Ginger Himgiri
+41,Ginger,Mahadeo (Local Konkan),Zingiber officinale,Ginger Mahadeo (Local Konkan)
+41,Ginger,Rio-de-Janeiro,Zingiber officinale,Ginger Rio-de-Janeiro
+41,Ginger,Suprabha,Zingiber officinale,Ginger Suprabha
+42,Tamarind,PKM-1,Tamarindus indica,Tamarind PKM-1
+42,Tamarind,Pragati,Tamarindus indica,Tamarind Pragati
+42,Tamarind,Urigam (Local),Tamarindus indica,Tamarind Urigam (Local)
+43,Fenugreek,Kasuri Methi (IARI-PEB),Trigonella foenum-graecum,Fenugreek Kasuri Methi (IARI-PEB)
+43,Fenugreek,Pusa Early Bunching,Trigonella foenum-graecum,Fenugreek Pusa Early Bunching
+43,Fenugreek,RMt-1 (Rajasthan),Trigonella foenum-graecum,Fenugreek RMt-1 (Rajasthan)
+44,Coriander,CO-1,Coriandrum sativum,Coriander CO-1
+44,Coriander,Phule Suvarna,Coriandrum sativum,Coriander Phule Suvarna
+44,Coriander,Rajendra Swati,Coriandrum sativum,Coriander Rajendra Swati
+45,Watermelon,Arka Manik,Citrullus lanatus,Watermelon Arka Manik
+45,Watermelon,NS-295 (Namdhari),Citrullus lanatus,Watermelon NS-295 (Namdhari)
+45,Watermelon,Phule Indrayani (Seedless),Citrullus lanatus,Watermelon Phule Indrayani (Seedless)
+45,Watermelon,Sugar Baby,Citrullus lanatus,Watermelon Sugar Baby
+46,Muskmelon,Arka Rajhans,Cucumis melo,Muskmelon Arka Rajhans
+46,Muskmelon,Hara Madhu,Cucumis melo,Muskmelon Hara Madhu
+46,Muskmelon,Phule Shreshtha,Cucumis melo,Muskmelon Phule Shreshtha
+47,Lemon,Eureka Lemon,Citrus limon / Citrus aurantiifolia,Lemon Eureka Lemon
+47,Lemon,Phule Saurabh,Citrus limon / Citrus aurantiifolia,Lemon Phule Saurabh
+47,Lemon,Sai Sharbati,Citrus limon / Citrus aurantiifolia,Lemon Sai Sharbati
+47,Lemon,Seedless Lime,Citrus limon / Citrus aurantiifolia,Lemon Seedless Lime

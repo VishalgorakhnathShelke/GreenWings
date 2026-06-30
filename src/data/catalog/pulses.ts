@@ -511,7 +511,7 @@ export const pulsesProducts: Product[] = [
     id: 'urad',
     name: 'Urad / Black Gram',
     slug: 'urad',
-    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/urad/urad_1.webp',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/urad/urad_1.jpg',
     overview:
       'Urad, or black gram, is a highly valued pulse crop in India, revered for its unique nutritional profile and its irreplaceable role in South Indian cuisine. The whole urad grain is black with a white interior, while the split dal is creamy white. Urad is the primary ingredient in iconic preparations such as idli, dosa, medu vada, and dal makhani, making it a cornerstone of India\'s culinary heritage.\n\nIndia is the world\'s largest producer of black gram, with the crop cultivated predominantly as a kharif pulse. Urad is also grown in the rabi and summer seasons in certain regions, providing year-round cultivation opportunities. Its nitrogen-fixing capability makes it an excellent rotation crop with rice, sugarcane, and cotton, while its short crop duration of 75–90 days allows farmers to integrate it into intensive cropping systems.\n\nIndian urad dal holds significant export potential, particularly in markets with substantial South Indian diaspora communities. The growing global interest in fermented foods, where urad batter serves as a key fermentation medium, has further expanded the crop\'s international market prospects.',
     keyBenefits: [

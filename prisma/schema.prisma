@@ -1,0 +1,315 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model LocalFertilizer {
+  id                      Int      @id @default(autoincrement())
+  name                    String
+  category                String
+  manufacturer            String
+  countryOfOrigin         String   @default("India")
+  description             String   @db.Text
+  content                 String   @db.Text
+  uses                    String   @db.Text
+  applyOnCrops            String   @db.Text
+  doNotApplyOn            String   @db.Text
+  applicationMethod       String   @db.Text
+  recommendedStage        String
+  season                  String
+  temperatureRange        String
+  soilType                String
+  benefits                String   @db.Text
+  precautions             String   @db.Text
+  imageUrl                String?
+  status                  String   @default("active")
+  documentUrl             String?
+  approvalBody            String?
+  regionalRecommendations String?  @db.Text
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  translations LocalFertilizerTranslation[]
+
+  @@index([status])
+  @@index([category])
+}
+
+model ImportedFertilizer {
+  id                          Int      @id @default(autoincrement())
+  name                        String
+  category                    String
+  manufacturer                String
+  countryOfOrigin             String
+  description                 String   @db.Text
+  content                     String   @db.Text
+  uses                        String   @db.Text
+  applyOnCrops                String   @db.Text
+  doNotApplyOn                String   @db.Text
+  applicationMethod           String   @db.Text
+  recommendedStage            String
+  season                      String
+  temperatureRange            String
+  soilType                    String
+  benefits                    String   @db.Text
+  precautions                 String   @db.Text
+  imageUrl                    String?
+  status                      String   @default("active")
+  documentUrl                 String?
+  brand                       String?
+  importCertifications        String?  @db.Text
+  internationalSpecifications String?  @db.Text
+  createdAt                   DateTime @default(now())
+  updatedAt                   DateTime @updatedAt
+
+  translations ImportedFertilizerTranslation[]
+
+  @@index([status])
+  @@index([category])
+}
+
+model LocalFertilizerTranslation {
+  id           Int             @id @default(autoincrement())
+  fertilizerId Int
+  language     String
+  name         String?
+  category     String?
+  countryOfOrigin String?
+  description  String?         @db.Text
+  content      String?         @db.Text
+  uses         String?         @db.Text
+  applyOnCrops String?         @db.Text
+  doNotApplyOn String?         @db.Text
+  applicationMethod String?    @db.Text
+  recommendedStage String?
+  season       String?
+  temperatureRange String?
+  soilType     String?
+  benefits     String?         @db.Text
+  precautions  String?         @db.Text
+  approvalBody String?         @db.Text
+  regionalRecommendations String? @db.Text
+  brand        String?
+  importCertifications String? @db.Text
+  internationalSpecifications String? @db.Text
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  fertilizer LocalFertilizer @relation(fields: [fertilizerId], references: [id], onDelete: Cascade)
+
+  @@unique([fertilizerId, language])
+}
+
+model ImportedFertilizerTranslation {
+  id           Int                @id @default(autoincrement())
+  fertilizerId Int
+  language     String
+  name         String?
+  category     String?
+  countryOfOrigin String?
+  description  String?            @db.Text
+  content      String?            @db.Text
+  uses         String?            @db.Text
+  applyOnCrops String?            @db.Text
+  doNotApplyOn String?            @db.Text
+  applicationMethod String?       @db.Text
+  recommendedStage String?
+  season       String?
+  temperatureRange String?
+  soilType     String?
+  benefits     String?            @db.Text
+  precautions  String?            @db.Text
+  approvalBody String?            @db.Text
+  regionalRecommendations String? @db.Text
+  brand        String?
+  importCertifications String?    @db.Text
+  internationalSpecifications String? @db.Text
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  fertilizer ImportedFertilizer @relation(fields: [fertilizerId], references: [id], onDelete: Cascade)
+
+  @@unique([fertilizerId, language])
+}
+
+model CompanyStory {
+  id            Int      @id @default(autoincrement())
+  title         String
+  slug          String
+  language      String
+  content       String   @db.Text
+  featuredImage String?
+  displayOrder  Int      @default(0)
+  status        String   @default("published")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([slug, language])
+  @@index([language, status, displayOrder])
+}
+
+model CompanyContent {
+  id           Int      @id @default(autoincrement())
+  sectionKey   String
+  title        String
+  subtitle     String?
+  content      String   @db.Text
+  language     String   @default("en")
+  displayOrder Int      @default(0)
+  status       String   @default("published")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([sectionKey, language])
+  @@index([language, status, displayOrder])
+}
+
+model CompanyMilestone {
+  id           Int      @id @default(autoincrement())
+  year         String
+  title        String
+  description  String   @db.Text
+  image        String?
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  translations CompanyMilestoneTranslation[]
+
+  @@index([displayOrder])
+}
+
+model CompanyMilestoneTranslation {
+  id          Int      @id @default(autoincrement())
+  milestoneId Int
+  language    String
+  title       String?
+  description String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  milestone CompanyMilestone @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+
+  @@unique([milestoneId, language])
+}
+
+model CompanyTimeline {
+  id           Int      @id @default(autoincrement())
+  year         String
+  title        String
+  description  String   @db.Text
+  impactMetric String?  @db.Text
+  language     String   @default("en")
+  displayOrder Int      @default(0)
+  status       String   @default("published")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([year, title, language])
+  @@index([language, status, displayOrder])
+}
+
+model LeadershipMember {
+  id           Int      @id @default(autoincrement())
+  fullName     String
+  designation  String
+  roleDescription String? @db.Text
+  biography    String   @db.Text
+  image        String?
+  imageUrl     String?
+  language     String   @default("en")
+  displayOrder Int      @default(0)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  translations LeadershipMemberTranslation[]
+
+  @@index([active, displayOrder])
+}
+
+model LeadershipMemberTranslation {
+  id                 Int      @id @default(autoincrement())
+  leadershipMemberId Int
+  language           String
+  designation        String?
+  biography          String?  @db.Text
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  leadershipMember LeadershipMember @relation(fields: [leadershipMemberId], references: [id], onDelete: Cascade)
+
+  @@unique([leadershipMemberId, language])
+}
+
+model HomepageStatistic {
+  id           Int      @id @default(autoincrement())
+  label        String   @unique
+  value        String
+  description  String?  @db.Text
+  displayOrder Int      @default(0)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([active, displayOrder])
+}
+
+model SuccessStory {
+  id               Int      @id @default(autoincrement())
+  farmerName       String
+  farmerPhone      String?
+  title            String
+  slug             String
+  location         String?
+  village          String?
+  district         String?
+  cropType         String?
+  landArea         String?
+  storyCategory    String?
+  shortQuote       String?  @db.Text
+  shortSummary     String?  @db.Text
+  fullStory        String   @db.Text
+  challenge        String?  @db.Text
+  solution         String?  @db.Text
+  result           String?  @db.Text
+  yieldBefore      String?
+  yieldAfter       String?
+  priceBenefit     String?
+  additionalIncome String?
+  fertilizerUsed   String?
+  seedUsed         String?
+  marketSupport    String?  @db.Text
+  profileImage     String?
+  coverImage       String?
+  language         String   @default("en")
+  displayOrder     Int      @default(0)
+  featured         Boolean  @default(false)
+  status           String   @default("published")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  media SuccessStoryMedia[]
+
+  @@unique([slug, language])
+  @@index([language, status, featured, displayOrder])
+}
+
+model SuccessStoryMedia {
+  id             Int      @id @default(autoincrement())
+  successStoryId Int
+  mediaType      String   @default("image")
+  mediaUrl       String
+  caption        String?
+  displayOrder   Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  successStory SuccessStory @relation(fields: [successStoryId], references: [id], onDelete: Cascade)
+
+  @@index([successStoryId, displayOrder])
+}
