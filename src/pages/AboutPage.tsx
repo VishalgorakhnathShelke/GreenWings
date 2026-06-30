@@ -21,7 +21,7 @@ export function AboutPage() {
 
         <Reveal>
           <div className="relative">
-            <img src="/assets/greenwings-hero.png" alt="Indian farming community learning together" className="w-full rounded-sm" />
+            <img src="https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/ui-assets/farmers/a_few_more_farmers.png" alt="Indian farming community learning together" className="w-full rounded-sm" />
             <div className="absolute -bottom-8 -right-4 lg:-right-8 bg-paper border border-line p-6 max-w-xs shadow-lg">
               <span className="font-serif text-4xl text-green leading-none">"</span>
               <p className="text-sm text-muted leading-relaxed mt-2 mb-3 italic">{t('quote')}</p>
