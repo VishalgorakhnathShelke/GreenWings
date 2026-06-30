@@ -5,7 +5,7 @@ export const exportProduce: Product[] = [
     id: 'saffron',
     name: 'Saffron',
     slug: 'saffron',
-    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/saffron/saffron_1.jpg',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/saffron/saffron_1.png',
     overview:
       'Indian saffron, cultivated in the pristine valleys of Kashmir, is among the world\'s most prized agricultural commodities, commanding extraordinary value per kilogram for its vivid colour, complex flavour, and intense aroma. India\'s Kashmiri saffron is internationally recognised for its superior crocin content — the compound responsible for saffron\'s signature golden hue — positioning it as a benchmark quality in global spice markets. GreenWings offers certified Kashmiri saffron sourced through trusted channels with laboratory-verified purity and potency.\n\nThe cultivation of saffron in Kashmir\'s unique climate — where high altitude, cold winters, and well-drained soils create ideal growing conditions — produces a crop with distinctive organoleptic characteristics that are difficult to replicate elsewhere. Each saffron flower yields only three delicate stigmas, which are hand-picked during a narrow harvest window, making every gram a testament to extraordinary agricultural craft.\n\nIndia\'s saffron sector is supported by Geographical Indication (GI) registration, protecting the authenticity and provenance of Kashmiri saffron in international markets. GreenWings facilitates premium saffron supply for culinary, pharmaceutical, cosmetic, and wellness applications, with rigorous quality assurance including colouring strength, flavour intensity, and moisture content testing.',
     keyBenefits: [
@@ -117,7 +117,7 @@ export const exportProduce: Product[] = [
     id: 'cashew',
     name: 'Cashew',
     slug: 'cashew',
-    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/cashew/cashew_1.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/cashew/cashew_1.jpg',
     overview:
       'India is the world\'s largest processor and second-largest producer of cashew nuts, commanding a central position in the global cashew trade. Indian cashew processing expertise — refined over decades of investment in shelling, peeling, grading, and packaging — sets the benchmark for quality that buyers worldwide have come to expect. GreenWings offers a comprehensive range of cashew grades from Whole kernels (W grades) to Broken and Scorched varieties, serving diverse market segments from ultra-premium retail to industrial food manufacturing.\n\nIndian cashew kernels are renowned for their consistent white colour, pleasant sweet flavour, and firm yet creamy texture. The country\'s processing industry has developed sophisticated grading systems that precisely classify kernels by size, shape, and colour, enabling buyers to specify exact requirements for their target markets. India\'s cashew processing clusters in Kerala, Goa, Maharashtra, and Tamil Nadu house world-class facilities meeting international food safety and quality standards.\n\nFrom raw cashew nut (RCN) import for processing to the export of finished, graded kernels, India\'s cashew value chain is a model of agricultural transformation. GreenWings facilitates access to this ecosystem, connecting global buyers with quality-certified Indian cashew kernels suitable for snacking, confectionery, bakery, culinary, and food-service applications across every market tier.',
     keyBenefits: [

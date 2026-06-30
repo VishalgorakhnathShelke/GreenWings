@@ -12,7 +12,7 @@ export function HomePage() {
   return (
     <>
       <section id="home" className="relative min-h-screen flex items-center justify-center text-white overflow-hidden">
-        <img src="https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/ui-assets/farmers/serious_discussion_in_farm.png" alt="A diverse group of Indian farmers standing together in a field at sunrise" className="absolute inset-0 w-full h-full object-cover" />
+        <img src="https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/ui-assets/farmers/Farmers_in_group.png" alt="A diverse group of Indian farmers standing together in a field at sunrise" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-deep/60 to-deep/80" />
 
         <div className="relative z-10 text-center max-w-3xl mx-auto px-6">

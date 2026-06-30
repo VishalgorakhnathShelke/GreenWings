@@ -290,7 +290,7 @@ export const fruitsProducts: Product[] = [
     id: 'grapes',
     name: 'Grapes',
     slug: 'grapes',
-    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/grapes/grapes_1.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/grapes/grapes_1.jpg',
     overview:
       'India has emerged as one of the world\'s most dynamic grape-producing nations, with the states of Maharashtra, Karnataka, and Andhra Pradesh leading cultivation across diverse climatic zones. Indian table grapes are increasingly recognized in global markets for their crisp texture, natural sweetness, and adherence to stringent quality standards. The country\'s grape industry has undergone a remarkable transformation, adopting advanced trellising systems, drip irrigation, and integrated pest management protocols.\n\nThe Indian grape export sector has built a strong reputation in premium markets including the European Union, the United Kingdom, the Middle East, and Southeast Asia. Varieties such as Thompson Seedless and its color-mutant derivatives dominate export volumes, while specialty varieties like Flame Seedless and Crimson Seedless cater to growing demand for colored grapes. India\'s counter-seasonal availability relative to Southern Hemisphere producers provides a strategic advantage in Northern Hemisphere markets.\n\nGreenWings maintains partnerships with GAP-certified vineyards across Nashik, Sangli, and Bijapur — the heartland of India\'s grape belt. Our quality assurance program covers every stage from vineyard monitoring through pre-cooling, grading, sulfur dioxide pad application, and refrigerated container loading, ensuring grapes arrive in export destinations in optimal condition.',
     keyBenefits: [
@@ -724,7 +724,7 @@ export const fruitsProducts: Product[] = [
     id: 'banana',
     name: 'Banana',
     slug: 'banana',
-    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/banana/banana_1.jpg',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/banana/banana_1.png',
     overview:
       'India is the world\'s largest banana producer, accounting for approximately 26% of global output across a remarkable spectrum of varieties adapted to diverse climatic zones from the tropical south to the subtropical north. The country cultivates both dessert and cooking banana varieties, each serving distinct market segments and culinary traditions. Indian bananas are integral to the nation\'s food security framework and are increasingly making inroads into premium export markets.\n\nThe Indian banana sector has undergone significant modernization, with tissue-cultured planting material, fertigation systems, and precision farming techniques boosting yields and quality consistency. Export-focused production in Tamil Nadu, Maharashtra, and Gujarat now meets international phytosanitary standards, enabling access to markets in the Middle East, Central Asia, and Southeast Asia. The Cavendish subgroup varieties (Grand Naine and Robusta) dominate commercial export programs.\n\nGreenWings sources bananas from GAP-certified farms across India\'s premier banana-growing districts, maintaining rigorous quality control from harvest maturity assessment through ripening chamber management. Our cold chain logistics, including temperature-controlled reefer containers, ensure that bananas reach export destinations at the precise stage of ripeness for optimal shelf life and consumer appeal.',
     keyBenefits: [
@@ -1092,7 +1092,7 @@ export const fruitsProducts: Product[] = [
     id: 'papaya',
     name: 'Papaya',
     slug: 'papaya',
-    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/papaya/papaya_1.jpg',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/papaya/papaya_1.png',
     overview:
       'India is one of the world\'s leading papaya producers, cultivating this tropical fruit across diverse climatic zones from the southern peninsula to the Gangetic plains. Papaya\'s rapid growth cycle, continuous fruiting habit, and high nutritional value have made it an economically important crop for Indian farmers. The fruit is marketed both as fresh produce and as a source of the enzyme papain, which has significant industrial applications.\n\nIndian papayas are gaining recognition in international markets for their vibrant orange to red flesh color, sweet flavor, and rich nutrient profile. The country\'s research institutions have developed several improved varieties that offer better disease resistance, higher yield, and more uniform fruit quality. States like Andhra Pradesh, Karnataka, Maharashtra, and West Bengal lead commercial papaya production, with both solo-type and larger varieties available for different market segments.\n\nGreenWings works with papaya growers who implement integrated pest management, proper pruning, and systematic post-harvest protocols including careful handling, temperature management, and ethylene-sensitive packaging. Our supply chain expertise ensures that papayas reach export destinations with optimal ripeness and maximum shelf life.',
     keyBenefits: [
@@ -1684,7 +1684,7 @@ export const fruitsProducts: Product[] = [
     id: 'sweet-lime',
     name: 'Sweet Lime',
     slug: 'sweet-lime',
-    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/sweet-lime/sweet-lime_1.jpg',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/sweet-lime/sweet-lime_1.png',
     overview:
       'Sweet lime, known as Mosambi or Musambi in India, is one of the country\'s most commercially important citrus fruits, prized for its refreshing sweetness, high juice content, and year-round availability. India is among the world\'s largest producers of sweet lime, with cultivation spread across Maharashtra, Andhra Pradesh, Karnataka, and Tamil Nadu. The fruit occupies a unique position in India\'s beverage culture, being the primary ingredient in the ubiquitous fresh lime soda.\n\nSweet lime differs from its acidic citrus cousins in having significantly lower acidity, resulting in a naturally sweet flavor that requires no added sugar in most juice applications. This characteristic, combined with its high juice yield and pleasant pale yellow-green color, has made it indispensable in India\'s fresh juice industry. The country\'s sweet lime sector has benefited from improved cultivars developed by agricultural research institutions.\n\nGreenWings sources sweet limes from well-established orchards across India\'s premier citrus-growing districts, ensuring systematic quality control from harvest maturity assessment through degreening treatment, wax coating, and cold chain logistics. Our integrated supply chain management ensures that sweet limes reach export destinations with optimal sweetness and freshness.',
     keyBenefits: [
@@ -1820,7 +1820,7 @@ export const fruitsProducts: Product[] = [
     id: 'custard-apple',
     name: 'Custard Apple',
     slug: 'custard-apple',
-    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/custard-apple/custard-apple_1.jpg',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/custard-apple/custard-apple_1.png',
     overview:
       'Custard apple, known as Sitaphal in Hindi, is a distinctive tropical fruit cultivated extensively across India\'s warmer regions, from the coastal belts of Andhra Pradesh and Tamil Nadu to the plains of Uttar Pradesh and the foothills of the Himalayas in Uttarakhand. The fruit is prized for its remarkably sweet, creamy flesh that resembles custard in texture, with a complex flavor profile that combines notes of vanilla, pineapple, and banana.\n\nIndia is one of the world\'s largest custard apple producers, with the fruit playing an important role in both commercial horticulture and traditional agriforestry systems. The country\'s diverse climate supports multiple cultivated and wild varieties, each adapted to specific regional conditions. Custard apple cultivation requires relatively low inputs compared to many commercial fruits, making it an attractive option for smallholder farmers.\n\nGreenWings sources custard apples from established growing regions in Andhra Pradesh, Maharashtra, and Karnataka, implementing careful post-harvest protocols including maturity-based harvesting, gentle handling to avoid skin damage, and temperature management to maintain quality during transit to export destinations.',
     keyBenefits: [
