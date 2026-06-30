@@ -5,7 +5,7 @@ export const grainsProducts: Product[] = [
     id: 'wheat',
     name: 'Wheat',
     slug: 'wheat',
-    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/wheat/wheat_1.jpg',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/wheat/wheat_1.png',
     overview:
       'India is among the world\'s largest producers of wheat, cultivating this staple cereal across millions of hectares in the fertile Indo-Gangetic plains. Indian wheat is prized for its high protein content and excellent milling qualities, making it a cornerstone of both domestic food security and international commodity trade. The country\'s diverse agro-climatic zones enable the production of distinct wheat varieties, each tailored to regional preferences and end-use requirements.',
     keyBenefits: [
