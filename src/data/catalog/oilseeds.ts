@@ -440,7 +440,7 @@ export const oilseedsProducts: Product[] = [
     id: 'sunflower',
     name: 'Sunflower',
     slug: 'sunflower',
-    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/sunflower/sunflower_1.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/sunflower/sunflower_1.jpg',
     overview:
       'Sunflower is a commercially important oilseed crop in India, cultivated primarily for its high-quality edible oil rich in polyunsaturated fatty acids and Vitamin E. The crop has expanded significantly in Karnataka, Maharashtra, and Andhra Pradesh, supported by hybrids that offer strong yield potential and good oil recovery. GreenWings provides graded sunflower seed for oil extraction and connects buyers with refined sunflower oil supply programmes.\n\nIndian sunflower oil is positioned as a premium heart-healthy cooking medium with clear golden colour, light flavour, and excellent frying stability. Its favourable fatty acid profile — high in linoleic acid with a good balance of monounsaturates — appeals to health-conscious consumers across domestic and export markets. The solvent extraction industry efficiently processes sunflower seed into refined oil, with the resulting meal serving as a valuable protein source for livestock feed.\n\nSunflower cultivation benefits from short duration, drought tolerance, and good fit in multiple cropping systems. The development of improved hybrids with higher oil content and disease resistance continues to strengthen India\'s sunflower sector. GreenWings supports quality-focused procurement with specifications for oil content, seed cleanliness, moisture, and varietal purity.',
     keyBenefits: [
