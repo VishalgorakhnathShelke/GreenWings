@@ -585,7 +585,7 @@ export const oilseedsProducts: Product[] = [
     id: 'mustard',
     name: 'Mustard / Sarson',
     slug: 'mustard',
-    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/mustard/mustard_1.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/mustard/mustard_1.jpg',
     overview:
       'Mustard is India\'s most culturally significant oilseed crop, deeply embedded in the country\'s culinary traditions, agricultural heritage, and rural economy. Indian mustard oil — known as sarson ka tel — is the preferred cooking medium across northern, eastern, and central India, valued for its pungent flavour, golden colour, and perceived health benefits. GreenWings offers graded mustard seed for oil extraction, condiment manufacturing, and export-oriented supply programmes.\n\nIndia grows several mustard species including Indian mustard (Brassica juncea), yellow mustard (Sinapis alba), and black mustard (Brassica nigra), each serving distinct market segments. The extracted oil serves household cooking, food-service frying, traditional pickle making, and industrial applications, while mustard flour and whole seeds are key ingredients in condiments, sauces, and processed foods.\n\nThe Indian mustard sector benefits from strong domestic demand stability, well-established trading networks, and growing export interest in mustard seed, oil, and meal. GreenWings facilitates quality-focused procurement with attention to oil content, pungency levels, seed cleanliness, and varietal authenticity for buyers seeking reliable mustard supply.',
     keyBenefits: [
