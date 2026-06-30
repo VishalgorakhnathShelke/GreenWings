@@ -1,0 +1,7 @@
+assets
+components
+data
+hooks
+pages
+services
+stores

@@ -1,0 +1,63 @@
+{
+  "subtype_id": 11,
+  "crop_variety_id": 11,
+  "crop": "Mango",
+  "variety": "Mallika",
+  "images": [
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0011-mango-mallika-01-8068f651e9.jpg",
+      "source_url": "",
+      "title": "Bing: \"Mangifera indica\" Mango plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    },
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0011-mango-mallika-02-93bcf61f89.jpg",
+      "source_url": "",
+      "title": "Bing: \"Mangifera indica\" Mango plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    },
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0011-mango-mallika-03-48623f24ad.jpg",
+      "source_url": "",
+      "title": "Bing: \"Mangifera indica\" Mango plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    },
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0011-mango-mallika-04-d2a2e2db73.jpg",
+      "source_url": "",
+      "title": "Bing: \"Mangifera indica\" Mango plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    },
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0011-mango-mallika-05-e868ca5935.jpg",
+      "source_url": "",
+      "title": "Bing: \"Mangifera indica\" Mango plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "subtype_id": 16,
+  "crop_variety_id": 16,
+  "crop": "Grapes",
+  "variety": "Sharad Seedless",
+  "images": [
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0016-grapes-sharad-seedless-01-56b9aa96a2.jpg",
+      "source_url": "",
+      "title": "Bing: \"Vitis vinifera\" Grapes plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    },
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0016-grapes-sharad-seedless-02-5eaab553a7.jpg",
+      "source_url": "",
+      "title": "Bing: \"Vitis vinifera\" Grapes plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    },
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0016-grapes-sharad-seedless-03-209c514eb0.jpg",
+      "source_url": "",
+      "title": "Bing: \"Vitis vinifera\" Grapes plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    },
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0016-grapes-sharad-seedless-04-44f48107b7.jpg",
+      "source_url": "",
+      "title": "Bing: \"Vitis vinifera\" Grapes plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    },
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0016-grapes-sharad-seedless-05-931e94dd53.jpg",
+      "source_url": "",
+      "title": "Bing: \"Vitis vinifera\" Grapes plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    }
+  ]
+}

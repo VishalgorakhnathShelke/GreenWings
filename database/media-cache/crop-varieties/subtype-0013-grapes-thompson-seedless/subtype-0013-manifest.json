@@ -1,0 +1,19 @@
+{
+  "subtype_id": 13,
+  "crop_variety_id": 13,
+  "crop": "Grapes",
+  "variety": "Thompson Seedless",
+  "images": [
+    {
+      "public_url": "https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-varieties/subtype-0013-grapes-thompson-seedless-01-aaf3edea6b.jpg",
+      "source_url": "",
+      "title": "Bing: \"Vitis vinifera\" Grapes plant",
+      "license": "Unknown (Bing Search)",
+      "artist": "",
+      "width": "800",
+      "height": "600",
+      "score": "72",
+      "source_name": "bing"
+    }
+  ]
+}
