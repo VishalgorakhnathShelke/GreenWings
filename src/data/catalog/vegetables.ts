@@ -5,7 +5,7 @@ export const vegetablesProducts: Product[] = [
     id: 'onion',
     name: 'Onion',
     slug: 'onion',
-    heroImage: '/assets/greenwings-hero.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/onion/onion_1.jpg',
     overview:
       'Onion is India\'s most commercially significant fresh vegetable crop, serving as an indispensable ingredient in virtually every Indian household and food service establishment. India ranks among the world\'s largest onion producers, with output spanning multiple agro-climatic zones that enable year-round supply. The crop\'s economic importance is such that price fluctuations in the onion market directly influence consumer sentiment and government trade policy.\n\nIndian onion cultivation benefits from well-established research and breeding programs at IARI, ICAR-DWR, and state agricultural universities, which have developed high-yielding, disease-resistant varieties adapted to diverse growing conditions. The country produces both red and light-red onion types, with the Nasik Red and Bangalore Rose categories recognized internationally for their pungent flavor and extended shelf life. These attributes make Indian onions particularly competitive in global trade.\n\nThe organised retail sector and export market for Indian onions have expanded significantly, driven by demand from South Asia, the Middle East, and Southeast Asia. Premium graded onions meeting APEDA specifications are exported by sea in reefer containers, with well-developed cold chain and packhouse infrastructure at major production hubs including Nashik, Bengaluru, and Pune.',
     keyBenefits: [
@@ -189,7 +189,7 @@ export const vegetablesProducts: Product[] = [
     id: 'tomato',
     name: 'Tomato',
     slug: 'tomato',
-    heroImage: '/assets/greenwings-hero.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/tomato/tomato_1.jpg',
     overview:
       'Tomato is one of India\'s most economically important vegetable crops, cultivated across diverse agro-climatic zones for fresh market sales, processing, and export. India ranks among the top global tomato producers, with the crop contributing significantly to both farm incomes and nutritional security. The versatility of tomato — consumed raw, cooked, pureed, and processed — ensures robust demand across all market segments.\n\nThe Indian tomato sector has benefited from decades of systematic breeding work at IARI, ICAR-IIHR, and state agricultural universities, producing varieties optimized for specific end-uses including fresh table tomatoes, processing-grade tomatoes for sauce and paste, and cherry tomatoes for premium retail. This varietal diversity enables India to serve both high-volume domestic markets and niche export opportunities.\n\nOrganised retail chains and food processing companies are increasingly sourcing tomatoes through contract farming arrangements, ensuring consistent quality, traceability, and supply reliability. Indian tomatoes are exported to neighboring South Asian markets, the Middle East, and increasingly to premium segments in Europe and North America where Indian greenhouse-grown cherry and vine tomatoes command attractive prices.',
     keyBenefits: [
@@ -373,7 +373,7 @@ export const vegetablesProducts: Product[] = [
     id: 'potato',
     name: 'Potato',
     slug: 'potato',
-    heroImage: '/assets/greenwings-hero.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/potato/potato_1.jpg',
     overview:
       'Potato is India\'s third most important food crop after rice and wheat, and the country ranks among the world\'s top potato producers. Grown predominantly as a rabi crop during the cool winter months, Indian potato cultivation is concentrated in the Indo-Gangetic plains and the high-altitude plateaus, where the cool climate and fertile alluvial soils provide ideal growing conditions.\n\nIndia has developed a robust potato research infrastructure centered on CPRI (Central Potato Research Institute), which has released numerous varieties optimized for different end-uses including table consumption, chip and fry processing, and starch extraction. The processing-grade potato market has expanded rapidly, driven by the growth of quick-service restaurant chains and the organized snack food industry in India.\n\nIndian seed potato production is well-organized through a network of government and private seed agencies, ensuring availability of disease-free seed tubers for commercial cultivation. The potato cold storage infrastructure across northern India is among the most developed for any Indian crop, enabling year-round supply and price stabilization.',
     keyBenefits: [
@@ -534,7 +534,7 @@ export const vegetablesProducts: Product[] = [
     id: 'cauliflower',
     name: 'Cauliflower',
     slug: 'cauliflower',
-    heroImage: '/assets/greenwings-hero.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/cauliflower/cauliflower_1.jpg',
     overview:
       'Cauliflower is a premium cool-season vegetable crop that holds a significant position in India\'s fresh vegetable sector. India is among the world\'s largest cauliflower producers, with cultivation concentrated in the northern plains, hills, and parts of peninsular India during the winter months. The crop\'s white, compact curds are a staple in North Indian cuisine and an increasingly popular ingredient in global health-conscious and low-carbohydrate diets.\n\nIndian cauliflower breeding programs at IARI and ICAR-IIHR have developed varieties specifically adapted to Indian agro-climatic conditions, including early, mid-season, and late maturity types that ensure extended market availability from September through March. This varietal range enables continuous supply to major urban markets and export channels.\n\nThe cauliflower export market from India has grown steadily, with shipments to the Middle East, Southeast Asia, and Europe. Indian cauliflower is particularly valued in Gulf countries during the winter season when it provides a premium fresh vegetable option. Organised retail chains in India have also expanded cauliflower procurement, offering pre-trimmed and packaged curds to urban consumers.',
     keyBenefits: [
@@ -695,7 +695,7 @@ export const vegetablesProducts: Product[] = [
     id: 'brinjal',
     name: 'Brinjal / Eggplant',
     slug: 'brinjal',
-    heroImage: '/assets/greenwings-hero.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/brinjal/brinjal_1.jpg',
     overview:
       'Brinjal, also known as eggplant or aubergine, is one of India\'s most extensively cultivated vegetable crops, cherished for its culinary versatility and deep roots in regional Indian cuisines. From the smoky baingan bharta of Punjab to the classic begun bhaja of Bengal and the spiced kathirikai kuzhambu of Tamil Nadu, brinjal is woven into the fabric of Indian food culture.\n\nIndia is the world\'s largest brinjal producer, with cultivation spanning all major states and agro-climatic zones. The crop exhibits remarkable diversity in fruit size, shape, and color, ranging from long slender purple types to small round green varieties and large oval white types. Indian agricultural research institutions have developed numerous high-yielding, disease-resistant varieties that maintain the authentic flavor profiles demanded by regional cuisines.\n\nThe brinjal market in India operates year-round, with peak supplies during the cooler months. Organised retail chains and modern food service companies are increasingly sourcing graded, pre-packed brinjal with quality specifications. The export market for Indian brinjal, while smaller than domestic demand, is growing in South Asian and Middle Eastern ethnic food channels.',
     keyBenefits: [
@@ -856,7 +856,7 @@ export const vegetablesProducts: Product[] = [
     id: 'okra',
     name: 'Okra / Bhindi',
     slug: 'okra',
-    heroImage: '/assets/greenwings-hero.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/okra/okra_1.jpg',
     overview:
       'Okra, universally known as bhindi in India, is one of the country\'s most commercially significant vegetable crops, with near-universal household consumption across all regions. India is the world\'s largest okra producer, cultivating the crop across diverse agro-climatic zones that enable year-round production and supply.\n\nThe crop\'s relatively short duration of 50–65 days and high yield potential make it attractive for farmers seeking quick returns. Indian okra breeding programs at IARI, ICAR-IIHR, and state universities have developed high-yielding, virus-resistant varieties that produce tender, dark green pods meeting the quality expectations of both traditional and modern market channels. The crop is also increasingly cultivated under protected cultivation for premium export-grade okra.\n\nIndian okra has established a strong export presence, particularly in markets serving South Asian diaspora communities where bhindi is a dietary staple. Premium tender okra meeting strict length and tenderness specifications is exported by air to the Middle East, UK, USA, and Southeast Asia, with well-developed grading and cold chain infrastructure at major production hubs.',
     keyBenefits: [
@@ -1017,7 +1017,7 @@ export const vegetablesProducts: Product[] = [
     id: 'capsicum',
     name: 'Capsicum / Bell Pepper',
     slug: 'capsicum',
-    heroImage: '/assets/greenwings-hero.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/capsicum/capsicum_1.jpg',
     overview:
       'Capsicum, known as bell pepper in international markets and shimla mirch in northern India, is a premium vegetable crop with rapidly growing demand in India\'s organised retail and food service sectors. The crop produces large, blocky, thick-fleshed fruits in a range of colors — green, red, yellow, and orange — that are valued equally for their culinary versatility and visual appeal.\n\nIndia\'s capsicum production has expanded significantly with the adoption of greenhouse and polyhouse cultivation, which enables year-round production of premium-quality fruits meeting international grading standards. Traditional open-field cultivation continues to serve the domestic mass market, while protected cultivation targets the export and organised retail segments. Major production hubs include Karnataka, Maharashtra, and Himachal Pradesh.\n\nIndian capsicum exports have grown substantially, with greenhouse-grown colored bell peppers commanding premium prices in the Middle East, Southeast Asia, and Europe. The crop\'s high per-unit economic value and relatively short crop duration of 90–120 days make it attractive for protected cultivation entrepreneurs and export-oriented farmers.',
     keyBenefits: [
@@ -1178,7 +1178,7 @@ export const vegetablesProducts: Product[] = [
     id: 'green-chillies',
     name: 'Green Chillies',
     slug: 'green-chillies',
-    heroImage: '/assets/greenwings-hero.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/green-chillies/green-chillies_1.jpg',
     overview:
       'Green chillies are arguably the most essential fresh vegetable in Indian cuisine, present in virtually every savory preparation across the country\'s extraordinarily diverse regional food traditions. India is the world\'s largest producer and consumer of green chillies, with the crop cultivated in every state and available in markets throughout the year.\n\nThe Indian green chilli sector encompasses an impressive diversity of varieties, from the intensely pungent small chillies favored in eastern India to the large, mild, fleshy types preferred in Kashmir and certain western Indian preparations. Agricultural research institutions and private seed companies have developed numerous high-yielding, virus-resistant varieties that maintain the pungency levels and flavor profiles demanded by regional culinary traditions.\n\nGreen chillies are among the most traded fresh vegetables in India, with significant inter-state movement to balance regional supply and demand. The export market for Indian green chillies is growing, driven by South Asian diaspora communities worldwide and the increasing global popularity of Indian cuisine. Premium graded green chillies meeting export specifications are shipped by air to the Middle East, Southeast Asia, Europe, and North America.',
     keyBenefits: [

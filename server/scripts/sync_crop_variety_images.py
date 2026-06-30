@@ -1,35 +1,39 @@
-"""sync_crop_variety_images.py
+"""sync_crop_variety_images.py  –  v4  (DuckDuckGo fallback, local storage)
 
-Downloads crop variety images by precisely targeting the species/variety
-on Wikimedia Commons and Wikidata, then applies relevance filters before
-uploading to Cloudflare R2 and saving public URLs to SQLite.
+Search strategy
+───────────────
+1. Wikimedia Commons / Wikidata  (free, no quota)
+   • Wikidata P18 → canonical species image
+   • Commons category crawl → editorial photos
+   Only used as a *fast pre-check*: if we get enough good images here
+   we skip Google entirely and save quota.
 
-Search strategy (in order of precision):
-  1. Wikidata SPARQL  – look up exact QID for scientific name or variety name,
-                        then pull P18 (image) AND P4765 (Commons category).
-  2. Commons category – crawl the matched Commons category for the species /
-                        variety and collect real photos.
-  3. Commons fulltext – targeted search scoped to the scientific name /
-                        variety name inside File: namespace.
-  4. Google PSE       – fallback if GOOGLE_PSE_API_KEY + GOOGLE_PSE_CX set.
-  5. Bing / icrawler  – last-resort (requires icrawler package).
+2. DuckDuckGo Search
+   • Free tier, no quotas.
 
-All candidates pass through:
-  • Negative-keyword hard rejection (logo, cartoon, recipe, …)
+3. Vision verification  (Claude Haiku, optional)
+   • Downloaded after Google returns URLs — no extra searches needed
+   • Confirms the image actually shows the target crop/plant
+   • Set ANTHROPIC_API_KEY in .env to enable
+
+All candidates also pass through:
+  • Negative-keyword title filter
   • Min-resolution guard
   • Duplicate-URL deduplication
-  • Relevance scoring (0-100) against species/variety/common name tokens
-  • Mandatory minimum score threshold before acceptance
+  • Metadata relevance score (0-100)
 
-Modes:
-  --dry-run         Score and log candidates; no download/upload/DB change.
-  --review          Write candidates to a JSON+CSV manifest for human approval.
-  --apply-approved  Upload manifest entries marked approved=true, then update DB.
+Modes
+─────
+  --dry-run          Score and log; no download/upload/DB change
+  --review           Write manifest for human approval
+  --apply-approved   Upload approved manifest entries → DB
+  --skip-vision      Skip AI vision check
 """
 
 from __future__ import annotations
 
 import argparse
+import base64
 import csv
 import hashlib
 import json
@@ -39,57 +43,58 @@ import re
 import sqlite3
 import time
 from collections import defaultdict
+from datetime import date
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote, urlencode
+from urllib.parse import quote
+from duckduckgo_search import DDGS
 from urllib.request import Request, urlopen
 
 # ---------------------------------------------------------------------------
-# Constants
+# Paths & constants
 # ---------------------------------------------------------------------------
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_DB_PATH = ROOT / "database" / "greenwings.db"
-DEFAULT_CACHE_DIR = ROOT / "database" / "media-cache" / "crop-varieties"
-DEFAULT_REVIEW_DIR = ROOT / "database" / "media-cache" / "review"
+DEFAULT_DB_PATH   = ROOT / "database" / "greenwings.db"
+DEFAULT_CACHE_DIR = ROOT / "public" / "images" / "crop-varieties"
+DEFAULT_REVIEW_DIR= ROOT / "public" / "images" / "crop-varieties" / "review"
+ANTHROPIC_API_URL    = "https://api.anthropic.com/v1/messages"
 
-COMMONS_API_URL = "https://commons.wikimedia.org/w/api.php"
-WIKIDATA_API_URL = "https://www.wikidata.org/w/api.php"
-WIKIDATA_SPARQL_URL = "https://query.wikidata.org/sparql"
+USER_AGENT       = "GreenWingsImageSync/4.0 (agricultural data maintenance)"
+SUPPORTED_MIMES  = {"image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp"}
 
-USER_AGENT = "GreenWingsImageSync/3.0 (agricultural data maintenance)"
-SUPPORTED_MIME_TYPES = {"image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp"}
+VISION_MODEL      = "claude-haiku-4-5-20251001"
+VISION_MAX_TOKENS = 120
+VISION_THUMB_W    = 400
 
-# Candidates below this score are always rejected.
-MIN_RELEVANCE_SCORE = 35
+MIN_RELEVANCE_SCORE  = 35
 
-# Hard-reject any candidate whose title contains one of these tokens.
+# Hard-reject titles containing any of these.
 NEGATIVE_KEYWORDS = {
-    "logo", "icon", "drawing", "cartoon", "recipe", "packaged", "packaging",
-    "market price", "price chart", "seed packet", "fertilizer", "nursery ad",
-    "advertisement", "clipart", "vector", "illustration", "isolated on white",
-    "white background", "sticker", "label", "brand", "map", "flag",
-    "coat of arms", "diagram", "chart", "infographic", "symbol",
+    "logo","icon","drawing","cartoon","recipe","packaged","packaging",
+    "market price","price chart","seed packet","fertilizer","nursery ad",
+    "advertisement","clipart","vector","illustration","isolated on white",
+    "white background","sticker","label","brand","map","flag",
+    "coat of arms","diagram","infographic","symbol","portrait","fashion",
+    "model","lifestyle","person","people","woman","man","girl","boy",
 }
 
-# Words that indicate a photo of the actual plant/fruit (raise score).
-PHOTO_POSITIVE_KEYWORDS = {
-    "fruit", "plant", "tree", "crop", "field", "harvest", "flower",
-    "leaf", "leaves", "branch", "orchard", "farm", "grove", "seed",
-    "seedling", "blossom", "berry", "grain", "pod", "root", "tuber",
+PHOTO_POSITIVE = {
+    "fruit","plant","tree","crop","field","harvest","flower",
+    "leaf","leaves","branch","orchard","farm","grove","seed",
+    "seedling","blossom","berry","grain","pod","root","tuber",
 }
 
-# Crop-type context words to append to broad searches.
 CROP_TYPE_HINTS: dict[str, str] = {
-    "fruit": "fruit plant",
+    "fruit":     "fruit plant",
     "vegetable": "vegetable plant",
-    "grain": "grain crop field",
-    "legume": "legume crop",
-    "tree": "tree orchard",
-    "herb": "herb plant",
-    "spice": "spice plant",
-    "nut": "nut tree",
-    "root": "root tuber crop",
+    "grain":     "grain crop field",
+    "legume":    "legume crop",
+    "tree":      "tree orchard",
+    "herb":      "herb plant",
+    "spice":     "spice plant",
+    "nut":       "nut tree",
+    "root":      "root tuber crop",
 }
 
 
@@ -115,8 +120,8 @@ class VarietyRecord:
 @dataclass
 class ImageCandidate:
     title: str
-    source_url: str       # Attribution / wiki page URL
-    file_url: str         # Direct downloadable URL
+    source_url: str
+    file_url: str
     thumb_url: str
     mime_type: str
     width: int
@@ -124,8 +129,7 @@ class ImageCandidate:
     license_name: str
     artist: str
     credit: str
-    source_name: str      # "wikidata_p18", "commons_category", "commons_search",
-                          # "google", "bing"
+    source_name: str      # "wikidata_p18"|"commons_category"|"google"
     relevance_score: int = 0
     rejection_reason: str = ""
 
@@ -140,13 +144,12 @@ def log(msg: str, indent: int = 0) -> None:
 
 
 # ---------------------------------------------------------------------------
-# Utility helpers
+# Utilities
 # ---------------------------------------------------------------------------
 
 
 def clean_slug(value: str) -> str:
-    slug = re.sub(r"[^a-z0-9]+", "-", value.lower())
-    return slug.strip("-")[:90] or "image"
+    return (re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")[:90]) or "image"
 
 
 def load_dotenv(path: Path) -> None:
@@ -156,25 +159,22 @@ def load_dotenv(path: Path) -> None:
         line = raw.strip()
         if not line or line.startswith("#") or "=" not in line:
             continue
-        key, value = line.split("=", 1)
-        key = key.strip()
-        value = value.strip().strip('"').strip("'")
-        os.environ.setdefault(key, value)
+        k, v = line.split("=", 1)
+        os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
 
 
 def parse_existing_urls(value: str | None) -> list[str]:
     if not value:
         return []
-    text = value.strip()
     try:
-        parsed = json.loads(text)
-        if isinstance(parsed, list):
-            return [str(i) for i in parsed if str(i).strip()]
-        if isinstance(parsed, str) and parsed.strip():
-            return [parsed.strip()]
+        p = json.loads(value.strip())
+        if isinstance(p, list):
+            return [str(i) for i in p if str(i).strip()]
+        if isinstance(p, str) and p.strip():
+            return [p.strip()]
     except json.JSONDecodeError:
         pass
-    return [p.strip() for p in re.split(r"[\n,;]+", text) if p.strip()]
+    return [x.strip() for x in re.split(r"[\n,;]+", value) if x.strip()]
 
 
 def html_text(value: Any) -> str:
@@ -188,26 +188,31 @@ def http_json(
     params: dict[str, Any],
     timeout: int = 30,
     extra_headers: dict[str, str] | None = None,
+    method: str = "GET",
+    body: bytes | None = None,
 ) -> dict[str, Any]:
-    request_url = f"{url}?{urlencode(params)}"
+    request_url = f"{url}?{urlencode(params)}" if params else url
     headers = {"User-Agent": USER_AGENT, "Accept": "application/json"}
     if extra_headers:
         headers.update(extra_headers)
-    req = Request(request_url, headers=headers)
+    req = Request(request_url, headers=headers, data=body, method=method)
     with urlopen(req, timeout=timeout) as resp:
         return json.loads(resp.read().decode("utf-8"))
 
 
-def extension_for(candidate: ImageCandidate) -> str:
-    return (
-        SUPPORTED_MIME_TYPES.get(candidate.mime_type)
-        or mimetypes.guess_extension(candidate.mime_type)
-        or ".jpg"
-    )
+def extension_for(c: ImageCandidate) -> str:
+    return SUPPORTED_MIMES.get(c.mime_type) or mimetypes.guess_extension(c.mime_type) or ".jpg"
 
 
 def _tokenise(text: str) -> set[str]:
     return set(re.sub(r"[^a-z0-9 ]+", " ", text.lower()).split())
+
+
+def _crop_hint(record: VarietyRecord) -> str:
+    cat = (record.category_name or "").lower()
+    return next((v for k, v in CROP_TYPE_HINTS.items() if k in cat), "plant crop")
+
+
 
 
 # ---------------------------------------------------------------------------
@@ -215,341 +220,302 @@ def _tokenise(text: str) -> set[str]:
 # ---------------------------------------------------------------------------
 
 
-def score_candidate(candidate: ImageCandidate, record: VarietyRecord) -> tuple[int, str]:
-    """
-    Return (score 0-100, rejection_reason).
-    Empty rejection_reason means the candidate passed all hard checks.
-    """
-    title_lower = (candidate.title or "").lower()
+def score_candidate(c: ImageCandidate, record: VarietyRecord) -> tuple[int, str]:
+    """Return (score 0-100, rejection_reason). Empty reason = passed."""
+    title = (c.title or "").lower()
 
-    # ── Hard rejections ────────────────────────────────────────────────────
+    # Whole-word match — avoids 'man' hitting 'Mangifera', 'woman' hitting 'Romania', etc.
+    title_words = set(re.sub(r"[^a-z0-9 ]+", " ", title).split())
     for neg in NEGATIVE_KEYWORDS:
-        if neg in title_lower:
-            return 0, f"negative keyword '{neg}' in title"
+        neg_words = neg.split()
+        if len(neg_words) == 1:
+            if neg_words[0] in title_words:
+                return 0, f"negative keyword '{neg}' in title"
+        else:
+            if neg in title:   # multi-word phrases: substring is fine
+                return 0, f"negative keyword '{neg}' in title"
 
-    if candidate.width < 1 or candidate.height < 1:
+    if c.width < 1 or c.height < 1:
         return 0, "unknown resolution"
+    if c.width < 300 or c.height < 300:
+        return 0, f"too small ({c.width}×{c.height})"
+    if c.mime_type not in SUPPORTED_MIMES:
+        return 0, f"unsupported mime '{c.mime_type}'"
 
-    if candidate.width < 300 or candidate.height < 300:
-        return 0, f"too small ({candidate.width}×{candidate.height})"
-
-    if candidate.mime_type not in SUPPORTED_MIME_TYPES:
-        return 0, f"unsupported mime '{candidate.mime_type}'"
-
-    # ── Positive scoring ───────────────────────────────────────────────────
     score = 0
+    sci_toks  = _tokenise(record.scientific_name or "")
+    com_toks  = _tokenise(record.common_name)
+    var_toks  = _tokenise(re.sub(r"\([^)]*\)", "", record.variety_name))
+    t_toks    = _tokenise(title)
 
-    sci_tokens = _tokenise(record.scientific_name or "")
-    common_tokens = _tokenise(record.common_name)
-    variety_tokens = _tokenise(re.sub(r"\([^)]*\)", "", record.variety_name))
-    title_tokens = _tokenise(title_lower)
-
-    # Scientific name match in title (+40) — strongest signal
-    sci_words = [t for t in sci_tokens if len(t) > 3]
-    sci_matches = sum(1 for t in sci_words if t in title_lower)
+    sci_words = [t for t in sci_toks if len(t) > 3]
     if sci_words:
-        score += int(40 * sci_matches / len(sci_words))
+        score += int(40 * sum(1 for t in sci_words if t in title) / len(sci_words))
 
-    # Common name match in title (+25)
-    common_words = [t for t in common_tokens if len(t) > 3]
-    if common_words and any(t in title_lower for t in common_words):
+    com_words = [t for t in com_toks if len(t) > 3]
+    if com_words and any(t in title for t in com_words):
         score += 25
 
-    # Variety name match in title (+20)
-    variety_words = [t for t in variety_tokens if len(t) > 3]
-    variety_matches = [t for t in variety_words if t in title_tokens]
-    score += min(20, len(variety_matches) * 10)
+    var_words = [t for t in var_toks if len(t) > 3]
+    score += min(20, sum(1 for t in var_words if t in t_toks) * 10)
 
-    # Photo-type keyword bonus (+5)
-    if any(kw in title_lower for kw in PHOTO_POSITIVE_KEYWORDS):
+    if any(kw in title for kw in PHOTO_POSITIVE):
         score += 5
-
-    # Trusted source bonus (+10)
-    if candidate.source_name in ("wikidata_p18", "commons_category", "commons_search"):
+    if c.source_name in ("wikidata_p18", "commons_category"):
         score += 10
-
-    # Open license bonus (+5)
-    lic = (candidate.license_name or "").lower()
+    lic = (c.license_name or "").lower()
     if "cc" in lic or "public domain" in lic:
         score += 5
-
-    # Resolution bonus (+5)
-    if candidate.width >= 1200 and candidate.height >= 800:
+    if c.width >= 1200 and c.height >= 800:
         score += 5
-    elif candidate.width >= 600:
+    elif c.width >= 600:
         score += 2
 
     return min(score, 100), ""
 
 
 # ---------------------------------------------------------------------------
-# Commons helpers
+# Vision verification  (Claude API — optional)
+# ---------------------------------------------------------------------------
+
+
+def _fetch_bytes(url: str, max_bytes: int = 3 * 1024 * 1024) -> tuple[bytes, str]:
+    if url.startswith("file://"):
+        p = Path(url[7:])
+        return p.read_bytes(), mimetypes.guess_type(str(p))[0] or "image/jpeg"
+    req = Request(url, headers={"User-Agent": USER_AGENT})
+    with urlopen(req, timeout=30) as resp:
+        ct = resp.headers.get("Content-Type", "image/jpeg").split(";")[0].strip()
+        buf, total = [], 0
+        while chunk := resp.read(65536):
+            total += len(chunk)
+            if total > max_bytes:
+                raise ValueError("image too large")
+            buf.append(chunk)
+    return b"".join(buf), ct
+
+
+def _resize(data: bytes, max_w: int) -> tuple[bytes, str]:
+    try:
+        from PIL import Image
+        import io
+        img = Image.open(io.BytesIO(data))
+        if img.width > max_w:
+            img = img.resize((max_w, max(1, int(img.height * max_w / img.width))), Image.LANCZOS)
+        out = io.BytesIO()
+        fmt = img.format if img.format in ("JPEG", "PNG", "WEBP") else "JPEG"
+        img.save(out, format=fmt)
+        return out.getvalue(), f"image/{fmt.lower()}"
+    except Exception:
+        return data, "image/jpeg"
+
+
+def vision_verify(c: ImageCandidate, record: VarietyRecord) -> tuple[bool, str]:
+    api_key = os.environ.get("ANTHROPIC_API_KEY", "").strip()
+    if not api_key:
+        return True, "skipped (no ANTHROPIC_API_KEY)"
+
+    img_url = c.thumb_url or c.file_url
+    if not img_url:
+        return False, "no image URL"
+
+    try:
+        raw, mime = _fetch_bytes(img_url)
+        img_b, mime = _resize(raw, VISION_THUMB_W)
+    except Exception as exc:
+        try:
+            raw, mime = _fetch_bytes(c.file_url)
+            img_b, mime = _resize(raw, VISION_THUMB_W)
+        except Exception as exc2:
+            return True, f"skipped (download error: {exc2})"
+
+    if mime not in SUPPORTED_MIMES:
+        mime = "image/jpeg"
+
+    b64 = base64.standard_b64encode(img_b).decode()
+    sci  = f" ({record.scientific_name})" if record.scientific_name else ""
+    prompt = (
+        f"You are a strict agricultural image verifier.\n"
+        f"Target crop: {record.common_name}{sci}, variety: {record.variety_name}.\n\n"
+        f"Answer ONLY:\n"
+        f"YES  – image clearly shows the {record.common_name} plant, fruit, tree, "
+        f"leaves, flower or harvest.\n"
+        f"NO: <short reason>  – if it shows a person, logo, wrong crop, packaged "
+        f"product, recipe, or anything else.\n"
+        f"Your answer:"
+    )
+    payload = {
+        "model": VISION_MODEL,
+        "max_tokens": VISION_MAX_TOKENS,
+        "messages": [{
+            "role": "user",
+            "content": [
+                {"type": "image", "source": {"type": "base64", "media_type": mime, "data": b64}},
+                {"type": "text",  "text": prompt},
+            ],
+        }],
+    }
+    try:
+        req = Request(
+            ANTHROPIC_API_URL,
+            data=json.dumps(payload).encode(),
+            headers={
+                "x-api-key": api_key,
+                "anthropic-version": "2023-06-01",
+                "content-type": "application/json",
+            },
+            method="POST",
+        )
+        with urlopen(req, timeout=45) as resp:
+            result = json.loads(resp.read())
+        answer = result.get("content", [{}])[0].get("text", "").strip()
+        log(f"  [Vision] {answer!r}", 1)
+        if answer.upper().startswith("YES"):
+            return True, answer
+        reason = answer[3:].strip(" :-") if len(answer) > 3 else "not the target crop"
+        return False, reason
+    except Exception as exc:
+        log(f"  [Vision] API error: {exc} — allowing through", 1)
+        return True, f"skipped (API error: {exc})"
+
+
+# ---------------------------------------------------------------------------
+# Wikimedia helpers  (free pre-check, no quota)
 # ---------------------------------------------------------------------------
 
 
 def _commons_file_info(file_title: str) -> dict[str, Any]:
-    """
-    Fetch full image metadata from Wikimedia Commons for one File: page.
-    Returns dict with keys: url, thumb_url, width, height, mime,
-    license, artist, credit.  Returns {} on any error.
-    """
     if not file_title.startswith("File:"):
         file_title = f"File:{file_title}"
     try:
-        data = http_json(
-            COMMONS_API_URL,
-            {
-                "action": "query",
-                "format": "json",
-                "prop": "imageinfo",
-                "titles": file_title,
-                "iiprop": "url|size|mime|extmetadata",
-                "iiurlwidth": 1200,
-            },
-        )
+        data = http_json(COMMONS_API_URL, {
+            "action": "query", "format": "json", "prop": "imageinfo",
+            "titles": file_title, "iiprop": "url|size|mime|extmetadata", "iiurlwidth": 1200,
+        })
         pages = data.get("query", {}).get("pages", {})
-        page = next(iter(pages.values()), {})
-        ii = (page.get("imageinfo") or [{}])[0]
+        ii = (next(iter(pages.values()), {}).get("imageinfo") or [{}])[0]
         meta = ii.get("extmetadata", {})
         return {
-            "url": ii.get("url", ""),
+            "url":       ii.get("url", ""),
             "thumb_url": ii.get("thumburl", ""),
-            "width": ii.get("width", 0),
-            "height": ii.get("height", 0),
-            "mime": ii.get("mime", "image/jpeg"),
-            "license": html_text(meta.get("LicenseShortName", {}))
-                       or html_text(meta.get("License", {})),
-            "artist": html_text(meta.get("Artist", {})),
-            "credit": html_text(meta.get("Credit", {})),
+            "width":     ii.get("width", 0),
+            "height":    ii.get("height", 0),
+            "mime":      ii.get("mime", "image/jpeg"),
+            "license":   html_text(meta.get("LicenseShortName", {})) or html_text(meta.get("License", {})),
+            "artist":    html_text(meta.get("Artist", {})),
+            "credit":    html_text(meta.get("Credit", {})),
         }
     except Exception:
         return {}
 
 
-def _file_title_to_candidate(
-    file_title: str,
-    source_url: str,
-    source_name: str,
-) -> ImageCandidate | None:
-    """Convert a Commons File: title into a full ImageCandidate, or None on failure."""
-    info = _commons_file_info(file_title)
+def _file_to_candidate(title: str, source_url: str, source_name: str) -> ImageCandidate | None:
+    info = _commons_file_info(title)
     if not info.get("url"):
         return None
     return ImageCandidate(
-        title=file_title,
-        source_url=source_url,
-        file_url=info["url"],
-        thumb_url=info.get("thumb_url", ""),
-        mime_type=info.get("mime", "image/jpeg"),
-        width=info.get("width", 0),
-        height=info.get("height", 0),
-        license_name=info.get("license", ""),
-        artist=info.get("artist", ""),
-        credit=info.get("credit", ""),
-        source_name=source_name,
+        title=title, source_url=source_url, file_url=info["url"],
+        thumb_url=info.get("thumb_url", ""), mime_type=info.get("mime", "image/jpeg"),
+        width=info.get("width", 0), height=info.get("height", 0),
+        license_name=info.get("license", ""), artist=info.get("artist", ""),
+        credit=info.get("credit", ""), source_name=source_name,
     )
 
 
-# ---------------------------------------------------------------------------
-# Source 1 – Wikidata SPARQL: find the exact QID for the species/variety,
-#            then pull P18 (image) and P4765 (Commons category).
-# ---------------------------------------------------------------------------
-
-
-def _wikidata_lookup(record: VarietyRecord) -> tuple[str, str, list[str]]:
+def _wikidata_p18_and_cat(record: VarietyRecord) -> tuple[list[ImageCandidate], str]:
     """
-    Look up the best Wikidata QID for this crop variety via SPARQL.
-
-    Strategy (tried in order):
-      a) Exact scientific name label match.
-      b) Variety name label match narrowed by "taxon" or "cultivar".
-      c) Common name label match.
-
-    Returns (qid, commons_category, [p18_filenames]).
-    All values are empty / empty-list if nothing found.
+    Look up the Wikidata entity for the species and return
+    (P18 image candidates, commons category name).
+    Uses label search API — no SPARQL needed.
     """
-    def sparql(query: str) -> list[dict[str, Any]]:
+    def label_search(q: str) -> list[dict[str, Any]]:
         try:
-            data = http_json(
-                WIKIDATA_SPARQL_URL,
-                {"query": query, "format": "json"},
-                extra_headers={"Accept": "application/sparql-results+json"},
-            )
-            return data.get("results", {}).get("bindings", [])
-        except Exception as exc:
-            log(f"  [Wikidata SPARQL] error: {exc}", 1)
-            return []
-
-    def label_search(label: str) -> list[dict[str, Any]]:
-        """Use Wikidata label search API (faster than SPARQL for exact names)."""
-        try:
-            data = http_json(
-                WIKIDATA_API_URL,
-                {
-                    "action": "wbsearchentities",
-                    "format": "json",
-                    "language": "en",
-                    "type": "item",
-                    "limit": 10,
-                    "search": label,
-                },
-            )
-            return data.get("search", [])
+            return http_json(WIKIDATA_API_URL, {
+                "action": "wbsearchentities", "format": "json",
+                "language": "en", "type": "item", "limit": 8, "search": q,
+            }).get("search", [])
         except Exception:
             return []
 
-    def get_p18_and_category(qid: str) -> tuple[str, list[str]]:
-        """Given a QID, return (commons_category, [p18_image_filenames])."""
+    def p18_cat(qid: str) -> tuple[str, list[str]]:
         try:
-            data = http_json(
-                WIKIDATA_API_URL,
-                {
-                    "action": "wbgetclaims",
-                    "format": "json",
-                    "entity": qid,
-                    "property": "P18|P373|P4765",  # image | Commons category | Commons category
-                },
+            claims = http_json(WIKIDATA_API_URL, {
+                "action": "wbgetclaims", "format": "json",
+                "entity": qid, "property": "P18|P373",
+            }).get("claims", {})
+            p18 = [
+                c.get("mainsnak", {}).get("datavalue", {}).get("value", "")
+                for c in claims.get("P18", [])
+                if c.get("mainsnak", {}).get("datavalue", {}).get("value")
+            ]
+            cat = next(
+                (c.get("mainsnak", {}).get("datavalue", {}).get("value", "")
+                 for c in claims.get("P373", [])
+                 if c.get("mainsnak", {}).get("datavalue", {}).get("value")),
+                "",
             )
-            claims = data.get("claims", {})
-
-            # P18 = image
-            p18_files = []
-            for claim in claims.get("P18", []):
-                fname = claim.get("mainsnak", {}).get("datavalue", {}).get("value", "")
-                if fname:
-                    p18_files.append(fname)
-
-            # P373 = Commons category name (string)
-            commons_cat = ""
-            for claim in claims.get("P373", []):
-                val = claim.get("mainsnak", {}).get("datavalue", {}).get("value", "")
-                if val:
-                    commons_cat = val
-                    break
-
-            return commons_cat, p18_files
+            return cat, p18
         except Exception:
             return "", []
 
-    # ── Try scientific name first (most precise) ──────────────────────────
-    if record.scientific_name:
-        results = label_search(record.scientific_name)
-        # Pick the first result whose label exactly matches (case-insensitive)
-        sci_lower = record.scientific_name.lower()
-        for item in results:
-            label = item.get("label", "").lower()
-            desc = item.get("description", "").lower()
-            # Accept if label matches AND description suggests a taxon/plant
-            if label == sci_lower or sci_lower.startswith(label):
-                qid = item["id"]
-                log(f"  [Wikidata] matched '{item['label']}' → {qid} ({item.get('description','')})", 1)
-                cat, p18 = get_p18_and_category(qid)
-                if cat or p18:
-                    return qid, cat, p18
-        # Fuzzy fallback: take top result if it mentions plant/taxon/cultivar
-        for item in results[:3]:
-            desc = item.get("description", "").lower()
-            if any(w in desc for w in ("taxon", "plant", "cultivar", "variety", "species", "crop", "fruit")):
-                qid = item["id"]
-                log(f"  [Wikidata] fuzzy match '{item['label']}' → {qid} ({item.get('description','')})", 1)
-                cat, p18 = get_p18_and_category(qid)
-                if cat or p18:
-                    return qid, cat, p18
+    plant_words = {"taxon", "plant", "cultivar", "variety", "species", "crop", "fruit"}
 
-    # ── Try variety name ──────────────────────────────────────────────────
+    search_terms = []
+    if record.scientific_name:
+        search_terms.append(record.scientific_name)
     variety_clean = re.sub(r"\([^)]*\)", "", record.variety_name).strip()
     if variety_clean:
-        results = label_search(f"{variety_clean} {record.common_name}")
-        for item in results[:5]:
+        search_terms.append(f"{variety_clean} {record.common_name}")
+    search_terms.append(record.common_name)
+
+    commons_cat = ""
+    for term in search_terms:
+        for item in label_search(term)[:5]:
             desc = item.get("description", "").lower()
-            if any(w in desc for w in ("taxon", "plant", "cultivar", "variety", "species", "crop", "fruit")):
+            if any(w in desc for w in plant_words):
                 qid = item["id"]
-                log(f"  [Wikidata] variety match '{item['label']}' → {qid}", 1)
-                cat, p18 = get_p18_and_category(qid)
-                if cat or p18:
-                    return qid, cat, p18
-
-    # ── Try common name ───────────────────────────────────────────────────
-    results = label_search(record.common_name)
-    for item in results[:5]:
-        desc = item.get("description", "").lower()
-        if any(w in desc for w in ("taxon", "plant", "cultivar", "variety", "species", "crop", "fruit")):
-            qid = item["id"]
-            log(f"  [Wikidata] common-name match '{item['label']}' → {qid}", 1)
-            cat, p18 = get_p18_and_category(qid)
-            if cat or p18:
-                return qid, cat, p18
-
-    return "", "", []
-
-
-def _source_wikidata_p18(record: VarietyRecord) -> tuple[list[ImageCandidate], str]:
-    """
-    Pull the P18 image(s) for the exact Wikidata entity.
-    Also returns the Commons category name so caller can use it next.
-    """
-    log(f"  [Wikidata P18] looking up '{record.scientific_name or record.variety_name}'", 1)
-    qid, commons_cat, p18_files = _wikidata_lookup(record)
-    if not qid:
-        log("  [Wikidata P18] no QID found", 1)
-        return [], ""
-
-    candidates: list[ImageCandidate] = []
-    for fname in p18_files[:3]:
-        c = _file_title_to_candidate(
-            fname,
-            source_url=f"https://www.wikidata.org/wiki/{qid}",
-            source_name="wikidata_p18",
-        )
-        if c:
-            log(f"  [Wikidata P18] found: {fname}", 1)
-            candidates.append(c)
-        time.sleep(0.2)
-
-    return candidates, commons_cat
+                log(f"  [Wikidata] '{item['label']}' → {qid} ({desc[:60]})", 1)
+                cat, p18_files = p18_cat(qid)
+                if cat:
+                    commons_cat = cat
+                if p18_files:
+                    candidates = []
+                    for fname in p18_files[:3]:
+                        c = _file_to_candidate(
+                            fname,
+                            source_url=f"https://www.wikidata.org/wiki/{qid}",
+                            source_name="wikidata_p18",
+                        )
+                        if c:
+                            candidates.append(c)
+                        time.sleep(0.2)
+                    return candidates, commons_cat
+    return [], commons_cat
 
 
-# ---------------------------------------------------------------------------
-# Source 2 – Wikimedia Commons category crawl
-# ---------------------------------------------------------------------------
-
-
-def _commons_category_members(category: str, limit: int) -> list[ImageCandidate]:
-    """
-    List files inside a Wikimedia Commons category and fetch their metadata.
-    `category` is the raw category name without the 'Category:' prefix.
-    """
-    candidates: list[ImageCandidate] = []
+def _commons_category_images(category: str, limit: int) -> list[ImageCandidate]:
+    if not category:
+        return []
     cmtitle = category if category.startswith("Category:") else f"Category:{category}"
     try:
-        data = http_json(
-            COMMONS_API_URL,
-            {
-                "action": "query",
-                "format": "json",
-                "list": "categorymembers",
-                "cmtitle": cmtitle,
-                "cmtype": "file",
-                "cmlimit": min(limit * 3, 30),  # fetch extra, filtering will reduce
-                "cmprop": "title",
-            },
-        )
+        data = http_json(COMMONS_API_URL, {
+            "action": "query", "format": "json", "list": "categorymembers",
+            "cmtitle": cmtitle, "cmtype": "file",
+            "cmlimit": min(limit * 3, 30), "cmprop": "title",
+        })
     except Exception as exc:
-        log(f"  [Commons cat] error listing '{category}': {exc}", 1)
+        log(f"  [Commons cat] error: {exc}", 1)
         return []
 
     members = data.get("query", {}).get("categorymembers", [])
     log(f"  [Commons cat] '{category}' → {len(members)} file(s)", 1)
-
-    for member in members:
-        title = member.get("title", "")
-        if not title:
-            continue
-        # Skip obvious non-photo files early (SVG, OGG, PDF, etc.)
+    candidates = []
+    for m in members:
+        title = m.get("title", "")
         ext = title.rsplit(".", 1)[-1].lower()
-        if ext in ("svg", "ogg", "ogv", "webm", "pdf", "tif", "tiff"):
+        if ext in ("svg", "ogg", "ogv", "webm", "pdf"):
             continue
-        c = _file_title_to_candidate(
+        c = _file_to_candidate(
             title,
             source_url=f"https://commons.wikimedia.org/wiki/{quote(cmtitle.replace(' ', '_'))}",
             source_name="commons_category",
@@ -559,263 +525,72 @@ def _commons_category_members(category: str, limit: int) -> list[ImageCandidate]
         time.sleep(0.15)
         if len(candidates) >= limit:
             break
-
     return candidates
 
 
-def _source_commons_category(
-    commons_cat: str, record: VarietyRecord, limit: int
-) -> list[ImageCandidate]:
-    """
-    Try the exact Commons category from Wikidata, then also derive plausible
-    Commons category names from scientific / variety / common names.
-    """
-    if not commons_cat:
-        # Derive candidate category names
-        sci = record.scientific_name or ""
-        variety_clean = re.sub(r"\([^)]*\)", "", record.variety_name).strip()
-        commons_cat_candidates = []
-        if sci:
-            commons_cat_candidates.append(sci)  # e.g. "Mangifera indica"
-        if variety_clean:
-            commons_cat_candidates.append(variety_clean)
-            if sci:
-                commons_cat_candidates.append(f"{sci} {variety_clean}")
-        commons_cat_candidates.append(record.common_name)
-        # Try each derived name
-        for cat in commons_cat_candidates:
-            results = _commons_category_members(cat, limit)
-            if results:
-                return results
-        return []
+# ---------------------------------------------------------------------------
+# DuckDuckGo Search  — PRIMARY fallback source
+# ---------------------------------------------------------------------------
+
+
+def _build_ddg_query(record: VarietyRecord) -> str:
+    sci     = record.scientific_name or ""
+    variety = re.sub(r"\([^)]*\)", "", record.variety_name).strip()
+    common  = record.common_name
+    hint    = _crop_hint(record)
+
+    if sci:
+        core = f'"{sci}"'
+        if variety and variety.lower() not in sci.lower():
+            core += f' "{variety}"'
+    elif variety:
+        core = f'"{variety}" {common}'
     else:
-        return _commons_category_members(commons_cat, limit)
+        core = common
+
+    return f"{core} {hint}"
 
 
-# ---------------------------------------------------------------------------
-# Source 3 – Wikimedia Commons full-text search (File: namespace)
-# ---------------------------------------------------------------------------
+def _source_ddg(
+    record: VarietyRecord,
+    images_wanted: int,
+) -> list[ImageCandidate]:
+    query = _build_ddg_query(record)
+    log(f"  [DDG] query: '{query}'", 1)
 
-
-def _build_commons_queries(record: VarietyRecord) -> list[str]:
-    """
-    Build a list of Commons search queries, most-specific first.
-    Each query targets the File: namespace and uses exact species/variety terms.
-    """
-    sci = record.scientific_name or ""
-    variety = re.sub(r"\([^)]*\)", "", record.variety_name).strip()
-    common = record.common_name
-    cat = (record.category_name or "").lower()
-
-    # Pick a type hint
-    hint = next(
-        (v for k, v in CROP_TYPE_HINTS.items() if k in cat),
-        "plant crop",
-    )
-
-    queries: list[str] = []
-
-    # 1. Scientific name is the most specific anchor
-    if sci:
-        queries.append(sci)
-        queries.append(f"{sci} {hint}")
-    # 2. Variety + common name
-    if variety:
-        queries.append(f"{variety} {common}")
-        if sci:
-            queries.append(f"{sci} {variety}")
-    # 3. Common name + type hint
-    queries.append(f"{common} {hint}")
-    queries.append(common)
-
-    # Deduplicate preserving order
-    seen: set[str] = set()
-    result: list[str] = []
-    for q in queries:
-        q = q.strip()
-        if q.lower() not in seen:
-            seen.add(q.lower())
-            result.append(q)
-    return result
-
-
-def _commons_fulltext_search(query: str, limit: int) -> list[ImageCandidate]:
-    """Search Wikimedia Commons File: namespace using the MediaWiki search API."""
     candidates: list[ImageCandidate] = []
     try:
-        data = http_json(
-            COMMONS_API_URL,
-            {
-                "action": "query",
-                "format": "json",
-                "list": "search",
-                "srnamespace": 6,          # File namespace only
-                "srsearch": f"{query} filetype:bitmap",
-                "srlimit": min(limit * 2, 20),
-                "srqiprofile": "classic",  # more predictable ranking
-            },
+        results = DDGS().images(
+            keywords=query,
+            max_results=images_wanted + 3,
+            safesearch="on",
         )
+        for item in results:
+            candidates.append(ImageCandidate(
+                title       = item.get("title", ""),
+                source_url  = item.get("url", ""),
+                file_url    = item.get("image", ""),
+                thumb_url   = item.get("thumbnail", ""),
+                mime_type   = "image/jpeg",
+                width       = item.get("width", 0) or 800,
+                height      = item.get("height", 0) or 600,
+                license_name= "Unknown (DDG)",
+                artist      = item.get("source", ""),
+                credit      = "",
+                source_name = "ddg",
+            ))
+            
+        log(f"  [DDG] {len(candidates)} image(s) returned", 1)
+        import time
+        time.sleep(2.0)
     except Exception as exc:
-        log(f"  [Commons search] error: {exc}", 1)
-        return []
-
-    for item in data.get("query", {}).get("search", []):
-        title = item.get("title", "")
-        if not title:
-            continue
-        ext = title.rsplit(".", 1)[-1].lower()
-        if ext in ("svg", "ogg", "ogv", "webm", "pdf"):
-            continue
-        c = _file_title_to_candidate(
-            title,
-            source_url=f"https://commons.wikimedia.org/wiki/{quote(title.replace(' ', '_'))}",
-            source_name="commons_search",
-        )
-        if c:
-            candidates.append(c)
-        time.sleep(0.15)
-    return candidates
-
-
-def _source_commons_search(record: VarietyRecord, limit: int) -> list[ImageCandidate]:
-    all_candidates: list[ImageCandidate] = []
-    for query in _build_commons_queries(record):
-        log(f"  [Commons search] query: '{query}'", 1)
-        results = _commons_fulltext_search(query, limit - len(all_candidates) + 5)
-        log(f"  [Commons search] {len(results)} result(s)", 1)
-        all_candidates.extend(results)
-        if len(all_candidates) >= limit * 2:
-            break
-        time.sleep(0.3)
-    return all_candidates
-
-
-# ---------------------------------------------------------------------------
-# Source 4 – Google Programmable Search Engine (fallback)
-# ---------------------------------------------------------------------------
-
-
-def _source_google(record: VarietyRecord, limit: int) -> list[ImageCandidate]:
-    api_key = os.environ.get("GOOGLE_PSE_API_KEY", "").strip()
-    cx = os.environ.get("GOOGLE_PSE_CX", "").strip()
-    if not api_key or not cx:
-        return []
-
-    sci = record.scientific_name or ""
-    variety = re.sub(r"\([^)]*\)", "", record.variety_name).strip()
-    common = record.common_name
-    cat = (record.category_name or "").lower()
-    hint = next((v for k, v in CROP_TYPE_HINTS.items() if k in cat), "plant")
-
-    queries = []
-    if sci:
-        queries.append(f'"{sci}" {hint}')
-    if variety:
-        queries.append(f'"{variety}" {common} {hint}')
-    queries.append(f"{common} {hint}")
-
-    neg = "-logo -icon -cartoon -recipe -price -advertisement"
-
-    candidates: list[ImageCandidate] = []
-    for query in queries:
-        if len(candidates) >= limit:
-            break
-        full_query = f"{query} {neg}"
-        log(f"  [Google PSE] query: '{full_query}'", 1)
-        try:
-            data = http_json(
-                "https://www.googleapis.com/customsearch/v1",
-                {
-                    "key": api_key,
-                    "cx": cx,
-                    "q": full_query,
-                    "searchType": "image",
-                    "num": min(limit - len(candidates), 10),
-                    "imgType": "photo",
-                    "safe": "active",
-                    "imgSize": "large",
-                },
-            )
-        except Exception as exc:
-            log(f"  [Google PSE] error: {exc}", 1)
-            continue
-
-        for item in data.get("items", []):
-            image = item.get("image", {})
-            candidates.append(
-                ImageCandidate(
-                    title=item.get("title", ""),
-                    source_url=image.get("contextLink", ""),
-                    file_url=item.get("link", ""),
-                    thumb_url=image.get("thumbnailLink", ""),
-                    mime_type=item.get("mime", "image/jpeg"),
-                    width=image.get("width", 0),
-                    height=image.get("height", 0),
-                    license_name="Unknown (Google Search)",
-                    artist="",
-                    credit="",
-                    source_name="google",
-                )
-            )
-        time.sleep(0.5)
+        log(f"  [DDG] API error: {exc}", 1)
 
     return candidates
 
 
 # ---------------------------------------------------------------------------
-# Source 5 – Bing / icrawler (last resort)
-# ---------------------------------------------------------------------------
-
-
-def _source_bing(record: VarietyRecord, limit: int) -> list[ImageCandidate]:
-    try:
-        import logging
-        import tempfile
-        import glob
-        import pathlib
-        from icrawler.builtin import BingImageCrawler
-    except ImportError:
-        log("  [Bing] icrawler not installed — skipping.", 1)
-        return []
-
-    sci = record.scientific_name or ""
-    common = record.common_name
-    variety = re.sub(r"\([^)]*\)", "", record.variety_name).strip()
-    query = f'"{sci or variety}" {common} plant' if (sci or variety) else common
-
-    log(f"  [Bing] query: '{query}' (last-resort fallback)", 1)
-    candidates: list[ImageCandidate] = []
-    temp_dir = tempfile.mkdtemp(prefix="bing_images_")
-    try:
-        crawler = BingImageCrawler(
-            storage={"root_dir": temp_dir},
-            log_level=logging.ERROR,
-        )
-        crawler.crawl(keyword=query, max_num=limit + 5)
-        for f in glob.glob(os.path.join(temp_dir, "*")):
-            local_uri = pathlib.Path(f).absolute().as_uri()
-            candidates.append(
-                ImageCandidate(
-                    title="Unknown Image (Bing Scraper)",
-                    source_url="",
-                    file_url=local_uri,
-                    thumb_url="",
-                    mime_type="image/jpeg",
-                    width=800,
-                    height=600,
-                    license_name="Unknown (Bing Search)",
-                    artist="",
-                    credit="",
-                    source_name="bing",
-                )
-            )
-    except Exception as exc:
-        log(f"  [Bing] error: {exc}", 1)
-    return candidates
-
-
-# ---------------------------------------------------------------------------
-# Candidate pipeline: collect → filter → score → rank
+# Candidate pipeline
 # ---------------------------------------------------------------------------
 
 
@@ -823,77 +598,76 @@ def find_candidates(
     record: VarietyRecord,
     count: int,
     min_width: int,
+    
+    vision_enabled: bool = True,
 ) -> tuple[list[ImageCandidate], list[tuple[ImageCandidate, str]]]:
     """
-    Run the full source cascade and return (accepted, rejected_with_reasons).
+    Full pipeline:
+      1. Wikidata P18 + Commons category  (free, no quota consumed)
+      2. Google PSE  (1 search, ≤10 results, quota−1)
+      Filter each candidate through:
+        a. Duplicate URL check
+        b. Min-width floor
+        c. Metadata relevance score
+        d. AI vision verify  (if enabled)
     """
     seen_urls: set[str] = set()
-    accepted: list[ImageCandidate] = []
-    rejected: list[tuple[ImageCandidate, str]] = []
+    accepted:  list[ImageCandidate] = []
+    rejected:  list[tuple[ImageCandidate, str]] = []
 
     def evaluate(raw: list[ImageCandidate]) -> None:
         for c in raw:
             if len(accepted) >= count:
                 return
+
             if not c.file_url:
-                rejected.append((c, "empty file_url"))
-                continue
+                rejected.append((c, "empty file_url")); continue
             if c.file_url in seen_urls:
-                rejected.append((c, "duplicate URL"))
-                continue
+                rejected.append((c, "duplicate URL")); continue
             seen_urls.add(c.file_url)
 
-            # Caller's min-width override (hard floor)
             if 0 < c.width < min_width:
-                rejected.append((c, f"width {c.width} < min_width {min_width}"))
-                continue
+                rejected.append((c, f"width {c.width} < {min_width}")); continue
 
             score, reason = score_candidate(c, record)
             c.relevance_score = score
             if reason:
                 c.rejection_reason = reason
-                rejected.append((c, reason))
-            elif score < MIN_RELEVANCE_SCORE:
+                rejected.append((c, reason)); continue
+            if score < MIN_RELEVANCE_SCORE:
                 c.rejection_reason = f"low score ({score})"
-                rejected.append((c, f"low relevance score ({score})"))
-            else:
-                log(
-                    f"  ✓ accepted [{c.source_name}] score={score} "
-                    f"{c.width}×{c.height}  {c.file_url[:80]}",
-                    1,
-                )
-                accepted.append(c)
+                rejected.append((c, f"low score ({score})")); continue
 
-    # ── Source 1: Wikidata P18 ────────────────────────────────────────────
-    p18_results, commons_cat = _source_wikidata_p18(record)
-    log(f"  [Wikidata P18] {len(p18_results)} image(s), Commons cat: '{commons_cat}'", 1)
+            if vision_enabled:
+                ok, explanation = vision_verify(c, record)
+                if not ok:
+                    c.rejection_reason = f"vision: {explanation}"
+                    rejected.append((c, f"vision: {explanation}"))
+                    log(f"  ✗ vision rejected [{c.source_name}]: {explanation}", 1)
+                    continue
+                log(f"  ✓ vision OK [{c.source_name}]: {explanation[:60]}", 1)
+
+            log(f"  ✓ accepted [{c.source_name}] score={score} {c.width}×{c.height}  {c.file_url[:80]}", 1)
+            accepted.append(c)
+
+    # ── Step 1: Wikimedia (free) ──────────────────────────────────────────
+    log("  [Wikidata] looking up P18 + Commons category…", 1)
+    p18_results, commons_cat = _wikidata_p18_and_cat(record)
+    log(f"  [Wikidata] P18: {len(p18_results)} image(s)  Commons cat: '{commons_cat}'", 1)
     evaluate(p18_results)
 
-    # ── Source 2: Commons category ────────────────────────────────────────
-    if len(accepted) < count:
-        cat_results = _source_commons_category(commons_cat, record, count * 3)
-        log(f"  [Commons cat] {len(cat_results)} image(s) fetched", 1)
+    if len(accepted) < count and commons_cat:
+        cat_results = _commons_category_images(commons_cat, count * 3)
         evaluate(cat_results)
 
-    # ── Source 3: Commons full-text search ───────────────────────────────
+    # ── Step 2: Google PSE (1 search, up to 10 images) ───────────────────
     if len(accepted) < count:
-        search_results = _source_commons_search(record, count * 3)
-        log(f"  [Commons search] {len(search_results)} image(s) fetched", 1)
-        evaluate(search_results)
+        ddg_results = _source_ddg(record, count - len(accepted) + 3)
+        evaluate(ddg_results)
+    else:
+        log(f"  [DDG] skipped — Wikimedia gave enough images ({len(accepted)})", 1)
 
-    # ── Source 4: Google PSE ──────────────────────────────────────────────
-    if len(accepted) < count:
-        google_results = _source_google(record, (count - len(accepted)) + 5)
-        log(f"  [Google PSE] {len(google_results)} image(s) fetched", 1)
-        evaluate(google_results)
-
-    # ── Source 5: Bing / icrawler (last resort) ───────────────────────────
-    if len(accepted) < count:
-        bing_results = _source_bing(record, (count - len(accepted)) + 5)
-        log(f"  [Bing] {len(bing_results)} image(s) fetched", 1)
-        evaluate(bing_results)
-
-    # Log rejections
+    # ── Summary ───────────────────────────────────────────────────────────
     for c, reason in rejected:
         log(f"  ✗ rejected [{c.source_name}] {reason}: {(c.file_url or c.title)[:70]}", 1)
 
@@ -912,65 +686,10 @@ def download_image(file_url: str, target: Path) -> None:
         target.write_bytes(resp.read())
 
 
-# ---------------------------------------------------------------------------
-# Cloudflare R2 upload (unchanged from v2)
-# ---------------------------------------------------------------------------
-
-
-def r2_client() -> Any:
-    try:
-        import boto3
-    except ImportError as exc:
-        raise SystemExit("boto3 not installed. Run: pip install boto3") from exc
-
-    endpoint = os.environ.get("R2_ENDPOINT_URL", "").strip()
-    key_id = os.environ.get("R2_ACCESS_KEY_ID", "").strip()
-    secret = os.environ.get("R2_SECRET_ACCESS_KEY", "").strip()
-    missing = [n for n, v in {"R2_ENDPOINT_URL": endpoint, "R2_ACCESS_KEY_ID": key_id,
-                               "R2_SECRET_ACCESS_KEY": secret}.items() if not v]
-    if missing:
-        raise SystemExit(f"Missing env vars: {', '.join(missing)}")
-
-    import boto3
-    return boto3.client(
-        "s3",
-        endpoint_url=endpoint,
-        aws_access_key_id=key_id,
-        aws_secret_access_key=secret,
-        region_name=os.environ.get("R2_REGION", "auto"),
-    )
-
-
-def public_url_for_key(key: str) -> str:
-    base = os.environ.get("R2_PUBLIC_BASE_URL", "").strip().rstrip("/")
-    if not base:
-        raise SystemExit("Missing R2_PUBLIC_BASE_URL in .env/environment.")
-    encoded = "/".join(quote(p) for p in key.split("/"))
-    return f"{base}/{encoded}"
-
-
-def upload_to_r2(
-    client: Any,
-    bucket: str,
-    key: str,
-    image_path: Path,
-    mime_type: str,
-    metadata: dict[str, str],
-) -> str:
-    client.upload_file(
-        str(image_path),
-        bucket,
-        key,
-        ExtraArgs={
-            "ContentType": mime_type,
-            "Metadata": {k: v[:1024] for k, v in metadata.items() if v},
-        },
-    )
-    return public_url_for_key(key)
 
 
 # ---------------------------------------------------------------------------
-# SQLite helpers (unchanged from v2)
+# SQLite
 # ---------------------------------------------------------------------------
 
 
@@ -988,25 +707,20 @@ def fetch_varieties(
         params.extend(subtype_ids)
     if not force:
         where.append("(cv.image_url IS NULL OR TRIM(cv.image_url) = '')")
-    limit_sql = "LIMIT ?" if limit else ""
     if limit:
         params.append(limit)
     sql = f"""
-        SELECT
-            cv.id,
-            cv.subtype_id,
-            cv.variety_name,
-            c.common_name,
-            COALESCE(c.scientific_name, '') AS scientific_name,
-            COALESCE(cc.name, c.category, '') AS category_name,
-            COALESCE(cv.image_url, '') AS current_image_url,
-            COALESCE(cv.image_link, '') AS current_image_link
+        SELECT cv.id, cv.subtype_id, cv.variety_name, c.common_name,
+               COALESCE(c.scientific_name,'') AS scientific_name,
+               COALESCE(cc.name, c.category,'') AS category_name,
+               COALESCE(cv.image_url,'') AS current_image_url,
+               COALESCE(cv.image_link,'') AS current_image_link
         FROM crop_variety cv
         JOIN crop c ON c.id = cv.crop_id
         LEFT JOIN crop_category cc ON cc.id = c.category_id
         WHERE {' AND '.join(where)}
         ORDER BY cv.subtype_id
-        {limit_sql}
+        {"LIMIT ?" if limit else ""}
     """
     with sqlite3.connect(db_path) as conn:
         conn.row_factory = sqlite3.Row
@@ -1019,202 +733,125 @@ def save_urls(db_path: Path, variety_id: int, urls: list[str]) -> None:
         return
     with sqlite3.connect(db_path) as conn:
         conn.execute(
-            """UPDATE crop_variety
-               SET image_url = ?, image_link = ?, updated_at = CURRENT_TIMESTAMP
-               WHERE id = ?""",
+            "UPDATE crop_variety SET image_url=?, image_link=?, updated_at=CURRENT_TIMESTAMP WHERE id=?",
             (json.dumps(urls, ensure_ascii=False), urls[0], variety_id),
         )
         conn.commit()
 
 
 # ---------------------------------------------------------------------------
-# Manifest (review mode)
+# Review manifest
 # ---------------------------------------------------------------------------
 
 MANIFEST_FILENAME = "review_manifest.json"
 
 
 def load_manifest(review_dir: Path) -> list[dict[str, Any]]:
-    path = review_dir / MANIFEST_FILENAME
-    if not path.exists():
-        return []
-    return json.loads(path.read_text(encoding="utf-8"))
+    p = review_dir / MANIFEST_FILENAME
+    return json.loads(p.read_text()) if p.exists() else []
 
 
 def save_manifest(review_dir: Path, entries: list[dict[str, Any]]) -> None:
     review_dir.mkdir(parents=True, exist_ok=True)
-    path = review_dir / MANIFEST_FILENAME
-    path.write_text(json.dumps(entries, ensure_ascii=False, indent=2), encoding="utf-8")
-    csv_path = review_dir / "review_manifest.csv"
+    p = review_dir / MANIFEST_FILENAME
+    p.write_text(json.dumps(entries, ensure_ascii=False, indent=2))
+    csv_p = review_dir / "review_manifest.csv"
     if entries:
-        with csv_path.open("w", newline="", encoding="utf-8") as f:
-            writer = csv.DictWriter(f, fieldnames=list(entries[0].keys()))
-            writer.writeheader()
-            writer.writerows(entries)
-    log(f"\n  Manifest → {path}")
-    log(f"  CSV      → {csv_path}")
-    log("  Set 'approved': true for images you want, then: --apply-approved")
+        with csv_p.open("w", newline="", encoding="utf-8") as f:
+            w = csv.DictWriter(f, fieldnames=list(entries[0].keys()))
+            w.writeheader(); w.writerows(entries)
+    log(f"\n  Manifest → {p}")
+    log(f"  CSV      → {csv_p}")
+    log("  Set 'approved': true then run --apply-approved")
 
 
-def accepted_to_manifest_entries(
-    record: VarietyRecord, accepted: list[ImageCandidate]
-) -> list[dict[str, Any]]:
-    return [
-        {
-            "variety_id": record.id,
-            "subtype_id": record.subtype_id,
-            "common_name": record.common_name,
-            "variety_name": record.variety_name,
-            "scientific_name": record.scientific_name,
-            "candidate_url": c.file_url,
-            "source_page": c.source_url,
-            "title": c.title,
-            "license": c.license_name,
-            "author": c.artist,
-            "width": c.width,
-            "height": c.height,
-            "relevance_score": c.relevance_score,
-            "source_name": c.source_name,
-            "mime_type": c.mime_type,
-            "approved": False,
-        }
-        for c in accepted
-    ]
+def accepted_to_manifest(record: VarietyRecord, accepted: list[ImageCandidate]) -> list[dict[str, Any]]:
+    return [{
+        "variety_id": record.id, "subtype_id": record.subtype_id,
+        "common_name": record.common_name, "variety_name": record.variety_name,
+        "scientific_name": record.scientific_name,
+        "candidate_url": c.file_url, "source_page": c.source_url,
+        "title": c.title, "license": c.license_name, "author": c.artist,
+        "width": c.width, "height": c.height,
+        "relevance_score": c.relevance_score, "source_name": c.source_name,
+        "mime_type": c.mime_type, "approved": False,
+    } for c in accepted]
 
 
 # ---------------------------------------------------------------------------
-# Per-record processing
+# Per-record sync
 # ---------------------------------------------------------------------------
 
 
-def _slug_filename(record: VarietyRecord, index: int, url: str, ext: str) -> str:
+def _slug(record: VarietyRecord, idx: int, url: str, ext: str) -> str:
     h = hashlib.sha1(url.encode()).hexdigest()[:10]
-    return (
-        f"subtype-{record.subtype_id:04d}"
-        f"-{clean_slug(record.common_name)}"
-        f"-{clean_slug(record.variety_name)}"
-        f"-{index:02d}-{h}{ext}"
-    )
-
-
-def _write_record_manifest(
-    record_dir: Path, record: VarietyRecord, rows: list[dict[str, str]]
-) -> None:
-    (record_dir / f"subtype-{record.subtype_id:04d}-manifest.json").write_text(
-        json.dumps(
-            {
-                "subtype_id": record.subtype_id,
-                "crop_variety_id": record.id,
-                "crop": record.common_name,
-                "variety": record.variety_name,
-                "images": rows,
-            },
-            ensure_ascii=False,
-            indent=2,
-        ),
-        encoding="utf-8",
-    )
+    return f"subtype-{record.subtype_id:04d}-{clean_slug(record.common_name)}-{clean_slug(record.variety_name)}-{idx:02d}-{h}{ext}"
 
 
 def sync_record(
     record: VarietyRecord,
-    db_path: Path,
-    cache_dir: Path,
-    images_per_subtype: int,
-    min_width: int,
-    dry_run: bool,
-    review_mode: bool,
-    client: Any | None,
-    bucket: str,
-    r2_prefix: str,
-    force: bool,
+    db_path: Path, cache_dir: Path,
+    images_per_subtype: int, min_width: int,
+    dry_run: bool, review_mode: bool,
+    force: bool,  vision_enabled: bool,
 ) -> tuple[int, list[str], list[dict[str, Any]]]:
-    log(f"\n{'─' * 64}")
+
+    log(f"\n{'─'*64}")
     log(f"Subtype {record.subtype_id}: {record.common_name} / {record.variety_name}")
     if record.scientific_name:
         log(f"  Scientific : {record.scientific_name}", 1)
     log(f"  Category   : {record.category_name}", 1)
 
-    accepted, rejected = find_candidates(record, images_per_subtype, min_width)
-
+    accepted, rejected = find_candidates(
+        record, images_per_subtype, min_width,  vision_enabled,
+    )
     log(f"  → accepted: {len(accepted)}  rejected: {len(rejected)}", 1)
 
     if not accepted:
         log("  ⚠ No suitable images found.", 1)
         return record.subtype_id, [], []
 
-    # ── Dry run ─────────────────────────────────────────────────────────────
     if dry_run:
         for c in accepted:
-            log(
-                f"  dry-run [{c.source_name}] score={c.relevance_score} "
-                f"{c.width}×{c.height} {c.license_name}  {c.file_url[:80]}",
-                1,
-            )
+            log(f"  dry-run [{c.source_name}] score={c.relevance_score} {c.width}×{c.height} {c.file_url[:80]}", 1)
         return record.subtype_id, [], []
 
-    # ── Review mode ──────────────────────────────────────────────────────────
     if review_mode:
-        return record.subtype_id, [], accepted_to_manifest_entries(record, accepted)
+        return record.subtype_id, [], accepted_to_manifest(record, accepted)
 
-    # ── Live mode: download → upload → DB ────────────────────────────────────
-    record_dir = (
-        cache_dir
-        / f"subtype-{record.subtype_id:04d}"
-          f"-{clean_slug(record.common_name)}"
-          f"-{clean_slug(record.variety_name)}"
-    )
-    uploaded_urls: list[str] = []
+    record_dir = cache_dir / f"subtype-{record.subtype_id:04d}-{clean_slug(record.common_name)}-{clean_slug(record.variety_name)}"
+    uploaded: list[str] = []
     manifest_rows: list[dict[str, str]] = []
 
-    for idx, c in enumerate(accepted, start=1):
-        filename = _slug_filename(record, idx, c.file_url, extension_for(c))
-        local_path = record_dir / filename
+    for idx, c in enumerate(accepted, 1):
+        filename  = _slug(record, idx, c.file_url, extension_for(c))
+        local     = record_dir / filename
 
-        if force or not local_path.exists():
+        if force or not local.exists():
             try:
-                download_image(c.file_url, local_path)
+                download_image(c.file_url, local)
             except Exception as exc:
-                log(f"  ✗ download failed #{idx}: {exc}", 1)
-                continue
+                log(f"  ✗ download failed #{idx}: {exc}", 1); continue
 
-        try:
-            key = f"{r2_prefix.strip('/')}/{filename}"
-            public_url = upload_to_r2(
-                client, bucket, key, local_path, c.mime_type,
-                {
-                    "subtype_id": str(record.subtype_id),
-                    "crop": record.common_name,
-                    "variety": record.variety_name,
-                    "source": c.source_url,
-                    "license": c.license_name,
-                    "artist": c.artist,
-                },
-            )
-        except Exception as exc:
-            log(f"  ✗ upload failed #{idx}: {exc}", 1)
-            continue
+        pub = f"/images/crop-varieties/subtype-{record.subtype_id:04d}-{clean_slug(record.common_name)}-{clean_slug(record.variety_name)}/{filename}"
+        uploaded.append(pub)
+        manifest_rows.append({"public_url": pub, "source_url": c.source_url,
+            "title": c.title, "license": c.license_name, "artist": c.artist,
+            "width": str(c.width), "height": str(c.height),
+            "score": str(c.relevance_score), "source_name": c.source_name})
+        log(f"  ✓ uploaded [{c.source_name}] → {pub}", 1)
 
-        uploaded_urls.append(public_url)
-        manifest_rows.append({
-            "public_url": public_url,
-            "source_url": c.source_url,
-            "title": c.title,
-            "license": c.license_name,
-            "artist": c.artist,
-            "width": str(c.width),
-            "height": str(c.height),
-            "score": str(c.relevance_score),
-            "source_name": c.source_name,
-        })
-        log(f"  ✓ uploaded [{c.source_name}] → {public_url}", 1)
+    if uploaded:
+        save_urls(db_path, record.id, uploaded)
+        manifest_path = record_dir / f"subtype-{record.subtype_id:04d}-manifest.json"
+        record_dir.mkdir(parents=True, exist_ok=True)
+        manifest_path.write_text(json.dumps({
+            "subtype_id": record.subtype_id, "crop": record.common_name,
+            "variety": record.variety_name, "images": manifest_rows,
+        }, ensure_ascii=False, indent=2))
+        log(f"  ✓ saved {len(uploaded)} URL(s) to DB", 1)
 
-    if uploaded_urls:
-        save_urls(db_path, record.id, uploaded_urls)
-        _write_record_manifest(record_dir, record, manifest_rows)
-        log(f"  ✓ saved {len(uploaded_urls)} URL(s) to DB", 1)
-
-    return record.subtype_id, uploaded_urls, []
+    return record.subtype_id, uploaded, []
 
 
 # ---------------------------------------------------------------------------
@@ -1222,18 +859,11 @@ def sync_record(
 # ---------------------------------------------------------------------------
 
 
-def apply_approved(
-    review_dir: Path,
-    db_path: Path,
-    cache_dir: Path,
-    client: Any,
-    bucket: str,
-    r2_prefix: str,
-) -> None:
+def apply_approved(review_dir: Path, db_path: Path, cache_dir: Path,
+                   ) -> None:
     entries = load_manifest(review_dir)
     if not entries:
-        log("No review manifest found — nothing to apply.")
-        return
+        log("No manifest found."); return
 
     approved = [e for e in entries if e.get("approved")]
     log(f"Applying {len(approved)} approved image(s)…")
@@ -1242,49 +872,31 @@ def apply_approved(
         by_variety[e["variety_id"]].append(e)
 
     total = 0
-    for variety_id, items in by_variety.items():
-        uploaded: list[str] = []
-        common = items[0]["common_name"]
+    for vid, items in by_variety.items():
+        common  = items[0]["common_name"]
         variety = items[0]["variety_name"]
-        subtype_id = items[0]["subtype_id"]
-        record_dir = (
-            cache_dir
-            / f"subtype-{subtype_id:04d}-{clean_slug(common)}-{clean_slug(variety)}"
-        )
+        sid     = items[0]["subtype_id"]
+        rdir    = cache_dir / f"subtype-{sid:04d}-{clean_slug(common)}-{clean_slug(variety)}"
+        uploaded: list[str] = []
 
-        for idx, e in enumerate(items, start=1):
-            file_url = e["candidate_url"]
+        for idx, e in enumerate(items, 1):
+            furl = e["candidate_url"]
             mime = e.get("mime_type", "image/jpeg")
-            ext = SUPPORTED_MIME_TYPES.get(mime, ".jpg")
-            filename = (
-                f"subtype-{subtype_id:04d}"
-                f"-{clean_slug(common)}-{clean_slug(variety)}"
-                f"-{idx:02d}-{hashlib.sha1(file_url.encode()).hexdigest()[:10]}{ext}"
-            )
-            local_path = record_dir / filename
-            if not local_path.exists():
+            ext  = SUPPORTED_MIMES.get(mime, ".jpg")
+            fn   = f"subtype-{sid:04d}-{clean_slug(common)}-{clean_slug(variety)}-{idx:02d}-{hashlib.sha1(furl.encode()).hexdigest()[:10]}{ext}"
+            lp   = rdir / fn
+            if not lp.exists():
                 try:
-                    download_image(file_url, local_path)
+                    download_image(furl, lp)
                 except Exception as exc:
-                    log(f"  ✗ re-download failed: {exc}", 1)
-                    continue
-            try:
-                key = f"{r2_prefix.strip('/')}/{filename}"
-                pub = upload_to_r2(
-                    client, bucket, key, local_path, mime,
-                    {"subtype_id": str(subtype_id), "crop": common, "variety": variety,
-                     "source": e.get("source_page", ""), "license": e.get("license", ""),
-                     "artist": e.get("author", "")},
-                )
-                uploaded.append(pub)
-                log(f"  ✓ {pub}", 1)
-                total += 1
-            except Exception as exc:
-                log(f"  ✗ upload failed: {exc}", 1)
+                    log(f"  ✗ re-download: {exc}", 1); continue
+            pub = f"/images/crop-varieties/subtype-{sid:04d}-{clean_slug(common)}-{clean_slug(variety)}/{fn}"
+            uploaded.append(pub); total += 1
+            log(f"  ✓ {pub}", 1)
 
         if uploaded:
-            save_urls(db_path, variety_id, uploaded)
-            log(f"  ✓ DB updated for variety_id={variety_id}", 1)
+            save_urls(db_path, vid, uploaded)
+            log(f"  ✓ DB updated variety_id={vid}", 1)
 
     log(f"\nDone. Uploaded {total} approved image(s).")
 
@@ -1296,77 +908,59 @@ def apply_approved(
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(
-        description="Sync crop variety images: Wikimedia-first, scored, to R2 + SQLite."
+        description="GreenWings image sync — DuckDuckGo fallback, local storage, vision-verified."
     )
-    p.add_argument("--db", default=str(DEFAULT_DB_PATH))
-    p.add_argument("--cache-dir", default=str(DEFAULT_CACHE_DIR))
-    p.add_argument("--review-dir", default=str(DEFAULT_REVIEW_DIR))
+    p.add_argument("--db",                 default=str(DEFAULT_DB_PATH))
+    p.add_argument("--cache-dir",          default=str(DEFAULT_CACHE_DIR))
+    p.add_argument("--review-dir",         default=str(DEFAULT_REVIEW_DIR))
     p.add_argument("--images-per-subtype", type=int, default=5)
-    p.add_argument("--min-width", type=int, default=600, help="Minimum image width in pixels.")
-    p.add_argument("--subtype-id", type=int, action="append")
+    p.add_argument("--min-width",          type=int, default=600)
+    p.add_argument("--subtype-id",  type=int, action="append")
     p.add_argument("--limit-varieties", type=int)
-    p.add_argument("--force", action="store_true")
-    p.add_argument("--dry-run", action="store_true")
-    p.add_argument("--review", action="store_true",
-                   help="Write candidates to review manifest; do not upload.")
-    p.add_argument("--apply-approved", action="store_true",
-                   help="Upload manifest entries with approved=true, then update DB.")
+    p.add_argument("--force",        action="store_true")
+    p.add_argument("--dry-run",      action="store_true")
+    p.add_argument("--review",       action="store_true")
+    p.add_argument("--apply-approved", action="store_true")
+    p.add_argument("--skip-vision",  action="store_true",
+                   help="Disable AI vision check (faster, less accurate).")
     return p.parse_args()
 
 
 def main() -> None:
     args = parse_args()
     images_per_subtype = max(1, min(args.images_per_subtype, 10))
-    db_path = Path(args.db).resolve()
-    cache_dir = Path(args.cache_dir).resolve()
+    db_path    = Path(args.db).resolve()
+    cache_dir  = Path(args.cache_dir).resolve()
     review_dir = Path(args.review_dir).resolve()
     load_dotenv(ROOT / ".env")
-
-    bucket = os.environ.get("R2_BUCKET", "").strip()
-    r2_prefix = os.environ.get("R2_PREFIX", "crop-varieties").strip() or "crop-varieties"
-    client: Any | None = None
-
     if args.apply_approved:
-        if not bucket:
-            raise SystemExit("Missing R2_BUCKET.")
-        apply_approved(review_dir, db_path, cache_dir, r2_client(), bucket, r2_prefix)
+        apply_approved(review_dir, db_path, cache_dir)
         return
-
-    if not args.dry_run and not args.review:
-        if not bucket:
-            raise SystemExit("Missing R2_BUCKET.")
-        client = r2_client()
-
     records = fetch_varieties(db_path, args.subtype_id, args.limit_varieties, args.force)
     if not records:
-        log("No crop variety rows need image sync.")
-        return
+        log("No crop variety rows need image sync."); return
 
+    vision_enabled = not args.skip_vision
     mode = "DRY-RUN" if args.dry_run else ("REVIEW" if args.review else "LIVE")
-    log(f"\n{'=' * 64}")
+
+    log(f"\n{'='*64}")
     log(f"GreenWings Image Sync  [{mode}]")
-    log(f"  Records     : {len(records)}")
-    log(f"  Images/sub  : {images_per_subtype}")
-    log(f"  Min width   : {args.min_width}px")
-    log(f"  Min score   : {MIN_RELEVANCE_SCORE}")
-    log(f"{'=' * 64}")
+    log(f"  Records         : {len(records)}")
+    log(f"  Images/subtype  : {images_per_subtype}")
+    log(f"  Min width       : {args.min_width}px")
+    log(f"  Vision verify   : {'ON' if vision_enabled else 'OFF (--skip-vision)'}")
+    log(f"{'='*64}")
 
     total_uploaded = 0
     all_review_entries: list[dict[str, Any]] = []
 
     for record in records:
+
         _, urls, review_entries = sync_record(
-            record=record,
-            db_path=db_path,
-            cache_dir=cache_dir,
-            images_per_subtype=images_per_subtype,
-            min_width=args.min_width,
-            dry_run=args.dry_run,
-            review_mode=args.review,
-            client=client,
-            bucket=bucket,
-            r2_prefix=r2_prefix,
-            force=args.force,
+            record=record, db_path=db_path, cache_dir=cache_dir,
+            images_per_subtype=images_per_subtype, min_width=args.min_width,
+            dry_run=args.dry_run, review_mode=args.review,
+            force=args.force, vision_enabled=vision_enabled,
         )
         total_uploaded += len(urls)
         all_review_entries.extend(review_entries)
@@ -1374,10 +968,10 @@ def main() -> None:
     if args.review and all_review_entries:
         existing = load_manifest(review_dir)
         seen = {e["candidate_url"] for e in existing}
-        new = [e for e in all_review_entries if e["candidate_url"] not in seen]
+        new  = [e for e in all_review_entries if e["candidate_url"] not in seen]
         save_manifest(review_dir, existing + new)
     elif not args.dry_run and not args.review:
-        log(f"\n{'=' * 64}")
+        log(f"\n{'='*64}")
         log(f"Done. Uploaded {total_uploaded} image(s) total.")
 
 
