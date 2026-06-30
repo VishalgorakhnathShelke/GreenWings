@@ -15,13 +15,13 @@ function VarietyAccordion({
   isOpen,
   onToggle,
   lang,
-  imageUrl,
+  imageUrls,
 }: {
   variety: Variety
   isOpen: boolean
   onToggle: () => void
   lang: Lang
-  imageUrl?: string
+  imageUrls?: string[]
 }) {
   const copy = catalogueCopy[lang]
 
@@ -45,8 +45,12 @@ function VarietyAccordion({
         <div className="border-t border-line p-6 lg:p-8" style={{ animation: 'fade-in-up 0.3s ease-out' }}>
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-8">
             <div>
-              {imageUrl ? (
-                <img src={imageUrl} alt={variety.name} className="h-52 w-full object-cover rounded-sm mb-6 shadow-sm border border-line" />
+              {imageUrls && imageUrls.length > 0 ? (
+                <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-3 mb-6 rounded-sm pb-2">
+                  {imageUrls.map((url, i) => (
+                    <img key={i} src={url} alt={`${variety.name} ${i + 1}`} className="h-52 min-w-full object-cover snap-center shadow-sm border border-line rounded-sm" />
+                  ))}
+                </div>
               ) : (
                 <div className="h-52 bg-gradient-to-br from-sky/20 via-cream to-harvest/20 border border-dashed border-line flex items-center justify-center text-center text-muted text-[10px] uppercase tracking-wider p-6 rounded-sm mb-6">
                   {variety.imagePlaceholder}
@@ -116,8 +120,8 @@ export function ProductProfilePage() {
     }
   }, [rawProduct, lang])
   
-  const getImageForVariety = (varietyName: string) => {
-    if (!dbProduct) return undefined
+  const getImagesForVariety = (varietyName: string): string[] => {
+    if (!dbProduct) return []
     const subtype = dbProduct.subtypes.find(s => {
       const vName = (s.variety_name || '').toLowerCase()
       const dName = (s.display_name || '').toLowerCase()
@@ -129,8 +133,26 @@ export function ProductProfilePage() {
       if (dName && dName.includes(target)) return true
       return false
     })
-    if (!subtype) return undefined
-    return subtype.image_link || subtype.imageLink || subtype.image_urls?.[0] || subtype.image_url || undefined
+    if (!subtype) return []
+    
+    if (subtype.image_url) {
+      try {
+        const parsed = JSON.parse(subtype.image_url)
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed
+        }
+      } catch (e) {
+        // Not JSON, return as single item array if it's a valid string
+        if (typeof subtype.image_url === 'string' && subtype.image_url.trim() !== '') {
+          return [subtype.image_url]
+        }
+      }
+    }
+    
+    if (subtype.image_urls && subtype.image_urls.length > 0) return subtype.image_urls
+    if (subtype.image_link) return [subtype.image_link]
+    if (subtype.imageLink) return [subtype.imageLink]
+    return []
   }
 
   if (!rawCategory || !category || !product) {
@@ -230,7 +252,7 @@ export function ProductProfilePage() {
             isOpen={openAccordion === variety.slug}
             onToggle={() => toggleAccordion(variety.slug)}
             lang={lang}
-            imageUrl={getImageForVariety(variety.name)}
+            imageUrls={getImagesForVariety(variety.name)}
           />
         ))}
       </div>

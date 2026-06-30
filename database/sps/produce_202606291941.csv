@@ -1,0 +1,612 @@
+produce_id,type,name,scientific_name,category,season,marathi_name,hindi_name,english_name,description,info,status,image_link
+1,fruit,Mango,Mangifera indica,Tropical,Zaid,Amba,Aam,Mango,"Maharashtra is one of India's leading mango-producing states. The Konkan coast is especially famous for Alphonso (Hapus), prized worldwide for its aroma, sweetness, and saffron-orange flesh. Grown across Ratnagiri, Sindhudurg, and Raigad districts. Season: March–June.","Maharashtra is one of India's leading mango-producing states. The Konkan coast is especially famous for Alphonso (Hapus), prized worldwide for its aroma, sweetness, and saffron-orange flesh. Grown across Ratnagiri, Sindhudurg, and Raigad districts. Season: March–June.
+
+Scientific name: Mangifera indica
+
+Category: Tropical
+
+Season: Zaid
+
+Marathi name: Amba
+
+Hindi name: Aam
+
+English name: Mango",active,
+2,fruit,Grapes,Vitis vinifera,Tropical,Rabi,Draksha,Angoor,Grapes,"Maharashtra, particularly Nashik district, is India's largest grape-producing region, accounting for ~70% of national output. Nashik is called the ""Wine Capital of India"". Grapes are grown from October–November (pruning) with harvest January–March. Major export crop.","Maharashtra, particularly Nashik district, is India's largest grape-producing region, accounting for ~70% of national output. Nashik is called the ""Wine Capital of India"". Grapes are grown from October–November (pruning) with harvest January–March. Major export crop.
+
+Scientific name: Vitis vinifera
+
+Category: Tropical
+
+Season: Rabi
+
+Marathi name: Draksha
+
+Hindi name: Angoor
+
+English name: Grapes",active,
+3,fruit,Orange,Citrus sinensis / Citrus reticulata,Citrus,Rabi,Santra,Santra,Orange,"Nagpur is the ""Orange City"" — Maharashtra's Vidarbha region produces the famous GI-tagged Nagpur Mandarin, India's most well-known orange variety, harvested November–January.","Nagpur is the ""Orange City"" — Maharashtra's Vidarbha region produces the famous GI-tagged Nagpur Mandarin, India's most well-known orange variety, harvested November–January.
+
+Scientific name: Citrus sinensis / Citrus reticulata
+
+Category: Citrus
+
+Season: Rabi
+
+Marathi name: Santra
+
+Hindi name: Santra
+
+English name: Orange",active,
+4,fruit,Banana,Musa acuminata / Musa balbisiana,Tropical,Year-round,Kela,Kela,Banana,Jalgaon district is India's banana capital — Maharashtra ranks first nationally in banana production. Jalgaon bananas have a GI tag. Bananas are cultivated year-round under drip irrigation.,"Jalgaon district is India's banana capital — Maharashtra ranks first nationally in banana production. Jalgaon bananas have a GI tag. Bananas are cultivated year-round under drip irrigation.
+
+Scientific name: Musa acuminata / Musa balbisiana
+
+Category: Tropical
+
+Season: Year-round
+
+Marathi name: Kela
+
+Hindi name: Kela
+
+English name: Banana",active,
+5,fruit,Guava,Psidium guajava,Tropical,Year-round,Peru,Amrood,Guava,"Guava is widely grown across Nashik, Pune, Solapur and Marathwada districts of Maharashtra. Rich in Vitamin C and lycopene; two crops per year possible.","Guava is widely grown across Nashik, Pune, Solapur and Marathwada districts of Maharashtra. Rich in Vitamin C and lycopene; two crops per year possible.
+
+Scientific name: Psidium guajava
+
+Category: Tropical
+
+Season: Year-round
+
+Marathi name: Peru
+
+Hindi name: Amrood
+
+English name: Guava",active,
+6,fruit,Pomegranate,Punica granatum,Sub-tropical,Year-round,Dalimb,Anar,Pomegranate,"Maharashtra is the largest pomegranate producer in India, contributing ~80% of national output. Solapur, Sangli, Pune, Nashik, Ahmednagar and Osmanabad are major growing districts. Bhagwa variety has a GI tag and is a prized export fruit.","Maharashtra is the largest pomegranate producer in India, contributing ~80% of national output. Solapur, Sangli, Pune, Nashik, Ahmednagar and Osmanabad are major growing districts. Bhagwa variety has a GI tag and is a prized export fruit.
+
+Scientific name: Punica granatum
+
+Category: Sub-tropical
+
+Season: Year-round
+
+Marathi name: Dalimb
+
+Hindi name: Anar
+
+English name: Pomegranate",active,
+7,fruit,Custard Apple,Annona squamosa / Annona reticulata,Tropical,Kharif,Sitafal,Sitafal,Custard Apple,"Custard apple is an important commercial fruit in Maharashtra, grown in dry regions of Nashik, Aurangabad, Osmanabad, Solapur and Pune. Season is September–November.","Custard apple is an important commercial fruit in Maharashtra, grown in dry regions of Nashik, Aurangabad, Osmanabad, Solapur and Pune. Season is September–November.
+
+Scientific name: Annona squamosa / Annona reticulata
+
+Category: Tropical
+
+Season: Kharif
+
+Marathi name: Sitafal
+
+Hindi name: Sitafal
+
+English name: Custard Apple",active,
+8,fruit,Papaya,Carica papaya,Tropical,Year-round,Papai,Papita,Papaya,"Papaya is grown extensively across Maharashtra for fresh fruit and raw papaya processing. Pune, Nashik, Jalgaon and Aurangabad are major producing districts.","Papaya is grown extensively across Maharashtra for fresh fruit and raw papaya processing. Pune, Nashik, Jalgaon and Aurangabad are major producing districts.
+
+Scientific name: Carica papaya
+
+Category: Tropical
+
+Season: Year-round
+
+Marathi name: Papai
+
+Hindi name: Papita
+
+English name: Papaya",active,
+9,fruit,Sapota,Manilkara zapota,Tropical,Year-round,Chiku,Chiku,Sapota / Chikoo,"Maharashtra is a major Sapota producer; Palghar, Nashik, Pune and Thane districts are major growing areas. Fruit is available year-round with peak seasons February–May and August–November.","Maharashtra is a major Sapota producer; Palghar, Nashik, Pune and Thane districts are major growing areas. Fruit is available year-round with peak seasons February–May and August–November.
+
+Scientific name: Manilkara zapota
+
+Category: Tropical
+
+Season: Year-round
+
+Marathi name: Chiku
+
+Hindi name: Chiku
+
+English name: Sapota / Chikoo",active,
+10,fruit,Coconut,Cocos nucifera,Tropical,Year-round,Naral,Nariyal,Coconut,"Coconut is a major crop of the Konkan coast — Ratnagiri, Sindhudurg, Raigad, Palghar and Thane. Used for copra, oil, tender coconut water, and in Maharashtrian cuisine.","Coconut is a major crop of the Konkan coast — Ratnagiri, Sindhudurg, Raigad, Palghar and Thane. Used for copra, oil, tender coconut water, and in Maharashtrian cuisine.
+
+Scientific name: Cocos nucifera
+
+Category: Tropical
+
+Season: Year-round
+
+Marathi name: Naral
+
+Hindi name: Nariyal
+
+English name: Coconut",active,
+11,fruit,Jackfruit,Artocarpus heterophyllus,Tropical,Zaid,Phanas,Kathal,Jackfruit,"Jackfruit grows in the humid Konkan belt; both unripe (vegetable use) and ripe fruit are consumed. Ratnagiri, Sindhudurg, Raigad and Thane are major areas. Season May–August.","Jackfruit grows in the humid Konkan belt; both unripe (vegetable use) and ripe fruit are consumed. Ratnagiri, Sindhudurg, Raigad and Thane are major areas. Season May–August.
+
+Scientific name: Artocarpus heterophyllus
+
+Category: Tropical
+
+Season: Zaid
+
+Marathi name: Phanas
+
+Hindi name: Kathal
+
+English name: Jackfruit",active,
+12,fruit,Amla,Phyllanthus emblica,Sub-tropical,Rabi,Avala,Amla,Indian Gooseberry,"Amla (Indian Gooseberry) is grown in Nashik, Aurangabad, Pune and Marathwada. Richest natural source of Vitamin C; harvested November–February. Important in Ayurveda and food processing (pickles, candy, juice).","Amla (Indian Gooseberry) is grown in Nashik, Aurangabad, Pune and Marathwada. Richest natural source of Vitamin C; harvested November–February. Important in Ayurveda and food processing (pickles, candy, juice).
+
+Scientific name: Phyllanthus emblica
+
+Category: Sub-tropical
+
+Season: Rabi
+
+Marathi name: Avala
+
+Hindi name: Amla
+
+English name: Indian Gooseberry",active,
+13,fruit,Strawberry,Fragaria × ananassa,Subtropical Highland,Rabi,Strawberry,Strawberry,Strawberry,"Mahabaleshwar (Satara district) and Panchgani produce 85% of India's strawberries. Cool highland climate (1,400m elevation) ideal; season November–March. GI tag pending; major tourist attraction.","Mahabaleshwar (Satara district) and Panchgani produce 85% of India's strawberries. Cool highland climate (1,400m elevation) ideal; season November–March. GI tag pending; major tourist attraction.
+
+Scientific name: Fragaria × ananassa
+
+Category: Subtropical Highland
+
+Season: Rabi
+
+Marathi name: Strawberry
+
+Hindi name: Strawberry
+
+English name: Strawberry",active,
+14,fruit,Fig,Ficus carica,Sub-tropical,Zaid,Anjeer,Anjeer,Fig,"Pune, particularly Purandar taluka, is the ""Fig Capital"" of India. Maharashtra has a GI tag for Purandar Fig. Season: January–March (main) and June–August (secondary).","Pune, particularly Purandar taluka, is the ""Fig Capital"" of India. Maharashtra has a GI tag for Purandar Fig. Season: January–March (main) and June–August (secondary).
+
+Scientific name: Ficus carica
+
+Category: Sub-tropical
+
+Season: Zaid
+
+Marathi name: Anjeer
+
+Hindi name: Anjeer
+
+English name: Fig",active,
+15,fruit,Ber,Ziziphus mauritiana,Sub-tropical,Rabi,Bor,Ber,Indian Jujube / Ber,"Ber is a drought-tolerant fruit grown in dry zones of Maharashtra — Solapur, Osmanabad, Latur, Aurangabad. Season November–February. Rich in Vitamin C and minerals; good for dry regions.","Ber is a drought-tolerant fruit grown in dry zones of Maharashtra — Solapur, Osmanabad, Latur, Aurangabad. Season November–February. Rich in Vitamin C and minerals; good for dry regions.
+
+Scientific name: Ziziphus mauritiana
+
+Category: Sub-tropical
+
+Season: Rabi
+
+Marathi name: Bor
+
+Hindi name: Ber
+
+English name: Indian Jujube / Ber",active,
+16,grain,Rice,Oryza sativa,Cereal,Kharif,Bhat / Tandul,Chawal,Rice,"Rice is the primary Kharif food grain of Maharashtra, grown mainly in Konkan (Ratnagiri, Sindhudurg, Raigad), Western Ghats foothills, and Vidarbha. Maharashtra grows aromatic traditional varieties alongside high-yielding types. Total area ~1.5 million hectares.","Rice is the primary Kharif food grain of Maharashtra, grown mainly in Konkan (Ratnagiri, Sindhudurg, Raigad), Western Ghats foothills, and Vidarbha. Maharashtra grows aromatic traditional varieties alongside high-yielding types. Total area ~1.5 million hectares.
+
+Scientific name: Oryza sativa
+
+Category: Cereal
+
+Season: Kharif
+
+Marathi name: Bhat / Tandul
+
+Hindi name: Chawal
+
+English name: Rice",active,
+17,grain,Wheat,Triticum aestivum / Triticum durum,Cereal,Rabi,Gahu,Gehun,Wheat,"Wheat is Maharashtra's principal Rabi crop; grown in Nashik, Pune, Ahmednagar, Aurangabad, Solapur and Vidarbha under irrigated conditions. Sown October–November, harvested February–March. Maharashtra grows both bread wheat and durum (for semolina/pasta).","Wheat is Maharashtra's principal Rabi crop; grown in Nashik, Pune, Ahmednagar, Aurangabad, Solapur and Vidarbha under irrigated conditions. Sown October–November, harvested February–March. Maharashtra grows both bread wheat and durum (for semolina/pasta).
+
+Scientific name: Triticum aestivum / Triticum durum
+
+Category: Cereal
+
+Season: Rabi
+
+Marathi name: Gahu
+
+Hindi name: Gehun
+
+English name: Wheat",active,
+18,grain,Jowar,Sorghum bicolor,Millet / Cereal,Kharif,Jwarī,Jowar,Sorghum,"Maharashtra is India's largest Jowar-producing state. Jowar (bhakri) is the staple food of rural Maharashtra. Grown in Solapur, Osmanabad, Latur, Aurangabad, Nashik. Kharif and Rabi (sweet sorghum for fodder) seasons. Drought tolerant and rainfed crop.","Maharashtra is India's largest Jowar-producing state. Jowar (bhakri) is the staple food of rural Maharashtra. Grown in Solapur, Osmanabad, Latur, Aurangabad, Nashik. Kharif and Rabi (sweet sorghum for fodder) seasons. Drought tolerant and rainfed crop.
+
+Scientific name: Sorghum bicolor
+
+Category: Millet / Cereal
+
+Season: Kharif
+
+Marathi name: Jwarī
+
+Hindi name: Jowar
+
+English name: Sorghum",active,
+19,grain,Bajra,Pennisetum glaucum,Millet / Cereal,Kharif,Bajrī,Bajra,Pearl Millet,"Bajra is a major Kharif crop of dry districts of Maharashtra — Nashik, Jalgaon, Dhule, Aurangabad. Very drought tolerant; important for poor rainfall areas. Bhakri (flatbread) is traditional use.","Bajra is a major Kharif crop of dry districts of Maharashtra — Nashik, Jalgaon, Dhule, Aurangabad. Very drought tolerant; important for poor rainfall areas. Bhakri (flatbread) is traditional use.
+
+Scientific name: Pennisetum glaucum
+
+Category: Millet / Cereal
+
+Season: Kharif
+
+Marathi name: Bajrī
+
+Hindi name: Bajra
+
+English name: Pearl Millet",active,
+20,grain,Maize,Zea mays,Cereal,Kharif,Makka,Makka,Maize / Corn,"Maize is an important Kharif crop in Nashik, Pune, Aurangabad, Ahmednagar and Nanded districts. Used for food (corn), poultry feed, starch and ethanol. Maharashtra contributes ~5% of national maize production.","Maize is an important Kharif crop in Nashik, Pune, Aurangabad, Ahmednagar and Nanded districts. Used for food (corn), poultry feed, starch and ethanol. Maharashtra contributes ~5% of national maize production.
+
+Scientific name: Zea mays
+
+Category: Cereal
+
+Season: Kharif
+
+Marathi name: Makka
+
+Hindi name: Makka
+
+English name: Maize / Corn",active,
+21,grain,Ragi,Eleusine coracana,Millet,Kharif,Nachni,Ragi / Mandua,Finger Millet,"Ragi (Nachni) is a nutritionally dense millet; grown in hilly and tribal areas of Nashik, Pune (Junnar), Nandurbar and Konkan. Richest grain source of calcium (344 mg/100g). Nachni bhakri and nachni satva (porridge) are traditional foods.","Ragi (Nachni) is a nutritionally dense millet; grown in hilly and tribal areas of Nashik, Pune (Junnar), Nandurbar and Konkan. Richest grain source of calcium (344 mg/100g). Nachni bhakri and nachni satva (porridge) are traditional foods.
+
+Scientific name: Eleusine coracana
+
+Category: Millet
+
+Season: Kharif
+
+Marathi name: Nachni
+
+Hindi name: Ragi / Mandua
+
+English name: Finger Millet",active,
+22,grain,Kodo Millet,Paspalum scrobiculatum,Millet,Kharif,Kodra,Kodra,Kodo Millet,"Kodo Millet (Kodra) is a traditional millet grown in tribal/hilly areas of Nashik, Nandurbar, Amravati and Gadchiroli. Drought-tolerant; low input; nutritious; part of the Nutri-Cereal revival initiative in Maharashtra.","Kodo Millet (Kodra) is a traditional millet grown in tribal/hilly areas of Nashik, Nandurbar, Amravati and Gadchiroli. Drought-tolerant; low input; nutritious; part of the Nutri-Cereal revival initiative in Maharashtra.
+
+Scientific name: Paspalum scrobiculatum
+
+Category: Millet
+
+Season: Kharif
+
+Marathi name: Kodra
+
+Hindi name: Kodra
+
+English name: Kodo Millet",active,
+23,grain,Little Millet,Panicum sumatrense,Millet,Kharif,Vari / Kutki,Kutki,Little Millet,"Little Millet (Vari) is used during religious fasting in Maharashtra (Ekadashi, Navratri). Grown in tribal belts of Nashik, Nandurbar and Gadchiroli. Reviving due to health consciousness and fasting food markets.","Little Millet (Vari) is used during religious fasting in Maharashtra (Ekadashi, Navratri). Grown in tribal belts of Nashik, Nandurbar and Gadchiroli. Reviving due to health consciousness and fasting food markets.
+
+Scientific name: Panicum sumatrense
+
+Category: Millet
+
+Season: Kharif
+
+Marathi name: Vari / Kutki
+
+Hindi name: Kutki
+
+English name: Little Millet",active,
+24,grain,Barnyard Millet,Echinochloa frumentacea,Millet,Kharif,Bhagar / Sanwa,Sanwa,Barnyard Millet,"Barnyard Millet (Bhagar) is extremely popular in Maharashtra for religious fasting (Upvasachi bhakri, Bhagar rice). Widely consumed during Ekadashi, Navratri. Grown in Nashik, Aurangabad, Nandurbar. High fibre, low GI.","Barnyard Millet (Bhagar) is extremely popular in Maharashtra for religious fasting (Upvasachi bhakri, Bhagar rice). Widely consumed during Ekadashi, Navratri. Grown in Nashik, Aurangabad, Nandurbar. High fibre, low GI.
+
+Scientific name: Echinochloa frumentacea
+
+Category: Millet
+
+Season: Kharif
+
+Marathi name: Bhagar / Sanwa
+
+Hindi name: Sanwa
+
+English name: Barnyard Millet",active,
+25,grain,Proso Millet,Panicum miliaceum,Millet,Kharif,Cheena,Cheena,Proso Millet / Common Millet,Proso Millet is an ancient grain with fastest growth cycle (60–75 days) among millets. Grown in dry areas of Maharashtra as an emergency/catch crop. Low water requirement; high nutritional value. Reviving under health and organic food movements.,"Proso Millet is an ancient grain with fastest growth cycle (60–75 days) among millets. Grown in dry areas of Maharashtra as an emergency/catch crop. Low water requirement; high nutritional value. Reviving under health and organic food movements.
+
+Scientific name: Panicum miliaceum
+
+Category: Millet
+
+Season: Kharif
+
+Marathi name: Cheena
+
+Hindi name: Cheena
+
+English name: Proso Millet / Common Millet",active,
+26,grain,Tur (Pigeon Pea),Cajanus cajan,Pulse,Kharif,Tur,Arhar / Tur,Pigeon Pea / Red Gram,"Maharashtra is the largest Tur (pigeon pea) producing state in India. Grown extensively in Latur, Osmanabad, Nanded, Solapur and Marathwada. Staple dal of Maharashtra — tur dal (amti) is fundamental to Maharashtrian thali. Kharif season: sown June–July, harvested January–February.","Maharashtra is the largest Tur (pigeon pea) producing state in India. Grown extensively in Latur, Osmanabad, Nanded, Solapur and Marathwada. Staple dal of Maharashtra — tur dal (amti) is fundamental to Maharashtrian thali. Kharif season: sown June–July, harvested January–February.
+
+Scientific name: Cajanus cajan
+
+Category: Pulse
+
+Season: Kharif
+
+Marathi name: Tur
+
+Hindi name: Arhar / Tur
+
+English name: Pigeon Pea / Red Gram",active,
+27,grain,Chickpea,Cicer arietinum,Pulse,Rabi,Harbhara / Chana,Chana,Chickpea / Bengal Gram,"Maharashtra is a leading chickpea-growing state; Marathwada (Latur, Osmanabad, Aurangabad) and Vidarbha are key regions. Both desi (brown) and kabuli (white/large) types grown. Rabi season: sown October–November, harvested January–February.","Maharashtra is a leading chickpea-growing state; Marathwada (Latur, Osmanabad, Aurangabad) and Vidarbha are key regions. Both desi (brown) and kabuli (white/large) types grown. Rabi season: sown October–November, harvested January–February.
+
+Scientific name: Cicer arietinum
+
+Category: Pulse
+
+Season: Rabi
+
+Marathi name: Harbhara / Chana
+
+Hindi name: Chana
+
+English name: Chickpea / Bengal Gram",active,
+28,grain,Urad (Black Gram),Vigna mungo,Pulse,Kharif,Udid,Urad,Black Gram / Urad,"Urad (Udid) is a Kharif pulse grown in Nanded, Latur, Osmanabad, Aurangabad and parts of Vidarbha. Essential for Maharashtrian vada, idli (batter), and dal. Short-duration; good in mixed cropping with Tur.","Urad (Udid) is a Kharif pulse grown in Nanded, Latur, Osmanabad, Aurangabad and parts of Vidarbha. Essential for Maharashtrian vada, idli (batter), and dal. Short-duration; good in mixed cropping with Tur.
+
+Scientific name: Vigna mungo
+
+Category: Pulse
+
+Season: Kharif
+
+Marathi name: Udid
+
+Hindi name: Urad
+
+English name: Black Gram / Urad",active,
+29,grain,Masoor (Lentil),Lens culinaris,Pulse,Rabi,Masur,Masoor,Lentil / Masoor,"Masoor (Red Lentil) is a Rabi pulse grown in Marathwada and Vidarbha — Latur, Osmanabad, Yavatmal. Less common than Tur and Chana but nutritionally important; pink/red split dal used widely in Maharashtrian cuisine.","Masoor (Red Lentil) is a Rabi pulse grown in Marathwada and Vidarbha — Latur, Osmanabad, Yavatmal. Less common than Tur and Chana but nutritionally important; pink/red split dal used widely in Maharashtrian cuisine.
+
+Scientific name: Lens culinaris
+
+Category: Pulse
+
+Season: Rabi
+
+Marathi name: Masur
+
+Hindi name: Masoor
+
+English name: Lentil / Masoor",active,
+30,grain,Soybean,Glycine max,Oilseed,Kharif,Soya,Soya,Soybean,"Maharashtra is the largest soybean-growing state in India, with ~40% of national acreage. Grown in Vidarbha (Nagpur, Amravati), Marathwada (Latur, Osmanabad) and Nashik. Major oilseed and protein crop. Sown June–July; harvested September–October.","Maharashtra is the largest soybean-growing state in India, with ~40% of national acreage. Grown in Vidarbha (Nagpur, Amravati), Marathwada (Latur, Osmanabad) and Nashik. Major oilseed and protein crop. Sown June–July; harvested September–October.
+
+Scientific name: Glycine max
+
+Category: Oilseed
+
+Season: Kharif
+
+Marathi name: Soya
+
+Hindi name: Soya
+
+English name: Soybean",active,
+31,grain,Groundnut,Arachis hypogaea,Oilseed,Kharif,Shengdana,Moongphali,Groundnut / Peanut,"Groundnut is a major Kharif oilseed and cash crop in Maharashtra — Akola, Amravati, Wardha (Vidarbha) and Nashik, Jalgaon (North Maharashtra). Maharashtra is 4th nationally. Also a Rabi irrigated crop in Solapur. Famous for ""Vidarbha shengdana"".","Groundnut is a major Kharif oilseed and cash crop in Maharashtra — Akola, Amravati, Wardha (Vidarbha) and Nashik, Jalgaon (North Maharashtra). Maharashtra is 4th nationally. Also a Rabi irrigated crop in Solapur. Famous for ""Vidarbha shengdana"".
+
+Scientific name: Arachis hypogaea
+
+Category: Oilseed
+
+Season: Kharif
+
+Marathi name: Shengdana
+
+Hindi name: Moongphali
+
+English name: Groundnut / Peanut",active,
+32,grain,Sesame,Sesamum indicum,Oilseed,Kharif,Til,Til,Sesame,"Sesame (Til) is a traditional oilseed crop of Maharashtra grown in Aurangabad, Jalgaon, Nashik and Osmanabad. Essential in Maharashtrian sweets — tilgul (sesame-jaggery balls) for Makar Sankranti. High-value crop for domestic and export market.","Sesame (Til) is a traditional oilseed crop of Maharashtra grown in Aurangabad, Jalgaon, Nashik and Osmanabad. Essential in Maharashtrian sweets — tilgul (sesame-jaggery balls) for Makar Sankranti. High-value crop for domestic and export market.
+
+Scientific name: Sesamum indicum
+
+Category: Oilseed
+
+Season: Kharif
+
+Marathi name: Til
+
+Hindi name: Til
+
+English name: Sesame",active,
+33,grain,Sunflower,Helianthus annuus,Oilseed,Rabi,Suryafool,Surajmukhi,Sunflower,"Sunflower is grown as a Rabi crop in Maharashtra — Solapur, Osmanabad, Latur, Aurangabad, Nashik. Good oil crop for light black soils; used as edible oil. Also a Kharif crop in some areas.","Sunflower is grown as a Rabi crop in Maharashtra — Solapur, Osmanabad, Latur, Aurangabad, Nashik. Good oil crop for light black soils; used as edible oil. Also a Kharif crop in some areas.
+
+Scientific name: Helianthus annuus
+
+Category: Oilseed
+
+Season: Rabi
+
+Marathi name: Suryafool
+
+Hindi name: Surajmukhi
+
+English name: Sunflower",active,
+34,grain,Sugarcane,Saccharum officinarum,Cash Crop / Industrial,Year-round,Oos / Verdi,Ganna,Sugarcane,"Maharashtra is India's second-largest sugarcane and sugar-producing state. The Deccan plateau districts of Pune, Satara, Sangli, Kolhapur, Solapur, Nashik and Ahmednagar form the ""Sugar Belt"". Over 200 cooperative sugar factories operate. Maharashtra also leads in ethanol production from sugarcane. Crushed October–March after 10–14 months of growth. By-products: bagasse (energy), molasses (ethanol/alcohol), press mud (compost).","Maharashtra is India's second-largest sugarcane and sugar-producing state. The Deccan plateau districts of Pune, Satara, Sangli, Kolhapur, Solapur, Nashik and Ahmednagar form the ""Sugar Belt"". Over 200 cooperative sugar factories operate. Maharashtra also leads in ethanol production from sugarcane. Crushed October–March after 10–14 months of growth. By-products: bagasse (energy), molasses (ethanol/alcohol), press mud (compost).
+
+Scientific name: Saccharum officinarum
+
+Category: Cash Crop / Industrial
+
+Season: Year-round
+
+Marathi name: Oos / Verdi
+
+Hindi name: Ganna
+
+English name: Sugarcane",active,
+35,vegetable,Onion,Allium cepa,Vegetable / Spice,Rabi,Kanda,Pyaaz,Onion,"Maharashtra is India's largest onion-producing state (~40% national share). Nashik, Pune, Ahmednagar, Solapur and Satara are prime growing districts. Nashik's Lasalgaon APMC is Asia's largest onion market. Three crops a year possible: Kharif (June–October), Late Kharif (September–January), and Rabi (January–May). Major export crop to Europe, South-East Asia and Middle East.","Maharashtra is India's largest onion-producing state (~40% national share). Nashik, Pune, Ahmednagar, Solapur and Satara are prime growing districts. Nashik's Lasalgaon APMC is Asia's largest onion market. Three crops a year possible: Kharif (June–October), Late Kharif (September–January), and Rabi (January–May). Major export crop to Europe, South-East Asia and Middle East.
+
+Scientific name: Allium cepa
+
+Category: Vegetable / Spice
+
+Season: Rabi
+
+Marathi name: Kanda
+
+Hindi name: Pyaaz
+
+English name: Onion",active,
+36,vegetable,Tomato,Solanum lycopersicum,Vegetable,Year-round,Tomato,Tamatar,Tomato,"Maharashtra is a top-3 tomato-producing state. Nashik, Pune, Satara, Ahmednagar and Solapur are major districts. Tomatoes are grown year-round under irrigated conditions; also a major processing crop for puree, paste and ketchup. Narayangaon (Pune) is an important tomato trading hub.","Maharashtra is a top-3 tomato-producing state. Nashik, Pune, Satara, Ahmednagar and Solapur are major districts. Tomatoes are grown year-round under irrigated conditions; also a major processing crop for puree, paste and ketchup. Narayangaon (Pune) is an important tomato trading hub.
+
+Scientific name: Solanum lycopersicum
+
+Category: Vegetable
+
+Season: Year-round
+
+Marathi name: Tomato
+
+Hindi name: Tamatar
+
+English name: Tomato",active,
+37,fruit,Sweet Lime,Citrus limetta,Citrus,Year-round,Mosambi,Mosambi,Sweet Lime / Mosambi,"Sweet Lime (Mosambi) is one of Maharashtra's most commercially important citrus fruits, distinct from orange. Solapur, Osmanabad, Aurangabad, Pune and Nashik are major growing centres. Extremely popular for fresh juice; sold across India year-round. Maharashtra accounts for ~35% of India's Mosambi production.","Sweet Lime (Mosambi) is one of Maharashtra's most commercially important citrus fruits, distinct from orange. Solapur, Osmanabad, Aurangabad, Pune and Nashik are major growing centres. Extremely popular for fresh juice; sold across India year-round. Maharashtra accounts for ~35% of India's Mosambi production.
+
+Scientific name: Citrus limetta
+
+Category: Citrus
+
+Season: Year-round
+
+Marathi name: Mosambi
+
+Hindi name: Mosambi
+
+English name: Sweet Lime / Mosambi",active,
+38,vegetable,Garlic,Allium sativum,Vegetable / Spice,Rabi,Lasun,Lahsun,Garlic,"Garlic is an important Rabi spice crop in Maharashtra — Nashik, Satara, Solapur, Pune, Aurangabad. Maharashtra is among top-5 garlic-producing states. Sown October–November; harvested February–March. Maharashtra garlic is known for its pungency and high allicin content. Major export crop and ingredient in Indian cuisine and Ayurvedic medicine.","Garlic is an important Rabi spice crop in Maharashtra — Nashik, Satara, Solapur, Pune, Aurangabad. Maharashtra is among top-5 garlic-producing states. Sown October–November; harvested February–March. Maharashtra garlic is known for its pungency and high allicin content. Major export crop and ingredient in Indian cuisine and Ayurvedic medicine.
+
+Scientific name: Allium sativum
+
+Category: Vegetable / Spice
+
+Season: Rabi
+
+Marathi name: Lasun
+
+Hindi name: Lahsun
+
+English name: Garlic",active,
+39,vegetable,Turmeric,Curcuma longa,Spice / Medicinal,Kharif,Halad,Haldi,Turmeric,"Maharashtra is one of India's top turmeric-producing states. Sangli, Kolhapur, Satara and Pune are major growing districts. Sangli's Erande (Yelur) turmeric is GI-tagged and renowned for its high curcumin content (>4.5%). Harvested January–March after 8–9 months. Essential in Maharashtrian cooking, medicine (Ayurveda) and cosmetics. Major export to USA, Japan, EU.","Maharashtra is one of India's top turmeric-producing states. Sangli, Kolhapur, Satara and Pune are major growing districts. Sangli's Erande (Yelur) turmeric is GI-tagged and renowned for its high curcumin content (>4.5%). Harvested January–March after 8–9 months. Essential in Maharashtrian cooking, medicine (Ayurveda) and cosmetics. Major export to USA, Japan, EU.
+
+Scientific name: Curcuma longa
+
+Category: Spice / Medicinal
+
+Season: Kharif
+
+Marathi name: Halad
+
+Hindi name: Haldi
+
+English name: Turmeric",active,
+40,vegetable,Chilli,Capsicum annuum,Spice / Vegetable,Kharif,Mirchi,Mirch,Chilli / Hot Pepper,"Maharashtra is a major chilli-producing state. Aurangabad, Nashik, Pune, Latur, Osmanabad and Amravati are key districts for dry chilli production. Kolhapur Red Chilli is GI-tagged and one of the hottest and most flavourful in India. Chilli grown for fresh, dry, and powder markets. Key ingredient in Kolhapuri cuisine and Maharashtra masalas.","Maharashtra is a major chilli-producing state. Aurangabad, Nashik, Pune, Latur, Osmanabad and Amravati are key districts for dry chilli production. Kolhapur Red Chilli is GI-tagged and one of the hottest and most flavourful in India. Chilli grown for fresh, dry, and powder markets. Key ingredient in Kolhapuri cuisine and Maharashtra masalas.
+
+Scientific name: Capsicum annuum
+
+Category: Spice / Vegetable
+
+Season: Kharif
+
+Marathi name: Mirchi
+
+Hindi name: Mirch
+
+English name: Chilli / Hot Pepper",active,
+41,vegetable,Ginger,Zingiber officinale,Spice / Medicinal,Kharif,Aale,Adrak,Ginger,"Ginger is grown in the high-rainfall Western Ghats districts of Maharashtra — Satara, Kolhapur, Sindhudurg, Pune (Maval). A Kharif crop, sown April–May and harvested November–December. Fresh green ginger and dried soonth (dried ginger powder) both produced. Maharashtra contributes ~8% of India's ginger output. High value for domestic cooking and pharma/ayurvedic industry.","Ginger is grown in the high-rainfall Western Ghats districts of Maharashtra — Satara, Kolhapur, Sindhudurg, Pune (Maval). A Kharif crop, sown April–May and harvested November–December. Fresh green ginger and dried soonth (dried ginger powder) both produced. Maharashtra contributes ~8% of India's ginger output. High value for domestic cooking and pharma/ayurvedic industry.
+
+Scientific name: Zingiber officinale
+
+Category: Spice / Medicinal
+
+Season: Kharif
+
+Marathi name: Aale
+
+Hindi name: Adrak
+
+English name: Ginger",active,
+42,fruit,Tamarind,Tamarindus indica,Fruit / Spice,Rabi,Chincha,Imli,Tamarind,"Tamarind is a perennial tree crop widely found across Maharashtra, especially in Marathwada (Aurangabad, Osmanabad, Latur) and Vidarbha (Amravati, Nagpur). It is a rainfed, low-maintenance crop harvested January–April. Tamarind pulp, seed and shell all have commercial value. Key ingredient in Maharashtra's chutneys, rasam-style dishes, and the famous Panha drink. Also used in pharmaceuticals, confectionery and food processing.","Tamarind is a perennial tree crop widely found across Maharashtra, especially in Marathwada (Aurangabad, Osmanabad, Latur) and Vidarbha (Amravati, Nagpur). It is a rainfed, low-maintenance crop harvested January–April. Tamarind pulp, seed and shell all have commercial value. Key ingredient in Maharashtra's chutneys, rasam-style dishes, and the famous Panha drink. Also used in pharmaceuticals, confectionery and food processing.
+
+Scientific name: Tamarindus indica
+
+Category: Fruit / Spice
+
+Season: Rabi
+
+Marathi name: Chincha
+
+Hindi name: Imli
+
+English name: Tamarind",active,
+43,vegetable,Fenugreek,Trigonella foenum-graecum,Spice / Vegetable / Medicinal,Rabi,Methi,Methi,Fenugreek / Methi,"Fenugreek (Methi) is grown across Maharashtra as a Rabi crop for its leaves (fresh vegetable) and seeds (spice). Nashik, Pune, Aurangabad and Solapur are major growing areas. The seeds are essential in Maharashtra's goda masala, pickles and parathas. Rich in fenuside, fibre and iron. Also used medicinally for diabetes and lactation support.","Fenugreek (Methi) is grown across Maharashtra as a Rabi crop for its leaves (fresh vegetable) and seeds (spice). Nashik, Pune, Aurangabad and Solapur are major growing areas. The seeds are essential in Maharashtra's goda masala, pickles and parathas. Rich in fenuside, fibre and iron. Also used medicinally for diabetes and lactation support.
+
+Scientific name: Trigonella foenum-graecum
+
+Category: Spice / Vegetable / Medicinal
+
+Season: Rabi
+
+Marathi name: Methi
+
+Hindi name: Methi
+
+English name: Fenugreek / Methi",active,
+44,vegetable,Coriander,Coriandrum sativum,Spice / Herb,Rabi,Kothimbir,Dhaniya,Coriander / Dhania,"Coriander is one of Maharashtra's most important spice crops, grown in Nashik, Pune, Satara, Aurangabad. Used both fresh (green coriander leaves) and dry (dhania seeds). Kothimbir Vadi (coriander fritters) is a signature Maharashtrian snack. Maharashtra is among India's top-5 coriander-producing states. Season: October–January for leaves; February–March for seeds.","Coriander is one of Maharashtra's most important spice crops, grown in Nashik, Pune, Satara, Aurangabad. Used both fresh (green coriander leaves) and dry (dhania seeds). Kothimbir Vadi (coriander fritters) is a signature Maharashtrian snack. Maharashtra is among India's top-5 coriander-producing states. Season: October–January for leaves; February–March for seeds.
+
+Scientific name: Coriandrum sativum
+
+Category: Spice / Herb
+
+Season: Rabi
+
+Marathi name: Kothimbir
+
+Hindi name: Dhaniya
+
+English name: Coriander / Dhania",active,
+45,fruit,Watermelon,Citrullus lanatus,Cucurbit Fruit,Zaid,Kalingad,Tarbooz,Watermelon,"Watermelon is a major summer (Zaid) crop in Maharashtra — Nashik, Aurangabad, Solapur, Latur, Pune. Grown on sandy riverbed soils; sown February–March, harvested April–June. Maharashtra is a leading watermelon-producing state for domestic market. Large fruits preferred in Indian market; seedless hybrids gaining popularity.","Watermelon is a major summer (Zaid) crop in Maharashtra — Nashik, Aurangabad, Solapur, Latur, Pune. Grown on sandy riverbed soils; sown February–March, harvested April–June. Maharashtra is a leading watermelon-producing state for domestic market. Large fruits preferred in Indian market; seedless hybrids gaining popularity.
+
+Scientific name: Citrullus lanatus
+
+Category: Cucurbit Fruit
+
+Season: Zaid
+
+Marathi name: Kalingad
+
+Hindi name: Tarbooz
+
+English name: Watermelon",active,
+46,fruit,Muskmelon,Cucumis melo,Cucurbit Fruit,Zaid,Kharbuja,Kharbuja,Muskmelon / Cantaloupe,"Muskmelon (Kharbuj) is an important summer fruit crop in Maharashtra — Nashik, Pune, Solapur, Jalgaon. Grown on sandy loam soils; excellent in Godavari and Bhima river basin. Season March–June. High demand for fresh consumption and cooling drinks.","Muskmelon (Kharbuj) is an important summer fruit crop in Maharashtra — Nashik, Pune, Solapur, Jalgaon. Grown on sandy loam soils; excellent in Godavari and Bhima river basin. Season March–June. High demand for fresh consumption and cooling drinks.
+
+Scientific name: Cucumis melo
+
+Category: Cucurbit Fruit
+
+Season: Zaid
+
+Marathi name: Kharbuja
+
+Hindi name: Kharbuja
+
+English name: Muskmelon / Cantaloupe",active,
+47,fruit,Lemon,Citrus limon / Citrus aurantiifolia,Citrus,Year-round,Limbu,Nimbu,Lemon / Lime,"Lemon and acid lime are widely grown across Maharashtra — Nashik, Pune, Aurangabad, Vidarbha. A perennial crop with year-round fruiting under irrigation. Widely used in Maharashtrian cuisine (limbu sherbet, chutneys, achaar), street food, and increasing export to the Gulf. Drought-tolerant once established.","Lemon and acid lime are widely grown across Maharashtra — Nashik, Pune, Aurangabad, Vidarbha. A perennial crop with year-round fruiting under irrigation. Widely used in Maharashtrian cuisine (limbu sherbet, chutneys, achaar), street food, and increasing export to the Gulf. Drought-tolerant once established.
+
+Scientific name: Citrus limon / Citrus aurantiifolia
+
+Category: Citrus
+
+Season: Year-round
+
+Marathi name: Limbu
+
+Hindi name: Nimbu
+
+English name: Lemon / Lime",active,

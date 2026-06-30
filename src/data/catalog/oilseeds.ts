@@ -5,7 +5,7 @@ export const oilseedsProducts: Product[] = [
     id: 'groundnut',
     name: 'Groundnut / Peanut',
     slug: 'groundnut',
-    heroImage: '/assets/greenwings-grains.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/groundnut/groundnut_1.jpg',
     overview:
       'Groundnut, also known as peanut, is one of India\'s most important oilseed crops, contributing substantially to domestic edible oil production and the global kernel trade. Grown across diverse agro-climatic zones, Indian groundnut is prized for its bold kernel size, consistent oil content, and rich roasted flavour. GreenWings partners with established producing regions to deliver graded and sorted kernels for oil crushing, confectionery, butter manufacturing, and export programmes.\n\nAs a dual-purpose crop, groundnut serves both the edible oil industry and high-value food markets. Mechanised grading, moisture-controlled storage, and rigorous quality inspection ensure that every lot meets buyer specifications for oil yield, aflatoxin limits, kernel count, and freedom from foreign matter. India\'s groundnut sector continues to evolve with improved varieties, better post-harvest infrastructure, and growing demand for certified export-grade kernels.\n\nFrom Gujarat\'s expansive irrigated farms to the rainfed fields of Andhra Pradesh and Rajasthan, groundnut remains a cornerstone of India\'s oilseed economy. GreenWings facilitates seamless access to shelled, bold, and split-grade groundnut for buyers seeking reliable supply for crushing, roasting, blanching, and specialty food applications.',
     keyBenefits: [
@@ -145,7 +145,7 @@ export const oilseedsProducts: Product[] = [
     id: 'soybean',
     name: 'Soybean',
     slug: 'soybean',
-    heroImage: '/assets/greenwings-grains.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/soybean/soybean_1.webp',
     overview:
       'Soybean is India\'s fastest-growing oilseed crop, playing an increasingly central role in edible oil production, protein meal exports, and the emerging plant-based food sector. Indian soybean is predominantly grown in the central and western states under rainfed conditions, with Madhya Pradesh alone accounting for nearly half of national production. GreenWings offers graded soybean for crushing, meal export, and identity-preserved food-grade programmes.\n\nThe crop\'s dual value — as a source of premium vegetable oil and high-protein defatted meal — makes soybean strategically important for both domestic food security and India\'s agricultural export portfolio. Advanced processing infrastructure, solvent extraction plants, and quality-certified refineries ensure that Indian soybean oil and meal meet stringent international buyer requirements.\n\nWith rising global demand for plant protein, sustainable meal for aquaculture and poultry, and identity-preserved non-GM soybeans for food applications, India\'s soybean sector is positioned for continued growth. GreenWings connects quality-conscious buyers with graded lots meeting specifications for oil content, protein level, moisture, and foreign matter.',
     keyBenefits: [
@@ -295,7 +295,7 @@ export const oilseedsProducts: Product[] = [
     id: 'sesame',
     name: 'Sesame / Til',
     slug: 'sesame',
-    heroImage: '/assets/greenwings-grains.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/sesame/sesame_1.jpg',
     overview:
       'Sesame, known as til in India, is one of the world\'s oldest cultivated oilseeds, revered for its distinctive nutty flavour, high oil content, and exceptional nutritional profile. India is the world\'s largest producer of sesame, with production spanning diverse agro-climatic zones from Rajasthan\'s arid plains to the humid tracts of West Bengal and Odisha. GreenWings offers graded sesame for oil extraction, tahini manufacturing, confectionery, bakery, and premium export markets.\n\nIndian sesame is available in a wide spectrum of colours including white, brown, black, and mixed, each type serving specific market segments and culinary traditions. The hulled white sesame market is particularly significant for tahini, halva, and bakery toppings, while brown and black varieties are prized for traditional foods, health products, and specialty applications.\n\nSesame oil, extracted from carefully cleaned and graded seed, is valued both as a premium cooking medium and as a base for pharmaceutical and cosmetic formulations. Its high oxidative stability and distinctive flavour profile command premium pricing in domestic and international specialty oil markets.',
     keyBenefits: [
@@ -440,7 +440,7 @@ export const oilseedsProducts: Product[] = [
     id: 'sunflower',
     name: 'Sunflower',
     slug: 'sunflower',
-    heroImage: '/assets/greenwings-grains.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/sunflower/sunflower_1.jpg',
     overview:
       'Sunflower is a commercially important oilseed crop in India, cultivated primarily for its high-quality edible oil rich in polyunsaturated fatty acids and Vitamin E. The crop has expanded significantly in Karnataka, Maharashtra, and Andhra Pradesh, supported by hybrids that offer strong yield potential and good oil recovery. GreenWings provides graded sunflower seed for oil extraction and connects buyers with refined sunflower oil supply programmes.\n\nIndian sunflower oil is positioned as a premium heart-healthy cooking medium with clear golden colour, light flavour, and excellent frying stability. Its favourable fatty acid profile — high in linoleic acid with a good balance of monounsaturates — appeals to health-conscious consumers across domestic and export markets. The solvent extraction industry efficiently processes sunflower seed into refined oil, with the resulting meal serving as a valuable protein source for livestock feed.\n\nSunflower cultivation benefits from short duration, drought tolerance, and good fit in multiple cropping systems. The development of improved hybrids with higher oil content and disease resistance continues to strengthen India\'s sunflower sector. GreenWings supports quality-focused procurement with specifications for oil content, seed cleanliness, moisture, and varietal purity.',
     keyBenefits: [
@@ -585,7 +585,7 @@ export const oilseedsProducts: Product[] = [
     id: 'mustard',
     name: 'Mustard / Sarson',
     slug: 'mustard',
-    heroImage: '/assets/greenwings-grains.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/mustard/mustard_1.jpg',
     overview:
       'Mustard is India\'s most culturally significant oilseed crop, deeply embedded in the country\'s culinary traditions, agricultural heritage, and rural economy. Indian mustard oil — known as sarson ka tel — is the preferred cooking medium across northern, eastern, and central India, valued for its pungent flavour, golden colour, and perceived health benefits. GreenWings offers graded mustard seed for oil extraction, condiment manufacturing, and export-oriented supply programmes.\n\nIndia grows several mustard species including Indian mustard (Brassica juncea), yellow mustard (Sinapis alba), and black mustard (Brassica nigra), each serving distinct market segments. The extracted oil serves household cooking, food-service frying, traditional pickle making, and industrial applications, while mustard flour and whole seeds are key ingredients in condiments, sauces, and processed foods.\n\nThe Indian mustard sector benefits from strong domestic demand stability, well-established trading networks, and growing export interest in mustard seed, oil, and meal. GreenWings facilitates quality-focused procurement with attention to oil content, pungency levels, seed cleanliness, and varietal authenticity for buyers seeking reliable mustard supply.',
     keyBenefits: [

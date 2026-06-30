@@ -72,11 +72,11 @@ export function AboutPage() {
         </Reveal>
 
         <Reveal>
-          <div className="relative">
+          <div className="relative h-[480px] lg:h-full lg:min-h-[640px] xl:min-h-[720px]">
             <img
-              src="/assets/greenwings-hero.png"
-              alt={introduction?.title || 'GreenWings farming community'}
-              className="w-full rounded-sm"
+              src="https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/ui-assets/farmers/serious_discussion_in_farm.png"
+              alt="Indian farmers surveying their fields"
+              className="w-full h-full object-cover rounded-sm"
             />
             <div className="absolute -bottom-8 -right-4 lg:-right-8 bg-paper border border-line p-6 max-w-xs shadow-lg">
               <span className="font-serif text-4xl text-green leading-none">"</span>
