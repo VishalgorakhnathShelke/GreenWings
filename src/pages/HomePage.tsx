@@ -109,7 +109,7 @@ export function HomePage() {
               <Reveal key={story.slug}>
                 <article className="border border-line bg-white overflow-hidden h-full">
                   <div
-                    className="h-44 bg-cover bg-center relative"
+                    className="h-72 bg-cover bg-[center_33%] relative"
                     style={{ backgroundImage: `url(${story.featuredImage || '/assets/greenwings-community.png'})` }}
                   >
                     <div className="absolute inset-0 bg-gradient-to-t from-deep/65 to-transparent" />

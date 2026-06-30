@@ -148,7 +148,7 @@ export function StoriesPage() {
         {stories.map((story) => (
           <Reveal key={`${story.slug}-${story.language}`}>
             <article className="bg-white border border-line overflow-hidden h-full flex flex-col shadow-[0_18px_40px_rgba(58,38,20,0.07)]">
-              <div className="h-56 bg-cover bg-center relative" style={{ backgroundImage: `url(${storyImage(story)})` }}>
+              <div className="h-72 bg-cover bg-[center_33%] relative" style={{ backgroundImage: `url(${storyImage(story)})` }}>
                 <div className="absolute inset-0 bg-gradient-to-t from-deep/70 via-deep/15 to-transparent" />
                 <span className="absolute left-4 bottom-4 bg-harvest text-deep text-[9px] uppercase tracking-wider font-bold px-3 py-1">
                   {story.storyCategory || 'Success Story'}
@@ -246,7 +246,7 @@ export function StoryDetailPage() {
 
       <section className="px-[8vw] py-16 grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 items-start">
         <aside className="border border-line bg-white p-6 lg:sticky lg:top-24">
-          <img src={story.profileImage || story.coverImage || '/assets/greenwings-community.png'} alt={story.farmerName} className="w-full h-56 object-cover mb-5" />
+          <img src={story.profileImage || story.coverImage || '/assets/greenwings-community.png'} alt={story.farmerName} className="w-full h-80 object-cover mb-5" />
           <small className="block text-[10px] uppercase tracking-[0.15em] text-green font-bold mb-2">{copy.farmerProfile}</small>
           <h2 className="font-serif text-3xl text-ink mb-5">{story.farmerName}</h2>
           <div className="grid gap-3">
