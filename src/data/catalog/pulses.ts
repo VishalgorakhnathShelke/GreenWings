@@ -5,7 +5,7 @@ export const pulsesProducts: Product[] = [
     id: 'tur',
     name: 'Tur / Arhar / Pigeon Pea',
     slug: 'tur',
-    heroImage: '/assets/greenwings-grains.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/tur/tur_1.webp',
     overview:
       'Tur, commonly known as arhar or pigeon pea, is one of the most widely cultivated pulse crops across India. As a staple source of plant-based protein for millions of households, it plays an indispensable role in the daily Indian diet, forming the base of beloved dishes such as dal tadka and sambar. India is the largest producer and consumer of pigeon pea globally, with the crop thriving in diverse agro-climatic zones.\n\nThe crop offers exceptional nitrogen-fixing capabilities, making it a preferred choice for sustainable crop rotation and intercropping systems. Its deep root system improves soil health and fertility, benefitting subsequent cereal and oilseed crops. Tur is predominantly grown as a kharif crop, with major sowing coinciding with the monsoon season across central and southern India.\n\nIndia\'s tur production meets a significant portion of global demand, and the grain is increasingly positioned as an export-ready commodity. Premium graded tur dal with consistent quality standards is sought after in international markets, particularly in South Asia, the Middle East, and Africa, where Indian vegetarian cuisine continues to gain popularity.',
     keyBenefits: [
@@ -189,7 +189,7 @@ export const pulsesProducts: Product[] = [
     id: 'chana',
     name: 'Chana / Chickpea',
     slug: 'chana',
-    heroImage: '/assets/greenwings-grains.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/chana/chana_1.jpg',
     overview:
       'Chana, or chickpea, is India\'s most important pulse crop and the country\'s leading source of plant-based protein. India accounts for approximately 65% of global chickpea production, cultivating both the small, dark-seeded Desi type and the large, light-colored Kabuli type. Chickpea is deeply embedded in Indian food culture, consumed as whole boiled chana, roasted chana snacks, besan (gram flour), and a multitude of regional specialties.\n\nThe crop is predominantly grown as a rabi crop, sown after the monsoon retreat and harvested in early spring. Chickpea\'s nitrogen-fixing ability makes it an ideal rotation crop with wheat, barley, and mustard, contributing to sustainable intensification of cereal-based farming systems. Its relatively low water requirement compared to cereals makes it a climate-smart choice for semi-arid regions.\n\nIndian chickpea is increasingly recognized in international markets as a premium plant-protein ingredient. Kabuli chickpea from India competes directly with Mexican and Australian supplies in global trade, while Desi chickpea is sought after for its distinct nutritional profile and suitability for value-added processing into flour, snack bases, and protein isolates.',
     keyBenefits: [
@@ -350,7 +350,7 @@ export const pulsesProducts: Product[] = [
     id: 'moong',
     name: 'Moong / Green Gram',
     slug: 'moong',
-    heroImage: '/assets/greenwings-grains.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/moong/moong_1.jpg',
     overview:
       'Moong, or green gram, is one of India\'s most cherished pulse crops, prized for its easily digestible protein, refreshing flavor, and versatile culinary applications. It occupies a unique position in Indian agriculture as both a kharif and rabi crop, with summer and spring moong cultivation providing an additional income opportunity for farmers beyond the main monsoon season.\n\nThe crop is inherently nitrogen-fixing and has a relatively short duration of 60–75 days, making it an ideal catch crop in multiple cropping systems. Moong is extensively cultivated in rotation with rice, wheat, and sugarcane, contributing to soil health while generating quick returns. Its green pods are also consumed as a fresh vegetable, while the dried grain is used for dal, sprouts, flour, and a wide range of traditional sweets and savory preparations.\n\nIndian moong is increasingly exported as a premium pulse commodity, with whole green moong and yellow moong dal finding markets across Asia, the Middle East, Europe, and North America. The growing global demand for plant-based protein and sprouted foods has positioned moong as a high-value export crop with significant growth potential.',
     keyBenefits: [
@@ -511,7 +511,7 @@ export const pulsesProducts: Product[] = [
     id: 'urad',
     name: 'Urad / Black Gram',
     slug: 'urad',
-    heroImage: '/assets/greenwings-grains.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/urad/urad_1.jpg',
     overview:
       'Urad, or black gram, is a highly valued pulse crop in India, revered for its unique nutritional profile and its irreplaceable role in South Indian cuisine. The whole urad grain is black with a white interior, while the split dal is creamy white. Urad is the primary ingredient in iconic preparations such as idli, dosa, medu vada, and dal makhani, making it a cornerstone of India\'s culinary heritage.\n\nIndia is the world\'s largest producer of black gram, with the crop cultivated predominantly as a kharif pulse. Urad is also grown in the rabi and summer seasons in certain regions, providing year-round cultivation opportunities. Its nitrogen-fixing capability makes it an excellent rotation crop with rice, sugarcane, and cotton, while its short crop duration of 75–90 days allows farmers to integrate it into intensive cropping systems.\n\nIndian urad dal holds significant export potential, particularly in markets with substantial South Indian diaspora communities. The growing global interest in fermented foods, where urad batter serves as a key fermentation medium, has further expanded the crop\'s international market prospects.',
     keyBenefits: [
@@ -672,7 +672,7 @@ export const pulsesProducts: Product[] = [
     id: 'masoor',
     name: 'Masoor / Red Lentil',
     slug: 'masoor',
-    heroImage: '/assets/greenwings-grains.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/masoor/masoor_1.png',
     overview:
       'Masoor, or red lentil, is a vital pulse crop in India that plays a central role in everyday nutrition across all regions of the country. As one of the quickest-cooking lentils, masoor dal is a household staple, valued for its convenience, protein content, and comforting flavor profile. India is among the world\'s largest producers of red lentil, with significant domestic consumption supplemented by imports to meet the growing demand.\n\nMasoor is predominantly cultivated as a rabi crop in northern and central India, sown after the monsoon and harvested in early spring. The crop\'s relatively short duration of 100–120 days allows it to fit efficiently into wheat-based rotation systems. Its nitrogen-fixing capability contributes to soil fertility, supporting sustainable agricultural practices in pulse-growing regions.\n\nIndian masoor is increasingly finding its way into international trade, with the country\'s red lentil production competing with Canadian and Australian supplies in global markets. The export potential of Indian masoor is enhanced by its distinct flavor profile, which is preferred in many traditional South Asian and Middle Eastern culinary applications.',
     keyBenefits: [

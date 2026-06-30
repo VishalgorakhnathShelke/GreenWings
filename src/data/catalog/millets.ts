@@ -5,7 +5,7 @@ export const milletsProducts: Product[] = [
     id: 'bajra',
     name: 'Bajra / Pearl Millet',
     slug: 'bajra',
-    heroImage: '/assets/greenwings-grains.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/bajra/bajra_1.jpg',
     overview:
       'Bajra, or pearl millet, is one of India\'s most resilient cereal crops, thriving in arid and semi-arid conditions where few other grains can survive. Grown predominantly across Rajasthan, Gujarat, Haryana, and Maharashtra, bajra has been a dietary cornerstone for rural communities for centuries. Its exceptional drought tolerance and ability to flourish on marginal soils with minimal irrigation make it a vital crop for climate-adapted agriculture in some of India\'s most water-stressed regions.\n\nFrom a nutritional standpoint, bajra delivers impressive levels of iron, calcium, magnesium, and high-quality plant protein, positioning it as a powerful tool in combating micronutrient deficiencies. Its low glycaemic index and gluten-free profile have driven growing consumer interest among health-conscious buyers, fitness-focused demographics, and individuals managing dietary sensitivities. The flour is prized for traditional flatbreads, notably the rustic bhakri of western India.\n\nGlobal demand for climate-resilient grains is accelerating, and bajra stands at the forefront of this movement. Export-ready processing, stringent quality grading, and modern packaging now enable Indian bajra to serve international health-food, gluten-free, and sustainable-agriculture markets. GreenWings connects buyers with graded, cleaned, and optionally biofortified bajra suited to retail flour, ready-to-cook, snack, and ingredient applications.',
     keyBenefits: [
@@ -158,7 +158,7 @@ export const milletsProducts: Product[] = [
     id: 'jowar',
     name: 'Jowar / Sorghum',
     slug: 'jowar',
-    heroImage: '/assets/greenwings-grains.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/jowar/jowar_1.jpg',
     overview:
       'Jowar, or sorghum, is India\'s third-most important cereal crop and a cornerstone of dryland farming systems across Maharashtra, Karnataka, Madhya Pradesh, and Andhra Pradesh. Its remarkable ability to withstand both drought and waterlogging, coupled with tolerance of high temperatures and marginal soils, makes it one of the most climate-resilient grains in the country\'s agricultural portfolio. Jowar has sustained farming communities in the Deccan plateau for millennia.\n\nNutritionally, jowar is rich in protein, dietary fibre, iron, phosphorus, and potassium, and is naturally gluten-free. Its flour produces soft, pliable bhakri — a staple flatbread in Maharashtra and Karnataka — and is increasingly used in modern gluten-free bakery, snack, and beverage products. Jowar\'s balanced amino-acid profile and high antioxidant content have attracted attention from health-food innovators globally.\n\nIndia\'s millet revival, supported by the United Nations International Year of Millets and government promotion through the Indian Institute of Millets Research, has propelled jowar into premium domestic and export markets. GreenWings connects quality-focused buyers with graded jowar suitable for flour milling, processed foods, brewing, and health-nutrition applications, with full traceability from farm to finished product.',
     keyBenefits: [
@@ -311,7 +311,7 @@ export const milletsProducts: Product[] = [
     id: 'ragi',
     name: 'Ragi / Finger Millet',
     slug: 'ragi',
-    heroImage: '/assets/greenwings-grains.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/ragi/ragi_1.jpg',
     overview:
       'Ragi, or finger millet, is a nutritionally superior small millet that has been a staple food in southern India, the tribal belts of central India, and the Himalayan foothills for thousands of years. Its remarkable calcium content — the highest among all cereals — combined with high iron, amino acids, and dietary fibre, gives it a unique position in India\'s nutritional landscape. Ragi is widely cultivated in Karnataka, Tamil Nadu, Odisha, Uttarakhand, and parts of Andhra Pradesh.\n\nThe grain\'s adaptability to diverse agro-climatic zones, from the Deccan plateau to Himalayan slopes at elevations above 2,000 metres, underscores its extraordinary resilience. Ragi grows well in both rainfed and irrigated conditions, on red laterite soils, and even on marginal hillside terrain. This versatility, combined with low input requirements, makes it an ideal crop for sustainable and climate-adaptive farming systems.\n\nIndia\'s growing health-food movement, coupled with global recognition of millets as climate-smart crops, has driven strong demand for ragi in both domestic and international markets. GreenWings supplies graded, cleaned ragi for flour, malt, porridge, bakery, infant-food, beverage, and specialty nutrition products, with options for organic and certified-origin sourcing.',
     keyBenefits: [

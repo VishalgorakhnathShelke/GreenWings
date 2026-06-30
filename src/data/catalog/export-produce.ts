@@ -5,7 +5,7 @@ export const exportProduce: Product[] = [
     id: 'saffron',
     name: 'Saffron',
     slug: 'saffron',
-    heroImage: '/assets/greenwings-community.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/saffron/saffron_1.jpg',
     overview:
       'Indian saffron, cultivated in the pristine valleys of Kashmir, is among the world\'s most prized agricultural commodities, commanding extraordinary value per kilogram for its vivid colour, complex flavour, and intense aroma. India\'s Kashmiri saffron is internationally recognised for its superior crocin content — the compound responsible for saffron\'s signature golden hue — positioning it as a benchmark quality in global spice markets. GreenWings offers certified Kashmiri saffron sourced through trusted channels with laboratory-verified purity and potency.\n\nThe cultivation of saffron in Kashmir\'s unique climate — where high altitude, cold winters, and well-drained soils create ideal growing conditions — produces a crop with distinctive organoleptic characteristics that are difficult to replicate elsewhere. Each saffron flower yields only three delicate stigmas, which are hand-picked during a narrow harvest window, making every gram a testament to extraordinary agricultural craft.\n\nIndia\'s saffron sector is supported by Geographical Indication (GI) registration, protecting the authenticity and provenance of Kashmiri saffron in international markets. GreenWings facilitates premium saffron supply for culinary, pharmaceutical, cosmetic, and wellness applications, with rigorous quality assurance including colouring strength, flavour intensity, and moisture content testing.',
     keyBenefits: [
@@ -117,7 +117,7 @@ export const exportProduce: Product[] = [
     id: 'cashew',
     name: 'Cashew',
     slug: 'cashew',
-    heroImage: '/assets/greenwings-community.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/cashew/cashew_1.png',
     overview:
       'India is the world\'s largest processor and second-largest producer of cashew nuts, commanding a central position in the global cashew trade. Indian cashew processing expertise — refined over decades of investment in shelling, peeling, grading, and packaging — sets the benchmark for quality that buyers worldwide have come to expect. GreenWings offers a comprehensive range of cashew grades from Whole kernels (W grades) to Broken and Scorched varieties, serving diverse market segments from ultra-premium retail to industrial food manufacturing.\n\nIndian cashew kernels are renowned for their consistent white colour, pleasant sweet flavour, and firm yet creamy texture. The country\'s processing industry has developed sophisticated grading systems that precisely classify kernels by size, shape, and colour, enabling buyers to specify exact requirements for their target markets. India\'s cashew processing clusters in Kerala, Goa, Maharashtra, and Tamil Nadu house world-class facilities meeting international food safety and quality standards.\n\nFrom raw cashew nut (RCN) import for processing to the export of finished, graded kernels, India\'s cashew value chain is a model of agricultural transformation. GreenWings facilitates access to this ecosystem, connecting global buyers with quality-certified Indian cashew kernels suitable for snacking, confectionery, bakery, culinary, and food-service applications across every market tier.',
     keyBenefits: [
@@ -277,7 +277,7 @@ export const exportProduce: Product[] = [
     id: 'black-pepper',
     name: 'Black Pepper',
     slug: 'black-pepper',
-    heroImage: '/assets/greenwings-community.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/black-pepper/black-pepper_1.jpg',
     overview:
       'India is the birthplace of black pepper trade, a distinction that stretches back millennia to when the spice coast of Malabar attracted merchants from across the ancient world. Today, India remains one of the world\'s premier black pepper producers and exporters, with Kerala\'s Western Ghats producing peppers of extraordinary piperine content and aromatic complexity. GreenWings offers a carefully curated range of Indian black pepper sourced from established producing regions with full quality certification.\n\nIndian black pepper, often called the "King of Spices," is distinguished by its bold, sharp pungency, rich volatile oil content, and complex flavour profile that combines heat with woody, floral, and citrus notes depending on origin and processing method. The country produces both the traditional Malabar Garbled grades and improved varieties developed for higher yield, disease resistance, and enhanced quality parameters.\n\nIndia\'s pepper industry has invested significantly in post-harvest infrastructure including modern cleaning, grading, steam sterilisation, and packaging facilities that meet stringent European Union and US FDA import requirements. GreenWings connects global buyers with quality-assured Indian black pepper for culinary, pharmaceutical, oleoresin extraction, and food-processing applications.',
     keyBenefits: [
@@ -437,7 +437,7 @@ export const exportProduce: Product[] = [
     id: 'cardamom',
     name: 'Cardamom (Green)',
     slug: 'cardamom',
-    heroImage: '/assets/greenwings-community.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/cardamom/cardamom_1.jpg',
     overview:
       'Indian green cardamom, known as the "Queen of Spices," is one of the world\'s most expensive and sought-after spices, cultivated in the misty cardamom hills of the Western Ghats spanning Kerala, Karnataka, and Tamil Nadu. India\'s Alleppey Green cardamom holds a Geographical Indication (GI) registration, recognising its distinctive sweet-spicy flavour profile and exceptional aromatic intensity that set it apart from Guatemalan and other origins. GreenWings offers certified Indian green cardamom through quality-assured channels with laboratory-verified essential oil content and freshness parameters.\n\nIndian green cardamom is prized for its complex flavour that combines intensely sweet, eucalyptus-like, and slightly camphoraceous notes in a single spice. This unique organoleptic profile makes it indispensable in Indian cuisine, Middle Eastern coffee traditions, Scandinavian baking, and premium global food and beverage applications. The spice\'s high volatile oil content — primarily 1,8-cineole — delivers an aromatic punch that few other spices can match.\n\nIndia\'s cardamom industry operates one of the world\'s most sophisticated small-spice processing networks, with auction systems, electronic trading platforms, and quality certification infrastructure that ensure transparency and buyer confidence. GreenWings facilitates access to India\'s finest cardamom for culinary, beverage, pharmaceutical, and aromatherapy applications.',
     keyBenefits: [
@@ -573,7 +573,7 @@ export const exportProduce: Product[] = [
     id: 'turmeric',
     name: 'Turmeric',
     slug: 'turmeric',
-    heroImage: '/assets/greenwings-community.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/turmeric/turmeric_1.jpg',
     overview:
       'India is the world\'s undisputed leader in turmeric production, cultivation, and export, producing over 80 percent of the global supply. Indian turmeric is celebrated for its extraordinary curcumin content — the bioactive compound responsible for turmeric\'s vibrant golden colour and potent health-promoting properties — making it the reference standard for quality in international markets. GreenWings offers a comprehensive range of Indian turmeric varieties, each with distinctive colour, aroma, and curcumin profiles suited to culinary, pharmaceutical, nutraceutical, and cosmetic applications.\n\nThe diversity of India\'s turmeric-producing regions — from the humid tropics of Kerala and Tamil Nadu to the drier zones of Andhra Pradesh, Telangana, and Maharashtra — produces turmeric with remarkable variation in curcumin content, essential oil profile, and physical characteristics. This diversity enables India to serve virtually every turmeric application and quality requirement in the global market.\n\nIndia\'s turmeric sector has evolved significantly in recent years, with investment in improved varieties, mechanised processing, quality testing infrastructure, and export-certified packaging. The growing global recognition of curcumin\'s health benefits has further elevated Indian turmeric\'s importance in pharmaceutical and nutraceutical supply chains. GreenWings connects global buyers with quality-certified Indian turmeric for every market segment.',
     keyBenefits: [
@@ -733,7 +733,7 @@ export const exportProduce: Product[] = [
     id: 'ginger',
     name: 'Ginger',
     slug: 'ginger',
-    heroImage: '/assets/greenwings-community.png',
+    heroImage: 'https://pub-b4b449ec1942478faeec7dcf924c0abe.r2.dev/crop-main/ginger/ginger_1.jpg',
     overview:
       'India is the world\'s largest producer of ginger, cultivating this versatile rhizome across diverse agro-climatic zones from the tropical south to the subtropical northeast. Indian ginger is globally recognised for its bold, fibrous rhizomes with high essential oil and oleoresin content, making it the preferred origin for both fresh and dried ginger trade. GreenWings offers a complete range of Indian ginger — fresh, dried, sliced, ground, and value-added — sourced from India\'s premier producing regions.\n\nThe diversity of India\'s ginger production is remarkable, with Kerala and Karnataka supplying bold, high-oleoresin varieties ideal for processing and extraction, while the northeastern states and Himachal Pradesh produce distinctive local types prized for their unique flavour profiles and traditional uses. This regional diversity enables India to serve virtually every ginger application in the global market, from fresh culinary ginger to pharmaceutical-grade oleoresin.\n\nIndia\'s ginger industry has developed sophisticated processing capabilities including washing, sorting, drying, polishing, grinding, and steam sterilisation that meet international food safety and quality standards. The country\'s established position as the world\'s leading ginger producer ensures reliable supply volumes and competitive pricing for global buyers across culinary, pharmaceutical, beverage, and confectionery sectors.',
     keyBenefits: [
