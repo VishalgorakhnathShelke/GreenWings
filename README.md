@@ -1,4 +1,6 @@
 # GreenWings
+Here we go...
+
 
 GreenWings is a multilingual corporate website, member portal, agricultural catalogue, and admin management system for **GREEN WINGS FARMERS PRODUCER COMPANY LIMITED**, a Farmer Producer Organisation based in Jalgaon Neur, Yeola, Nashik, Maharashtra.
 
@@ -192,32 +194,7 @@ Create a local `.env` from `.env.example` and fill only local development values
 
 Never commit real `.env` files.
 
-Required local variables:
 
-```text
-ADMIN_EMAIL=
-ADMIN_PASSWORD=
-ADMIN_TOKEN_SECRET=
-API_PORT=8787
-DATABASE_URL=sqlite:///database/greenwings.db
-```
-
-Optional integrations:
-
-```text
-SMTP_HOST=
-SMTP_PORT=
-SMTP_USER=
-SMTP_PASSWORD=
-EMAIL_FROM=
-R2_ENDPOINT_URL=
-R2_ACCESS_KEY_ID=
-R2_SECRET_ACCESS_KEY=
-R2_BUCKET=
-R2_PUBLIC_BASE_URL=
-R2_PREFIX=
-ANTHROPIC_API_KEY=
-```
 
 ### 4. Start backend
 
