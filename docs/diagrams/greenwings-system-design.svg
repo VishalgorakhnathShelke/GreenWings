@@ -1,0 +1,187 @@
+<svg width="1400" height="900" viewBox="0 0 1400 900" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">GreenWings System Design Diagram</title>
+  <desc id="desc">Colorful system design diagram showing users, Cloudflare entry, React frontend, FastAPI backend, database, object storage, email, logs, and admin operations.</desc>
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1400" y2="900" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F9F4E6"/>
+      <stop offset="0.45" stop-color="#EFF8E7"/>
+      <stop offset="1" stop-color="#D8F1E6"/>
+    </linearGradient>
+
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0F5132"/>
+      <stop offset="1" stop-color="#2E7D32"/>
+    </linearGradient>
+
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFCF5A"/>
+      <stop offset="1" stop-color="#E89B22"/>
+    </linearGradient>
+
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5DADEC"/>
+      <stop offset="1" stop-color="#1271B9"/>
+    </linearGradient>
+
+    <linearGradient id="brown" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#A56A3B"/>
+      <stop offset="1" stop-color="#6B3F22"/>
+    </linearGradient>
+
+    <linearGradient id="purple" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8664D8"/>
+      <stop offset="1" stop-color="#4B2E83"/>
+    </linearGradient>
+
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#063B2A" flood-opacity="0.18"/>
+    </filter>
+
+    <marker id="arrowGreen" markerWidth="14" markerHeight="14" refX="11" refY="7" orient="auto" markerUnits="strokeWidth">
+      <path d="M2 2L12 7L2 12Z" fill="#1D6B3B"/>
+    </marker>
+
+    <marker id="arrowBlue" markerWidth="14" markerHeight="14" refX="11" refY="7" orient="auto" markerUnits="strokeWidth">
+      <path d="M2 2L12 7L2 12Z" fill="#1271B9"/>
+    </marker>
+
+    <style>
+      .title { font: 800 42px Georgia, serif; fill: #073B2A; }
+      .subtitle { font: 500 18px Arial, sans-serif; fill: #4F675D; }
+      .section { font: 800 18px Arial, sans-serif; fill: #073B2A; letter-spacing: 0.8px; }
+      .box-title { font: 800 22px Arial, sans-serif; fill: #FFFFFF; }
+      .box-text { font: 500 15px Arial, sans-serif; fill: rgba(255,255,255,0.92); }
+      .dark-title { font: 800 22px Arial, sans-serif; fill: #073B2A; }
+      .dark-text { font: 500 15px Arial, sans-serif; fill: #41584F; }
+      .pill-text { font: 800 13px Arial, sans-serif; fill: #073B2A; letter-spacing: 1.4px; }
+      .line { stroke: #1D6B3B; stroke-width: 3; marker-end: url(#arrowGreen); }
+      .line-blue { stroke: #1271B9; stroke-width: 3; marker-end: url(#arrowBlue); }
+      .line-soft { stroke: #93B994; stroke-width: 2.4; marker-end: url(#arrowGreen); stroke-dasharray: 8 8; }
+    </style>
+  </defs>
+
+  <rect width="1400" height="900" fill="url(#bg)"/>
+  <circle cx="1220" cy="100" r="220" fill="#B8E986" opacity="0.18"/>
+  <circle cx="130" cy="780" r="240" fill="#F6C453" opacity="0.18"/>
+
+  <text x="70" y="72" class="title">GreenWings System Design</text>
+  <text x="72" y="104" class="subtitle">Public website, member portal, admin dashboard, multilingual content, product catalogues, and farmer enquiry workflows.</text>
+
+  <rect x="72" y="132" width="360" height="38" rx="19" fill="#FFFFFF" stroke="#D8C89C"/>
+  <text x="96" y="156" class="pill-text">USER ENTRY AND ACCESS LAYER</text>
+
+  <!-- Users -->
+  <g filter="url(#shadow)">
+    <rect x="72" y="215" width="220" height="104" rx="22" fill="url(#green)"/>
+    <text x="104" y="253" class="box-title">Public Visitor</text>
+    <text x="104" y="282" class="box-text">Website browsing</text>
+    <text x="104" y="305" class="box-text">Products, stories, contact</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="72" y="365" width="220" height="104" rx="22" fill="url(#gold)"/>
+    <text x="104" y="403" class="dark-title">Farmer Member</text>
+    <text x="104" y="432" class="dark-text">Login and enquiries</text>
+    <text x="104" y="455" class="dark-text">Track status/history</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="72" y="515" width="220" height="104" rx="22" fill="url(#purple)"/>
+    <text x="104" y="553" class="box-title">Admin User</text>
+    <text x="104" y="582" class="box-text">Protected dashboard</text>
+    <text x="104" y="605" class="box-text">CMS and reports</text>
+  </g>
+
+  <!-- Edge and frontend -->
+  <g filter="url(#shadow)">
+    <rect x="390" y="340" width="230" height="155" rx="26" fill="#FFFFFF" stroke="#D8C89C" stroke-width="2"/>
+    <text x="430" y="383" class="dark-title">Cloudflare / Domain</text>
+    <text x="430" y="416" class="dark-text">HTTPS entry</text>
+    <text x="430" y="440" class="dark-text">Temporary tunnel for client</text>
+    <text x="430" y="464" class="dark-text">Production edge later</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="710" y="300" width="285" height="235" rx="30" fill="url(#green)"/>
+    <text x="755" y="344" class="box-title">React + Vite Frontend</text>
+    <text x="755" y="382" class="box-text">Public corporate website</text>
+    <text x="755" y="407" class="box-text">Member portal</text>
+    <text x="755" y="432" class="box-text">Admin panel</text>
+    <text x="755" y="457" class="box-text">Language switcher</text>
+    <text x="755" y="482" class="box-text">Responsive UI</text>
+  </g>
+
+  <line x1="292" y1="267" x2="390" y2="385" class="line"/>
+  <line x1="292" y1="417" x2="390" y2="417" class="line"/>
+  <line x1="292" y1="567" x2="390" y2="450" class="line"/>
+  <line x1="620" y1="417" x2="710" y2="417" class="line"/>
+
+  <!-- Backend -->
+  <g filter="url(#shadow)">
+    <rect x="1085" y="295" width="245" height="245" rx="30" fill="url(#blue)"/>
+    <text x="1125" y="340" class="box-title">FastAPI Backend</text>
+    <text x="1125" y="378" class="box-text">REST APIs</text>
+    <text x="1125" y="403" class="box-text">Authentication + RBAC</text>
+    <text x="1125" y="428" class="box-text">Pydantic validation</text>
+    <text x="1125" y="453" class="box-text">SQLAlchemy ORM</text>
+    <text x="1125" y="478" class="box-text">Business workflows</text>
+  </g>
+
+  <line x1="995" y1="417" x2="1085" y2="417" class="line-blue"/>
+
+  <!-- API capability cards -->
+  <rect x="710" y="600" width="620" height="205" rx="28" fill="#FFFFFF" stroke="#D8C89C" stroke-width="2" filter="url(#shadow)"/>
+  <text x="746" y="640" class="section">BACKEND CAPABILITIES</text>
+
+  <g>
+    <rect x="748" y="665" width="170" height="48" rx="14" fill="#EAF6EA" stroke="#A5CFA4"/>
+    <text x="770" y="695" class="dark-text">Company content</text>
+    <rect x="940" y="665" width="170" height="48" rx="14" fill="#FFF2CD" stroke="#E4C56D"/>
+    <text x="962" y="695" class="dark-text">Product catalogue</text>
+    <rect x="1132" y="665" width="160" height="48" rx="14" fill="#E9F4FF" stroke="#91C8EC"/>
+    <text x="1154" y="695" class="dark-text">Fertilizers</text>
+    <rect x="748" y="732" width="170" height="48" rx="14" fill="#F1ECFF" stroke="#B7A7E8"/>
+    <text x="770" y="762" class="dark-text">Enquiries</text>
+    <rect x="940" y="732" width="170" height="48" rx="14" fill="#F9E7DA" stroke="#D7A27A"/>
+    <text x="962" y="762" class="dark-text">Success stories</text>
+    <rect x="1132" y="732" width="160" height="48" rx="14" fill="#EAF6EA" stroke="#A5CFA4"/>
+    <text x="1154" y="762" class="dark-text">Reports</text>
+  </g>
+
+  <line x1="1208" y1="540" x2="1208" y2="600" class="line-blue"/>
+
+  <!-- Data and external services -->
+  <g filter="url(#shadow)">
+    <rect x="710" y="165" width="225" height="92" rx="22" fill="#FFFFFF" stroke="#A5CFA4" stroke-width="2"/>
+    <text x="742" y="201" class="dark-title">SQLite Dev DB</text>
+    <text x="742" y="229" class="dark-text">PostgreSQL target</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="960" y="165" width="225" height="92" rx="22" fill="#FFFFFF" stroke="#91C8EC" stroke-width="2"/>
+    <text x="992" y="201" class="dark-title">Cloudflare R2</text>
+    <text x="992" y="229" class="dark-text">Images, docs, media</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="1210" y="165" width="120" height="92" rx="22" fill="#FFFFFF" stroke="#D7A27A" stroke-width="2"/>
+    <text x="1234" y="201" class="dark-title">SMTP</text>
+    <text x="1234" y="229" class="dark-text">Email</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="470" y="650" width="180" height="92" rx="22" fill="#FFFFFF" stroke="#C5B0F0" stroke-width="2"/>
+    <text x="505" y="686" class="dark-title">Logs</text>
+    <text x="505" y="714" class="dark-text">Audit and runtime</text>
+  </g>
+
+  <line x1="1135" y1="295" x2="910" y2="257" class="line-soft"/>
+  <line x1="1208" y1="295" x2="1073" y2="257" class="line-soft"/>
+  <line x1="1260" y1="295" x2="1270" y2="257" class="line-soft"/>
+  <line x1="1085" y1="520" x2="650" y2="696" class="line-soft"/>
+
+  <!-- Footer note -->
+  <rect x="72" y="805" width="560" height="48" rx="24" fill="#073B2A" opacity="0.92"/>
+  <text x="104" y="836" class="box-text">Design principle: admin changes flow through APIs into the database, then render dynamically in the selected language.</text>
+</svg>
