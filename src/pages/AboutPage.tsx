@@ -180,7 +180,7 @@ export function AboutPage() {
             {content?.leadership.map((member) => (
               <Reveal key={member.id}>
                 <article className="border border-line bg-white overflow-hidden h-full">
-                  <img src={member.imageUrl || member.image || '/assets/greenwings-community.png'} alt={member.fullName} className="h-52 w-full object-cover" />
+                  <img src={member.imageUrl || member.image || '/assets/greenwings-community.png'} alt={member.fullName} className="h-64 w-full object-contain bg-cream/30 p-2" />
                   <div className="p-5">
                     <h3 className="font-serif text-2xl text-ink">{member.fullName}</h3>
                     <strong className="block text-xs text-green uppercase tracking-[0.12em] mt-1 mb-3">{member.designation}</strong>

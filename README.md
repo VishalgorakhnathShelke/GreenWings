@@ -17,6 +17,14 @@ The platform is designed to help farmers, buyers, partners, and administrators i
 - Cloudflare R2-compatible image storage workflow
 - PostgreSQL/Prisma planning assets for production expansion
 
+## System Design
+
+![GreenWings System Design](docs/diagrams/greenwings-system-design.svg)
+
+## Architecture
+
+![GreenWings Application Architecture](docs/diagrams/greenwings-architecture.svg)
+
 ## Tech Stack
 
 ### Frontend
